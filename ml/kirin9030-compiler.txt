@@ -1,0 +1,57 @@
+[baseline] {'CPUCL': 1}
+W/AI_FMK  (56): partitioner_strategy.cpp ToPartitionerList(345)::"Partition of type: NPUCL is more than 9," " will rollback to CPU"
+
+[layout] {'CPUCL': 1}
+W/AI_FMK  (155): partitioner_strategy.cpp ToPartitionerList(345)::"Partition of type: NPUCL is more than 9," " will rollback to CPU"
+
+[rank3] {'CPUCL': 1}
+W/AI_FMK  (267): partitioner_strategy.cpp ToPartitionerList(345)::"Partition of type: NPUCL is more than 9," " will rollback to CPU"
+
+[conv] {'CPUCL': 1}
+W/AI_FMK  (379): partitioner_strategy.cpp ToPartitionerList(345)::"Partition of type: NPUCL is more than 9," " will rollback to CPU"
+
+[flatten] {'CPUCL': 1}
+W/AI_FMK  (491): partitioner_strategy.cpp ToPartitionerList(345)::"Partition of type: NPUCL is more than 9," " will rollback to CPU"
+
+[conv_packed] {'CPUCL': 1}
+W/AI_FMK  (603): partitioner_strategy.cpp ToPartitionerList(345)::"Partition of type: NPUCL is more than 9," " will rollback to CPU"
+
+[conv_broadcast] {'CPUCL': 1}
+W/AI_FMK  (827): partitioner_strategy.cpp ToPartitionerList(345)::"Partition of type: NPUCL is more than 9," " will rollback to CPU"
+
+[perhead] {'CPUCL': 1}
+W/AI_FMK  (372): partitioner_strategy.cpp ToPartitionerList(345)::"Partition of type: NPUCL is more than 9," " will rollback to CPU"
+
+[conv_partialmm] {'CPUCL': 1, 'NPUCL': 1}
+I/AI_FMK  (369): partitioner_strategy.cpp ToPartitionerList(356)::"partition type NPU:1, CPU:1, GPU:0, ISP:0."
+W/AI_NPUCL  (369): npu_graph_compiler.cc SaveKernelBinInfo(331)::"NPUGraphCompiler kernelBin: [stubName = executor_softmax_5d_w_tiling0_fp16, kernelSize = 2668]"
+
+[conv_lowered] {'NPUCL': 1}
+I/AI_FMK  (715): partitioner_strategy.cpp ToPartitionerList(356)::"partition type NPU:1, CPU:0, GPU:0, ISP:0."
+
+[softmaxfull] {'NPUCL': 1}
+I/AI_FMK  (238): partitioner_strategy.cpp ToPartitionerList(356)::"partition type NPU:1, CPU:0, GPU:0, ISP:0."
+W/AI_NPUCL  (238): npu_graph_compiler.cc SaveKernelBinInfo(331)::"NPUGraphCompiler kernelBin: [stubName = executor_softmax_5d_w_tiling0_fp16, kernelSize = 2668]"
+
+[softmax16] {'NPUCL': 1}
+I/AI_FMK  (267): partitioner_strategy.cpp ToPartitionerList(356)::"partition type NPU:1, CPU:0, GPU:0, ISP:0."
+W/AI_NPUCL  (267): npu_graph_compiler.cc SaveKernelBinInfo(331)::"NPUGraphCompiler kernelBin: [stubName = executor_softmax_5d_w_tiling0_fp16, kernelSize = 2668]"
+
+[softmax32] {'NPUCL': 1}
+I/AI_FMK  (284): partitioner_strategy.cpp ToPartitionerList(356)::"partition type NPU:1, CPU:0, GPU:0, ISP:0."
+W/AI_NPUCL  (284): npu_graph_compiler.cc SaveKernelBinInfo(331)::"NPUGraphCompiler kernelBin: [stubName = executor_softmax_5d_w_tiling0_fp16, kernelSize = 2668]"
+
+[softmax64] {'NPUCL': 1}
+I/AI_FMK  (219): partitioner_strategy.cpp ToPartitionerList(356)::"partition type NPU:1, CPU:0, GPU:0, ISP:0."
+W/AI_NPUCL  (219): npu_graph_compiler.cc SaveKernelBinInfo(331)::"NPUGraphCompiler kernelBin: [stubName = executor_softmax_5d_w_tiling0_fp16, kernelSize = 2668]"
+
+[native V2 single-op, pv_64_64, Kirin9030]
+E49999[PID: 61] 2026-11-14-18:40:03.338.454 (E49999):  AOE failed to call InitCannKB.[FUNC:Initialize][FILE:python_adapter_manager.cc][LINE:50]
+
+[native V2 single-op, qk_64_64, Kirin9030]
+E49999[PID: 7] 2026-11-14-18:40:02.334.228 (E49999):  AOE failed to call InitCannKB.[FUNC:Initialize][FILE:python_adapter_manager.cc][LINE:50]
+
+[native V2 single-op, softmax_64_64, Kirin9030]
+E49999[PID: 34] 2026-11-14-18:40:02.927.695 (E49999):  AOE failed to call InitCannKB.[FUNC:Initialize][FILE:python_adapter_manager.cc][LINE:50]
+
+[native AIR roundtrip, kirin9030] {'MatMul': 12, 'Softmax': 6}

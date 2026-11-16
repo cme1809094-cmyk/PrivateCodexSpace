@@ -1,0 +1,4 @@
+{ "string": [
+  { "name": "app_name", "value": "权限意图 HiAI 性能版" },
+  { "name": "module_desc", "value": "离线识别中文指令涉及的权限" }
+] }

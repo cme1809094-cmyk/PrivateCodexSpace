@@ -1,0 +1,38 @@
+=== Platform config ===
+vector_core_cnt=1
+
+=== SoftmaxV2 L=16 Q=1 ===
+Op SoftmaxV2 tiling context is: input0: (dtype: DT_FLOAT16),(shape:[8, 16]),(ori_shape:[8, 16]),(format: ND),; output0: (dtype: DT_FLOAT16),(shape:[8, 16]),(ori_shape:[8, 16]),(format: ND),; 
+E/ASC  (28): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Error: Common: CoreNum is 0, can not get blockDim!
+E/ASC  (28): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Inner Error: E89999: op[%s], CoreNum is 0, can not get blockDim!
+TilingFunc exec fail, please check the implement of TilingFunc.
+
+=== SoftmaxV2 L=16 Q=16 ===
+Op SoftmaxV2 tiling context is: input0: (dtype: DT_FLOAT16),(shape:[128, 16]),(ori_shape:[128, 16]),(format: ND),; output0: (dtype: DT_FLOAT16),(shape:[128, 16]),(ori_shape:[128, 16]),(format: ND),; 
+E/ASC  (29): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Error: Common: CoreNum is 0, can not get blockDim!
+E/ASC  (29): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Inner Error: E89999: op[%s], CoreNum is 0, can not get blockDim!
+TilingFunc exec fail, please check the implement of TilingFunc.
+
+=== SoftmaxV2 L=32 Q=1 ===
+Op SoftmaxV2 tiling context is: input0: (dtype: DT_FLOAT16),(shape:[8, 32]),(ori_shape:[8, 32]),(format: ND),; output0: (dtype: DT_FLOAT16),(shape:[8, 32]),(ori_shape:[8, 32]),(format: ND),; 
+E/ASC  (30): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Error: Common: CoreNum is 0, can not get blockDim!
+E/ASC  (30): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Inner Error: E89999: op[%s], CoreNum is 0, can not get blockDim!
+TilingFunc exec fail, please check the implement of TilingFunc.
+
+=== SoftmaxV2 L=32 Q=32 ===
+Op SoftmaxV2 tiling context is: input0: (dtype: DT_FLOAT16),(shape:[256, 32]),(ori_shape:[256, 32]),(format: ND),; output0: (dtype: DT_FLOAT16),(shape:[256, 32]),(ori_shape:[256, 32]),(format: ND),; 
+E/ASC  (31): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Error: Common: CoreNum is 0, can not get blockDim!
+E/ASC  (31): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Inner Error: E89999: op[%s], CoreNum is 0, can not get blockDim!
+TilingFunc exec fail, please check the implement of TilingFunc.
+
+=== SoftmaxV2 L=64 Q=1 ===
+Op SoftmaxV2 tiling context is: input0: (dtype: DT_FLOAT16),(shape:[8, 64]),(ori_shape:[8, 64]),(format: ND),; output0: (dtype: DT_FLOAT16),(shape:[8, 64]),(ori_shape:[8, 64]),(format: ND),; 
+E/ASC  (32): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Error: Common: CoreNum is 0, can not get blockDim!
+E/ASC  (32): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Inner Error: E89999: op[%s], CoreNum is 0, can not get blockDim!
+TilingFunc exec fail, please check the implement of TilingFunc.
+
+=== SoftmaxV2 L=64 Q=64 ===
+Op SoftmaxV2 tiling context is: input0: (dtype: DT_FLOAT16),(shape:[512, 64]),(ori_shape:[512, 64]),(format: ND),; output0: (dtype: DT_FLOAT16),(shape:[512, 64]),(ori_shape:[512, 64]),(format: ND),; 
+E/ASC  (33): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Error: Common: CoreNum is 0, can not get blockDim!
+E/ASC  (33): ascendc_tiling_multicore_policy.cpp MultiCorePolicyMeanMostLessOne(34)::"Inner Error: E89999: op[%s], CoreNum is 0, can not get blockDim!
+TilingFunc exec fail, please check the implement of TilingFunc.

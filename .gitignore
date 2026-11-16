@@ -1,0 +1,14 @@
+/.hvigor/
+/.idea/
+/oh_modules/
+/entry/oh_modules/
+/build/
+/entry/build/
+/model-build/
+/local.properties
+**/__pycache__/
+*.p12
+*.p7b
+*.cer
+
+**/.cxx/

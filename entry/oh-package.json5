@@ -1,0 +1,9 @@
+{
+  "name": "entry",
+  "version": "1.0.0",
+  "description": "Offline permission intent demo",
+  "main": "",
+  "dependencies": {
+    "libpermission_hiai.so": "file:./src/main/cpp/types/libpermission_hiai"
+  }
+}

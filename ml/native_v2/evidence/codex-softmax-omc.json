@@ -1,0 +1,163 @@
+[
+  {
+    "length": 64,
+    "query": 64,
+    "input_shape": [
+      512,
+      64
+    ],
+    "use_origin_format": true,
+    "exit_code": 0,
+    "log": "/workspace/work/native-v2/alias-probe/compile-origin.log",
+    "output": "/workspace/work/native-v2/alias-probe/softmax_origin.omc",
+    "output_bytes": 13198,
+    "output_sha256": "43f84fc3deba2869e4c69d66de27f909df2299f0afe7adccf297ea1c889dfc07",
+    "kernels": [
+      {
+        "name": "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2",
+        "bytes": 7640
+      }
+    ],
+    "native_softmax_bound": true,
+    "legacy_softmax_bound": false,
+    "passed": true
+  },
+  {
+    "length": 16,
+    "query": 1,
+    "input_shape": [
+      8,
+      16
+    ],
+    "use_origin_format": true,
+    "exit_code": 0,
+    "log": "/workspace/work/native-v2/alias-probe/softmax_16_1_origin1.log",
+    "output": "/workspace/work/native-v2/alias-probe/softmax_16_1_origin1.omc",
+    "output_bytes": 13151,
+    "output_sha256": "2c681047d7ce14d2670c9f513e77d568cda05ba84569ed2c40c2becc73cd6ba7",
+    "kernels": [
+      {
+        "name": "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2",
+        "bytes": 7640
+      }
+    ],
+    "native_softmax_bound": true,
+    "legacy_softmax_bound": false,
+    "passed": true
+  },
+  {
+    "length": 16,
+    "query": 16,
+    "input_shape": [
+      128,
+      16
+    ],
+    "use_origin_format": true,
+    "exit_code": 0,
+    "log": "/workspace/work/native-v2/alias-probe/softmax_16_16_origin1.log",
+    "output": "/workspace/work/native-v2/alias-probe/softmax_16_16_origin1.omc",
+    "output_bytes": 13170,
+    "output_sha256": "1b95f187cfa1ea071485bd888726b7e53b866607bb99f9954090dd8089a77f0c",
+    "kernels": [
+      {
+        "name": "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2",
+        "bytes": 7640
+      }
+    ],
+    "native_softmax_bound": true,
+    "legacy_softmax_bound": false,
+    "passed": true
+  },
+  {
+    "length": 32,
+    "query": 1,
+    "input_shape": [
+      8,
+      32
+    ],
+    "use_origin_format": true,
+    "exit_code": 0,
+    "log": "/workspace/work/native-v2/alias-probe/softmax_32_1_origin1.log",
+    "output": "/workspace/work/native-v2/alias-probe/softmax_32_1_origin1.omc",
+    "output_bytes": 13151,
+    "output_sha256": "888b6f19c5b603cec5c0bee86c9b6c51d1ceb8d98938ce32640bbba70354c4bd",
+    "kernels": [
+      {
+        "name": "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2",
+        "bytes": 7640
+      }
+    ],
+    "native_softmax_bound": true,
+    "legacy_softmax_bound": false,
+    "passed": true
+  },
+  {
+    "length": 32,
+    "query": 32,
+    "input_shape": [
+      256,
+      32
+    ],
+    "use_origin_format": true,
+    "exit_code": 0,
+    "log": "/workspace/work/native-v2/alias-probe/softmax_32_32_origin1.log",
+    "output": "/workspace/work/native-v2/alias-probe/softmax_32_32_origin1.omc",
+    "output_bytes": 13198,
+    "output_sha256": "110f69d50c8443585aca91012e650106193403fc7f6d0a56ff402682797dd449",
+    "kernels": [
+      {
+        "name": "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2",
+        "bytes": 7640
+      }
+    ],
+    "native_softmax_bound": true,
+    "legacy_softmax_bound": false,
+    "passed": true
+  },
+  {
+    "length": 64,
+    "query": 1,
+    "input_shape": [
+      8,
+      64
+    ],
+    "use_origin_format": true,
+    "exit_code": 0,
+    "log": "/workspace/work/native-v2/alias-probe/softmax_64_1_origin1.log",
+    "output": "/workspace/work/native-v2/alias-probe/softmax_64_1_origin1.omc",
+    "output_bytes": 13151,
+    "output_sha256": "02d7aff42d9f7c7df0e339ae5fe15d2b73e4587b30b7e7f366aa1b1bc35cc0bc",
+    "kernels": [
+      {
+        "name": "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2",
+        "bytes": 7640
+      }
+    ],
+    "native_softmax_bound": true,
+    "legacy_softmax_bound": false,
+    "passed": true
+  },
+  {
+    "length": 64,
+    "query": 64,
+    "input_shape": [
+      512,
+      64
+    ],
+    "use_origin_format": false,
+    "exit_code": 0,
+    "log": "/workspace/work/native-v2/alias-probe/softmax_64_64_origin0.log",
+    "output": "/workspace/work/native-v2/alias-probe/softmax_64_64_origin0.omc",
+    "output_bytes": 13198,
+    "output_sha256": "49012161b795b3bb88fd241328716179e74ca85e8dfa1caac3803e1c8d39c146",
+    "kernels": [
+      {
+        "name": "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2",
+        "bytes": 7640
+      }
+    ],
+    "native_softmax_bound": true,
+    "legacy_softmax_bound": false,
+    "passed": true
+  }
+]

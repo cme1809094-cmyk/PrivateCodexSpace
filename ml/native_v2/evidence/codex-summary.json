@@ -1,0 +1,30 @@
+{
+  "archive": "HarmonyPermissionDemo-Kirin9030-native-v2-fix.zip",
+  "archive_sha256": "3b6902fa6ffc7af7b7b367bbfd1f38967b5e468a453e7a73f9f1d763e6c60a4c",
+  "full_project_transfer": "blocked by download_file 32 MiB transfer limit; need raw split chunks below that limit",
+  "control": {
+    "BatchMatMulV2": "18/18",
+    "SoftmaxV2": "0/6; CoreNum is 0"
+  },
+  "fix": "Initialize a zero incoming Softmax tiling blockDim from platform SoCInfo.vector_core_cnt, preserving an existing nonzero budget; call unmodified vendor tiler.",
+  "fixed_host_tiling": "24/24",
+  "bmm_control_unchanged": true,
+  "minimal_softmax_omc": {
+    "shapes": "six MiniRBT FP16 attention shapes",
+    "native_kernel": "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2",
+    "kernel_bytes": 7640,
+    "cases_passed": 6,
+    "origin_format_false_control_passed": true
+  },
+  "not_yet_validated": [
+    "original MiniRBT 16/32/64 full graphs",
+    "all 18 V2 nodes bound to NPU in each full model",
+    "permission output parity on target device",
+    "on-device performance"
+  ],
+  "atc_control": "host syscall checks pass, but Add single-op fails in RunCustomPass; isolated OMC validation uses direct OMG.",
+  "modified_files": [
+    "plugin/native_tiling_schema.cpp",
+    "README.md"
+  ]
+}

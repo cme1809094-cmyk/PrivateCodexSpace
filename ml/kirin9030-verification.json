@@ -1,0 +1,63 @@
+{
+  "platform": "kirin9030",
+  "device_tested": false,
+  "reference": "original 64-token MiniRBT ONNX, FP32",
+  "buckets": {
+    "16": {
+      "subgraphs": {
+        "NPUCL": 1
+      },
+      "compiler_subgraph_memory_bytes": 544768,
+      "model_bytes": 22681061,
+      "sha256": "8a54747116b950d36b0a23c7291ec0faf13999802de72593ce64ed436148ff05",
+      "softmax_kernel": "executor_softmax_5d_w_tiling0_fp16",
+      "heldout_samples": 27,
+      "max_logit_error": 6.9141387939453125e-06,
+      "random_mask_samples": 16,
+      "random_max_logit_error": 4.76837158203125e-06
+    },
+    "32": {
+      "subgraphs": {
+        "NPUCL": 1
+      },
+      "compiler_subgraph_memory_bytes": 1872384,
+      "model_bytes": 22722813,
+      "sha256": "8f019a0f19b7b9edced8ece489875c2413711813f2b0f879bca5d01343cd37b5",
+      "softmax_kernel": "executor_softmax_5d_w_tiling0_fp16",
+      "heldout_samples": 33,
+      "max_logit_error": 6.9141387939453125e-06,
+      "random_mask_samples": 32,
+      "random_max_logit_error": 7.010996341705322e-06
+    },
+    "64": {
+      "subgraphs": {
+        "NPUCL": 1
+      },
+      "compiler_subgraph_memory_bytes": 6886912,
+      "model_bytes": 22804982,
+      "sha256": "d6f5a8dfee7d6e597413b143084f873aa1efd3687ef1cab743991dffc971265f",
+      "softmax_kernel": "executor_softmax_5d_w_tiling0_fp16",
+      "heldout_samples": 33,
+      "max_logit_error": 6.9141387939453125e-06,
+      "random_mask_samples": 64,
+      "random_max_logit_error": 7.897615432739258e-06
+    }
+  },
+  "heldout_routing": {
+    "16": 27,
+    "32": 6
+  },
+  "baseline_64_all_queries": {
+    "subgraphs": {
+      "NPUCL": 1
+    },
+    "compiler_subgraph_memory_bytes": 6886912,
+    "model_bytes": 22790285,
+    "sha256": "f2aea9736566ea372630ef81af91192ead0e5db3afa4e2c4cbbd8b07c2ddb01b",
+    "softmax_kernel": "executor_softmax_5d_w_tiling0_fp16",
+    "heldout_samples": 33,
+    "max_logit_error": 6.9141387939453125e-06,
+    "random_mask_samples": 64,
+    "random_max_logit_error": 7.897615432739258e-06
+  }
+}

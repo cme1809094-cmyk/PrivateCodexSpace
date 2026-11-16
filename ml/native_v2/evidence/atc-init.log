@@ -1,0 +1,21 @@
+
+=== add ===
+loader request: <vendor>/components/tbe-tik/x86_64-linux/lib64/libcann_kb.so
+[INFO] TUNE(12,atc_ext.bin):2026-11-14-18:50:03.232.709 [cann_kb_pyfunc_mgr.cpp:72][CANNKB][Tid:12]"CannKbPyfuncMgr: Enter PyObjectInit, reference_ is 0!"
+getifaddrs: rc=-1 errno=1
+[PID: 12] 2026-11-14-18:50:04.780.337 Environment_Error_Import_Python_Module_Failed(EC0010): Failed to import Python module PermissionError: [Errno 1] Operation not permitted.
+        AOE failed to call InitCannKB.[FUNC:Initialize][FILE:python_adapter_manager.cc][LINE:50]
+
+=== softmax ===
+loader request: <vendor>/components/tbe-tik/x86_64-linux/lib64/libcann_kb.so
+[INFO] TUNE(38,atc_ext.bin):2026-11-14-18:50:05.406.335 [cann_kb_pyfunc_mgr.cpp:72][CANNKB][Tid:38]"CannKbPyfuncMgr: Enter PyObjectInit, reference_ is 0!"
+getifaddrs: rc=-1 errno=1
+[PID: 38] 2026-11-14-18:50:06.601.027 Environment_Error_Import_Python_Module_Failed(EC0010): Failed to import Python module PermissionError: [Errno 1] Operation not permitted.
+        AOE failed to call InitCannKB.[FUNC:Initialize][FILE:python_adapter_manager.cc][LINE:50]
+
+=== Add with CANN_KNOWLEDGE_BANK_PROCESS_NUM=0 ===
+[ERROR] TUNE(15,atc_ext.bin):2026-11-14-19:30:08.917.183 [pywrapper.cpp:108][CANNKB][Tid:15]"PermissionError: [Errno 1] Operation not permitted"
+[ERROR] TEFUSION(15,atc_ext.bin):2026-11-14-19:30:08.917.384 [python_adapter_manager.cc:98]15 InitCannKB Call CannKbInit failed. Result = [3]. Init parameters: [Kirin9030, 1, ]
+[ERROR] TEFUSION(15,atc_ext.bin):2026-11-14-19:30:08.917.420 [python_adapter_manager.cc:50]15 Initialize AOE failed to call InitCannKB.
+[PID: 15] 2026-11-14-19:30:08.917.234 Environment_Error_Import_Python_Module_Failed(EC0010): Failed to import Python module PermissionError: [Errno 1] Operation not permitted.
+        AOE failed to call InitCannKB.[FUNC:Initialize][FILE:python_adapter_manager.cc][LINE:50]

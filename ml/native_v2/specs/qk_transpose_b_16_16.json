@@ -1,0 +1,48 @@
+[
+  {
+    "op": "BatchMatMulV2",
+    "input_desc": [
+      {
+        "format": "ND",
+        "shape": [
+          8,
+          16,
+          32
+        ],
+        "type": "float16"
+      },
+      {
+        "format": "ND",
+        "shape": [
+          8,
+          16,
+          32
+        ],
+        "type": "float16"
+      }
+    ],
+    "output_desc": [
+      {
+        "format": "ND",
+        "shape": [
+          8,
+          16,
+          16
+        ],
+        "type": "float16"
+      }
+    ],
+    "attr": [
+      {
+        "name": "adj_x1",
+        "type": "bool",
+        "value": false
+      },
+      {
+        "name": "adj_x2",
+        "type": "bool",
+        "value": true
+      }
+    ]
+  }
+]

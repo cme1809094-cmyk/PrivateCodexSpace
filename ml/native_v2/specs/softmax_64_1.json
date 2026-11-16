@@ -1,0 +1,39 @@
+[
+  {
+    "op": "SoftmaxV2",
+    "input_desc": [
+      {
+        "format": "ND",
+        "shape": [
+          8,
+          64
+        ],
+        "type": "float16"
+      }
+    ],
+    "output_desc": [
+      {
+        "format": "ND",
+        "shape": [
+          8,
+          64
+        ],
+        "type": "float16"
+      }
+    ],
+    "attr": [
+      {
+        "name": "axes",
+        "type": "list_int",
+        "value": [
+          -1
+        ]
+      },
+      {
+        "name": "half_to_float",
+        "type": "bool",
+        "value": false
+      }
+    ]
+  }
+]

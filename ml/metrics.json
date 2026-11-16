@@ -1,0 +1,46 @@
+{
+  "checkpoint": "hfl/minirbt-h256",
+  "revision": "0ba7e5a947e3898b65bc742048790acd54fecf76",
+  "synthetic_data": true,
+  "labels": [
+    "camera",
+    "microphone",
+    "coarse_location",
+    "fine_location",
+    "out_of_scope"
+  ],
+  "training_samples": 99,
+  "selected_epoch": 36,
+  "thresholds": [
+    0.45,
+    0.425,
+    0.45,
+    0.475,
+    0.325
+  ],
+  "validation": {
+    "samples": 31,
+    "exact": 30,
+    "overpredicted": 0,
+    "missed_by_label": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "test": {
+    "samples": 33,
+    "exact": 24,
+    "overpredicted": 4,
+    "missed_by_label": [
+      2,
+      1,
+      0,
+      1,
+      2
+    ]
+  },
+  "pytorch_onnx_max_abs_logit_error": 1.150369644165039e-05
+}

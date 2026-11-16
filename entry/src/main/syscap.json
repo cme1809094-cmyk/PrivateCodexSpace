@@ -1,0 +1,4 @@
+{
+  "devices": { "general": ["phone", "tablet"], "custom": [] },
+  "production": { "addedSysCaps": ["SystemCapability.AI.MindSporeLite"] }
+}

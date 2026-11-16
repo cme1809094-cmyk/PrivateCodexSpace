@@ -1,0 +1,1536 @@
+{
+  "date_utc": "2026-11-16",
+  "target": "Mate 80 Pro Max / Kirin 9030 Pro",
+  "compiler_platform": "kirin9030",
+  "device_tested": false,
+  "build": "Recreate with ml/native_v2/run_frontend.sh; build directories are generated per invocation.",
+  "buckets": {
+    "16": {
+      "length": 16,
+      "passed": true,
+      "device_tested": false,
+      "model": "entry/src/main/resources/rawfile/permission_16.om",
+      "bytes": 22636729,
+      "sha256": "f0686728f90b84e50c2a72860aad7e92f333f7f74efd3842e6ddb58a459d0f5c",
+      "backend_log": "ml/native_v2/evidence/full/l16/backend.log",
+      "model_dump": "ml/native_v2/evidence/full/l16/mobile.json",
+      "partitions": {
+        "NPUCL": 1,
+        "CPUCL": 0
+      },
+      "compiler_subgraph_memory_bytes": 396288,
+      "native_node_counts": {
+        "BatchMatMulV2": 12,
+        "SoftmaxV2": 6
+      },
+      "native_kernels": {
+        "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1": {
+          "bytes": 63096,
+          "line": 1756
+        },
+        "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2": {
+          "bytes": 7640,
+          "line": 1758
+        },
+        "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2": {
+          "bytes": 59336,
+          "line": 1768
+        }
+      },
+      "legacy_softmax_kernels": [],
+      "nodes": [
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              16,
+              32
+            ],
+            [
+              8,
+              32,
+              16
+            ],
+            [
+              8,
+              16,
+              16
+            ]
+          ],
+          "backend_tiling_line": 670,
+          "backend_npu_task_line": 1675,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              128,
+              16
+            ],
+            [
+              128,
+              16
+            ]
+          ],
+          "backend_tiling_line": 689,
+          "backend_npu_task_line": 1677,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              16,
+              16
+            ],
+            [
+              8,
+              16,
+              32
+            ],
+            [
+              8,
+              16,
+              32
+            ]
+          ],
+          "backend_tiling_line": 755,
+          "backend_npu_task_line": 1681,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              16,
+              32
+            ],
+            [
+              8,
+              32,
+              16
+            ],
+            [
+              8,
+              16,
+              16
+            ]
+          ],
+          "backend_tiling_line": 848,
+          "backend_npu_task_line": 1685,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              128,
+              16
+            ],
+            [
+              128,
+              16
+            ]
+          ],
+          "backend_tiling_line": 866,
+          "backend_npu_task_line": 1687,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              16,
+              16
+            ],
+            [
+              8,
+              16,
+              32
+            ],
+            [
+              8,
+              16,
+              32
+            ]
+          ],
+          "backend_tiling_line": 932,
+          "backend_npu_task_line": 1691,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              16,
+              32
+            ],
+            [
+              8,
+              32,
+              16
+            ],
+            [
+              8,
+              16,
+              16
+            ]
+          ],
+          "backend_tiling_line": 1025,
+          "backend_npu_task_line": 1695,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              128,
+              16
+            ],
+            [
+              128,
+              16
+            ]
+          ],
+          "backend_tiling_line": 1043,
+          "backend_npu_task_line": 1697,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              16,
+              16
+            ],
+            [
+              8,
+              16,
+              32
+            ],
+            [
+              8,
+              16,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1109,
+          "backend_npu_task_line": 1701,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              16,
+              32
+            ],
+            [
+              8,
+              32,
+              16
+            ],
+            [
+              8,
+              16,
+              16
+            ]
+          ],
+          "backend_tiling_line": 1202,
+          "backend_npu_task_line": 1705,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              128,
+              16
+            ],
+            [
+              128,
+              16
+            ]
+          ],
+          "backend_tiling_line": 1220,
+          "backend_npu_task_line": 1707,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              16,
+              16
+            ],
+            [
+              8,
+              16,
+              32
+            ],
+            [
+              8,
+              16,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1286,
+          "backend_npu_task_line": 1711,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.4/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              16,
+              32
+            ],
+            [
+              8,
+              32,
+              16
+            ],
+            [
+              8,
+              16,
+              16
+            ]
+          ],
+          "backend_tiling_line": 1379,
+          "backend_npu_task_line": 1715,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.4/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              128,
+              16
+            ],
+            [
+              128,
+              16
+            ]
+          ],
+          "backend_tiling_line": 1397,
+          "backend_npu_task_line": 1717,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.4/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              16,
+              16
+            ],
+            [
+              8,
+              16,
+              32
+            ],
+            [
+              8,
+              16,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1463,
+          "backend_npu_task_line": 1721,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.5/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              1,
+              32
+            ],
+            [
+              8,
+              32,
+              16
+            ],
+            [
+              8,
+              1,
+              16
+            ]
+          ],
+          "backend_tiling_line": 1555,
+          "backend_npu_task_line": 1725,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.5/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              8,
+              16
+            ],
+            [
+              8,
+              16
+            ]
+          ],
+          "backend_tiling_line": 1573,
+          "backend_npu_task_line": 1727,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.5/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              1,
+              16
+            ],
+            [
+              8,
+              16,
+              32
+            ],
+            [
+              8,
+              1,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1639,
+          "backend_npu_task_line": 1731,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        }
+      ],
+      "evidence_scope": "Per-node vendor tiling success and NPU RuntimeConfig, emitted native kernel binaries present in OMC, compiled partition metadata; no device execution."
+    },
+    "32": {
+      "length": 32,
+      "passed": true,
+      "device_tested": false,
+      "model": "entry/src/main/resources/rawfile/permission_32.om",
+      "bytes": 22653914,
+      "sha256": "201d5a3108d009e23e389b61efe56b14595eca347ac9895eef90a8d8e61c4d96",
+      "backend_log": "ml/native_v2/evidence/full/l32/backend.log",
+      "model_dump": "ml/native_v2/evidence/full/l32/mobile.json",
+      "partitions": {
+        "NPUCL": 1,
+        "CPUCL": 0
+      },
+      "compiler_subgraph_memory_bytes": 790016,
+      "native_node_counts": {
+        "BatchMatMulV2": 12,
+        "SoftmaxV2": 6
+      },
+      "native_kernels": {
+        "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1": {
+          "bytes": 63096,
+          "line": 1756
+        },
+        "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2": {
+          "bytes": 7640,
+          "line": 1758
+        },
+        "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2": {
+          "bytes": 59336,
+          "line": 1768
+        }
+      },
+      "legacy_softmax_kernels": [],
+      "nodes": [
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ]
+          ],
+          "backend_tiling_line": 670,
+          "backend_npu_task_line": 1675,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              256,
+              32
+            ],
+            [
+              256,
+              32
+            ]
+          ],
+          "backend_tiling_line": 689,
+          "backend_npu_task_line": 1677,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ]
+          ],
+          "backend_tiling_line": 755,
+          "backend_npu_task_line": 1681,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ]
+          ],
+          "backend_tiling_line": 848,
+          "backend_npu_task_line": 1685,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              256,
+              32
+            ],
+            [
+              256,
+              32
+            ]
+          ],
+          "backend_tiling_line": 866,
+          "backend_npu_task_line": 1687,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ]
+          ],
+          "backend_tiling_line": 932,
+          "backend_npu_task_line": 1691,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1025,
+          "backend_npu_task_line": 1695,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              256,
+              32
+            ],
+            [
+              256,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1043,
+          "backend_npu_task_line": 1697,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1109,
+          "backend_npu_task_line": 1701,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1202,
+          "backend_npu_task_line": 1705,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              256,
+              32
+            ],
+            [
+              256,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1220,
+          "backend_npu_task_line": 1707,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1286,
+          "backend_npu_task_line": 1711,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.4/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1379,
+          "backend_npu_task_line": 1715,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.4/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              256,
+              32
+            ],
+            [
+              256,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1397,
+          "backend_npu_task_line": 1717,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.4/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1463,
+          "backend_npu_task_line": 1721,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.5/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              1,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              1,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1555,
+          "backend_npu_task_line": 1725,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.5/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              8,
+              32
+            ],
+            [
+              8,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1573,
+          "backend_npu_task_line": 1727,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.5/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              1,
+              32
+            ],
+            [
+              8,
+              32,
+              32
+            ],
+            [
+              8,
+              1,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1639,
+          "backend_npu_task_line": 1731,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        }
+      ],
+      "evidence_scope": "Per-node vendor tiling success and NPU RuntimeConfig, emitted native kernel binaries present in OMC, compiled partition metadata; no device execution."
+    },
+    "64": {
+      "length": 64,
+      "passed": true,
+      "device_tested": false,
+      "model": "entry/src/main/resources/rawfile/permission_64.om",
+      "bytes": 22686784,
+      "sha256": "90fa65045ffe0d9f54c2d0be3865dfa499ca001c4ed7df9b3b278a4c070e1603",
+      "backend_log": "ml/native_v2/evidence/full/l64/backend.log",
+      "model_dump": "ml/native_v2/evidence/full/l64/mobile.json",
+      "partitions": {
+        "NPUCL": 1,
+        "CPUCL": 0
+      },
+      "compiler_subgraph_memory_bytes": 1577472,
+      "native_node_counts": {
+        "BatchMatMulV2": 12,
+        "SoftmaxV2": 6
+      },
+      "native_kernels": {
+        "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1": {
+          "bytes": 63096,
+          "line": 1755
+        },
+        "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2": {
+          "bytes": 7640,
+          "line": 1757
+        },
+        "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2": {
+          "bytes": 59336,
+          "line": 1768
+        }
+      },
+      "legacy_softmax_kernels": [],
+      "nodes": [
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              64,
+              32
+            ],
+            [
+              8,
+              32,
+              64
+            ],
+            [
+              8,
+              64,
+              64
+            ]
+          ],
+          "backend_tiling_line": 670,
+          "backend_npu_task_line": 1675,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              512,
+              64
+            ],
+            [
+              512,
+              64
+            ]
+          ],
+          "backend_tiling_line": 689,
+          "backend_npu_task_line": 1677,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              64,
+              64
+            ],
+            [
+              8,
+              64,
+              32
+            ],
+            [
+              8,
+              64,
+              32
+            ]
+          ],
+          "backend_tiling_line": 755,
+          "backend_npu_task_line": 1681,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              64,
+              32
+            ],
+            [
+              8,
+              32,
+              64
+            ],
+            [
+              8,
+              64,
+              64
+            ]
+          ],
+          "backend_tiling_line": 848,
+          "backend_npu_task_line": 1685,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              512,
+              64
+            ],
+            [
+              512,
+              64
+            ]
+          ],
+          "backend_tiling_line": 866,
+          "backend_npu_task_line": 1687,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              64,
+              64
+            ],
+            [
+              8,
+              64,
+              32
+            ],
+            [
+              8,
+              64,
+              32
+            ]
+          ],
+          "backend_tiling_line": 932,
+          "backend_npu_task_line": 1691,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              64,
+              32
+            ],
+            [
+              8,
+              32,
+              64
+            ],
+            [
+              8,
+              64,
+              64
+            ]
+          ],
+          "backend_tiling_line": 1025,
+          "backend_npu_task_line": 1695,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              512,
+              64
+            ],
+            [
+              512,
+              64
+            ]
+          ],
+          "backend_tiling_line": 1043,
+          "backend_npu_task_line": 1697,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              64,
+              64
+            ],
+            [
+              8,
+              64,
+              32
+            ],
+            [
+              8,
+              64,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1109,
+          "backend_npu_task_line": 1701,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              64,
+              32
+            ],
+            [
+              8,
+              32,
+              64
+            ],
+            [
+              8,
+              64,
+              64
+            ]
+          ],
+          "backend_tiling_line": 1202,
+          "backend_npu_task_line": 1705,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              512,
+              64
+            ],
+            [
+              512,
+              64
+            ]
+          ],
+          "backend_tiling_line": 1220,
+          "backend_npu_task_line": 1707,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              64,
+              64
+            ],
+            [
+              8,
+              64,
+              32
+            ],
+            [
+              8,
+              64,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1286,
+          "backend_npu_task_line": 1711,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.4/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              64,
+              32
+            ],
+            [
+              8,
+              32,
+              64
+            ],
+            [
+              8,
+              64,
+              64
+            ]
+          ],
+          "backend_tiling_line": 1379,
+          "backend_npu_task_line": 1715,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.4/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              512,
+              64
+            ],
+            [
+              512,
+              64
+            ]
+          ],
+          "backend_tiling_line": 1397,
+          "backend_npu_task_line": 1717,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.4/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              64,
+              64
+            ],
+            [
+              8,
+              64,
+              32
+            ],
+            [
+              8,
+              64,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1463,
+          "backend_npu_task_line": 1721,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.5/attention/self/MatMul/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              1,
+              32
+            ],
+            [
+              8,
+              32,
+              64
+            ],
+            [
+              8,
+              1,
+              64
+            ]
+          ],
+          "backend_tiling_line": 1555,
+          "backend_npu_task_line": 1725,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.5/attention/self/Softmax/native/SoftmaxV2",
+          "type": "SoftmaxV2",
+          "shapes": [
+            [
+              8,
+              64
+            ],
+            [
+              8,
+              64
+            ]
+          ],
+          "backend_tiling_line": 1573,
+          "backend_npu_task_line": 1727,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
+          ]
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.5/attention/self/MatMul_1/native/MatMulV2",
+          "type": "BatchMatMulV2",
+          "shapes": [
+            [
+              8,
+              1,
+              64
+            ],
+            [
+              8,
+              64,
+              32
+            ],
+            [
+              8,
+              1,
+              32
+            ]
+          ],
+          "backend_tiling_line": 1639,
+          "backend_npu_task_line": 1731,
+          "block_dim": 1,
+          "emitted_kernels_for_type": [
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
+            "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2"
+          ]
+        }
+      ],
+      "evidence_scope": "Per-node vendor tiling success and NPU RuntimeConfig, emitted native kernel binaries present in OMC, compiled partition metadata; no device execution."
+    }
+  },
+  "host_onnx_parity": {
+    "16": {
+      "samples": 27,
+      "matches": 27,
+      "max_logit_error": 6.556510925292969e-06
+    },
+    "32": {
+      "samples": 33,
+      "matches": 33,
+      "max_logit_error": 6.556510925292969e-06
+    },
+    "64": {
+      "samples": 33,
+      "matches": 33,
+      "max_logit_error": 6.556510925292969e-06
+    }
+  },
+  "host_onnx_parity_scope": "Standard ONNX with native FP16 attention; CPUExecutionProvider. Not execution of compiled OMC.",
+  "host_tiling": {
+    "passed": 24,
+    "total": 24,
+    "report": "ml/native_v2/evidence/full/host-tiling.json",
+    "standalone_context_fix": "Seed zero incoming blockDim from SoCInfo.vector_core_cnt; invoke unmodified vendor tiler. Not loaded in full OMG compilation."
+  },
+  "rawfile_updates": [
+    {
+      "length": 16,
+      "source": "entry/src/main/resources/rawfile/permission_16.om",
+      "rawfile": "entry/src/main/resources/rawfile/permission_16.om",
+      "original_sha256": "8a54747116b950d36b0a23c7291ec0faf13999802de72593ce64ed436148ff05",
+      "native_v2_sha256": "f0686728f90b84e50c2a72860aad7e92f333f7f74efd3842e6ddb58a459d0f5c"
+    },
+    {
+      "length": 32,
+      "source": "entry/src/main/resources/rawfile/permission_32.om",
+      "rawfile": "entry/src/main/resources/rawfile/permission_32.om",
+      "original_sha256": "8f019a0f19b7b9edced8ece489875c2413711813f2b0f879bca5d01343cd37b5",
+      "native_v2_sha256": "201d5a3108d009e23e389b61efe56b14595eca347ac9895eef90a8d8e61c4d96"
+    },
+    {
+      "length": 64,
+      "source": "entry/src/main/resources/rawfile/permission_64.om",
+      "rawfile": "entry/src/main/resources/rawfile/permission_64.om",
+      "original_sha256": "d6f5a8dfee7d6e597413b143084f873aa1efd3687ef1cab743991dffc971265f",
+      "native_v2_sha256": "90fa65045ffe0d9f54c2d0be3865dfa499ca001c4ed7df9b3b278a4c070e1603"
+    }
+  ],
+  "original_models_backup_scope": "Original optimized models were preserved in the originating workspace; this checkout contains native V2 optimized models and the legacy baseline."
+}

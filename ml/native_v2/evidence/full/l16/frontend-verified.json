@@ -1,0 +1,348 @@
+{
+  "length": 16,
+  "counts": {
+    "BatchMatMulV2": 12,
+    "SoftmaxV2": 6
+  },
+  "ir_layout_labels": {
+    "NCHW": 48
+  },
+  "nodes": [
+    {
+      "name": "/classifier/bert/encoder/layer.0/attention/self/MatMul/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          16,
+          32
+        ],
+        [
+          8,
+          32,
+          16
+        ],
+        [
+          8,
+          16,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.0/attention/self/Softmax/native/SoftmaxV2",
+      "type": "SoftmaxV2",
+      "shapes": [
+        [
+          128,
+          16
+        ],
+        [
+          128,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.0/attention/self/MatMul_1/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          16,
+          16
+        ],
+        [
+          8,
+          16,
+          32
+        ],
+        [
+          8,
+          16,
+          32
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.1/attention/self/MatMul/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          16,
+          32
+        ],
+        [
+          8,
+          32,
+          16
+        ],
+        [
+          8,
+          16,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.1/attention/self/Softmax/native/SoftmaxV2",
+      "type": "SoftmaxV2",
+      "shapes": [
+        [
+          128,
+          16
+        ],
+        [
+          128,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.1/attention/self/MatMul_1/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          16,
+          16
+        ],
+        [
+          8,
+          16,
+          32
+        ],
+        [
+          8,
+          16,
+          32
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.2/attention/self/MatMul/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          16,
+          32
+        ],
+        [
+          8,
+          32,
+          16
+        ],
+        [
+          8,
+          16,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.2/attention/self/Softmax/native/SoftmaxV2",
+      "type": "SoftmaxV2",
+      "shapes": [
+        [
+          128,
+          16
+        ],
+        [
+          128,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.2/attention/self/MatMul_1/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          16,
+          16
+        ],
+        [
+          8,
+          16,
+          32
+        ],
+        [
+          8,
+          16,
+          32
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.3/attention/self/MatMul/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          16,
+          32
+        ],
+        [
+          8,
+          32,
+          16
+        ],
+        [
+          8,
+          16,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.3/attention/self/Softmax/native/SoftmaxV2",
+      "type": "SoftmaxV2",
+      "shapes": [
+        [
+          128,
+          16
+        ],
+        [
+          128,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.3/attention/self/MatMul_1/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          16,
+          16
+        ],
+        [
+          8,
+          16,
+          32
+        ],
+        [
+          8,
+          16,
+          32
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.4/attention/self/MatMul/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          16,
+          32
+        ],
+        [
+          8,
+          32,
+          16
+        ],
+        [
+          8,
+          16,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.4/attention/self/Softmax/native/SoftmaxV2",
+      "type": "SoftmaxV2",
+      "shapes": [
+        [
+          128,
+          16
+        ],
+        [
+          128,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.4/attention/self/MatMul_1/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          16,
+          16
+        ],
+        [
+          8,
+          16,
+          32
+        ],
+        [
+          8,
+          16,
+          32
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.5/attention/self/MatMul/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          1,
+          32
+        ],
+        [
+          8,
+          32,
+          16
+        ],
+        [
+          8,
+          1,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.5/attention/self/Softmax/native/SoftmaxV2",
+      "type": "SoftmaxV2",
+      "shapes": [
+        [
+          8,
+          16
+        ],
+        [
+          8,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.5/attention/self/MatMul_1/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          8,
+          1,
+          16
+        ],
+        [
+          8,
+          16,
+          32
+        ],
+        [
+          8,
+          1,
+          32
+        ]
+      ]
+    }
+  ]
+}

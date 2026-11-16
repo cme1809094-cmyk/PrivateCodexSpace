@@ -1,0 +1,5 @@
+# Install PyTorch >=2.6 first, selecting the CPU or CUDA build for your machine.
+transformers==4.55.4
+onnx==1.19.0
+onnxruntime==1.23.2
+numpy>=1.26,<3

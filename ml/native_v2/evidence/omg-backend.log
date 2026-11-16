@@ -1,0 +1,33 @@
+
+=== L=16 ===
+    with socket.socket(socket.AF_UNIX) as listener:
+PermissionError: [Errno 1] Operation not permitted
+W/TE_FUSION  (212): pywrapper.cc PrintPyException(93)::"    with socket.socket(socket.AF_UNIX) as listener:"
+W/TE_FUSION  (212): pywrapper.cc PrintPyException(93)::"PermissionError: [Errno 1] Operation not permitted"
+E/GENE  (212): generated_adaptee.cc Initialize(114)::"InitializeTeFusion failed"
+W/ASC  (212): ascendc_adaptee.cpp Initialize(75)::"AscendCAdaptee init failed, now finalize"
+E/AI_NPUCL  (212): plugin.cc RegisterLibrary(58)::"PlugIn library :libai_npucore_ascendc.so Initialize failed"
+E/AI_FMK  (212): model_compatibility_check.cpp CheckOpSupported(27)::"Node /classifier/bert/encoder/layer.0/attention/self/MatMul/native/MatMulV2 type BatchMatMulV2 don't support!"
+E/AI_FMK  (212): general_model_compiler.cpp BeforeCompile(172)::"check ir model compatibility failed"
+
+=== L=32 ===
+    with socket.socket(socket.AF_UNIX) as listener:
+PermissionError: [Errno 1] Operation not permitted
+W/TE_FUSION  (237): pywrapper.cc PrintPyException(93)::"    with socket.socket(socket.AF_UNIX) as listener:"
+W/TE_FUSION  (237): pywrapper.cc PrintPyException(93)::"PermissionError: [Errno 1] Operation not permitted"
+E/GENE  (237): generated_adaptee.cc Initialize(114)::"InitializeTeFusion failed"
+W/ASC  (237): ascendc_adaptee.cpp Initialize(75)::"AscendCAdaptee init failed, now finalize"
+E/AI_NPUCL  (237): plugin.cc RegisterLibrary(58)::"PlugIn library :libai_npucore_ascendc.so Initialize failed"
+E/AI_FMK  (237): model_compatibility_check.cpp CheckOpSupported(27)::"Node /classifier/bert/encoder/layer.0/attention/self/MatMul/native/MatMulV2 type BatchMatMulV2 don't support!"
+E/AI_FMK  (237): general_model_compiler.cpp BeforeCompile(172)::"check ir model compatibility failed"
+
+=== L=64 ===
+    with socket.socket(socket.AF_UNIX) as listener:
+PermissionError: [Errno 1] Operation not permitted
+W/TE_FUSION  (262): pywrapper.cc PrintPyException(93)::"    with socket.socket(socket.AF_UNIX) as listener:"
+W/TE_FUSION  (262): pywrapper.cc PrintPyException(93)::"PermissionError: [Errno 1] Operation not permitted"
+E/GENE  (262): generated_adaptee.cc Initialize(114)::"InitializeTeFusion failed"
+W/ASC  (262): ascendc_adaptee.cpp Initialize(75)::"AscendCAdaptee init failed, now finalize"
+E/AI_NPUCL  (262): plugin.cc RegisterLibrary(58)::"PlugIn library :libai_npucore_ascendc.so Initialize failed"
+E/AI_FMK  (262): model_compatibility_check.cpp CheckOpSupported(27)::"Node /classifier/bert/encoder/layer.0/attention/self/MatMul/native/MatMulV2 type BatchMatMulV2 don't support!"
+E/AI_FMK  (262): general_model_compiler.cpp BeforeCompile(172)::"check ir model compatibility failed"

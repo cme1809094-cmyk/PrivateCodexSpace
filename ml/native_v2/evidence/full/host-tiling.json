@@ -1,0 +1,446 @@
+{
+  "pv_16_1": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        1,
+        16
+      ],
+      [
+        8,
+        16,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "pv_16_16": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        16,
+        16
+      ],
+      [
+        8,
+        16,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 1,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "pv_32_1": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        1,
+        32
+      ],
+      [
+        8,
+        32,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "pv_32_32": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        32,
+        32
+      ],
+      [
+        8,
+        32,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 1,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "pv_64_1": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        1,
+        64
+      ],
+      [
+        8,
+        64,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "pv_64_64": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        64,
+        64
+      ],
+      [
+        8,
+        64,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 1,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_16_1": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        1,
+        32
+      ],
+      [
+        8,
+        32,
+        16
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_16_16": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        16,
+        32
+      ],
+      [
+        8,
+        32,
+        16
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 1,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_32_1": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        1,
+        32
+      ],
+      [
+        8,
+        32,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_32_32": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        32,
+        32
+      ],
+      [
+        8,
+        32,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 1,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_64_1": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        1,
+        32
+      ],
+      [
+        8,
+        32,
+        64
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_64_64": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        64,
+        32
+      ],
+      [
+        8,
+        32,
+        64
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 1,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_transpose_b_16_1": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        1,
+        32
+      ],
+      [
+        8,
+        16,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_transpose_b_16_16": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        16,
+        32
+      ],
+      [
+        8,
+        16,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 1,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_transpose_b_32_1": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        1,
+        32
+      ],
+      [
+        8,
+        32,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_transpose_b_32_32": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        32,
+        32
+      ],
+      [
+        8,
+        32,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 1,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_transpose_b_64_1": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        1,
+        32
+      ],
+      [
+        8,
+        64,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "qk_transpose_b_64_64": {
+    "op": "BatchMatMulV2",
+    "inputs": [
+      [
+        8,
+        64,
+        32
+      ],
+      [
+        8,
+        64,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 1,
+    "tiling_bytes": 552,
+    "passed": true
+  },
+  "softmax_16_1": {
+    "op": "SoftmaxV2",
+    "inputs": [
+      [
+        8,
+        16
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 56,
+    "passed": true
+  },
+  "softmax_16_16": {
+    "op": "SoftmaxV2",
+    "inputs": [
+      [
+        128,
+        16
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 56,
+    "passed": true
+  },
+  "softmax_32_1": {
+    "op": "SoftmaxV2",
+    "inputs": [
+      [
+        8,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 56,
+    "passed": true
+  },
+  "softmax_32_32": {
+    "op": "SoftmaxV2",
+    "inputs": [
+      [
+        256,
+        32
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 56,
+    "passed": true
+  },
+  "softmax_64_1": {
+    "op": "SoftmaxV2",
+    "inputs": [
+      [
+        8,
+        64
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 56,
+    "passed": true
+  },
+  "softmax_64_64": {
+    "op": "SoftmaxV2",
+    "inputs": [
+      [
+        512,
+        64
+      ]
+    ],
+    "exit_code": 0,
+    "block_dim": 1,
+    "tiling_key": 2,
+    "tiling_bytes": 56,
+    "passed": true
+  }
+}
