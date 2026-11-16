@@ -4,7 +4,18 @@
 #include <iostream>
 #include <thread>
 
-struct napi_value__ { std::string text; bool isError = false; };
+struct napi_value__ {
+    napi_value__(std::string value, bool error) : text(std::move(value)), isError(error) {}
+    std::string text;
+    bool isError;
+    bool typed = false, arrayBuffer = false;
+    napi_typedarray_type type = napi_int32_array;
+    uint32_t length = 64, byteLength = 256, number = 0;
+    size_t reportedLength = 256, offset = 0;
+    napi_value buffer = nullptr;
+    void *wrapped = nullptr;
+    std::vector<uint8_t> bytes;
+};
 struct napi_deferred__ {};
 struct napi_async_work__ {};
 struct NN_TensorDesc { size_t index; bool output; };
@@ -21,6 +32,13 @@ bool failResolve = false;
 bool pendingErrorCreation = false;
 bool pending = false;
 int rejected = 0, deleted = 0, destroyed = 0, buildCalls = 0;
+int runCalls = 0;
+std::string thrown;
+std::vector<napi_value> callbackArgs;
+void *queuedData = nullptr;
+napi_async_execute_callback queuedExecute = nullptr;
+napi_async_complete_callback queuedComplete = nullptr;
+bool failPropertyRead = false;
 std::string rejection;
 bool rejectionIsError = false;
 std::vector<std::unique_ptr<napi_value__>> jsValues;
@@ -45,7 +63,7 @@ void MaybeThrow(const char *operation)
 
 napi_value Value(const std::string &text, bool error = false)
 {
-    jsValues.push_back(std::make_unique<napi_value__>(napi_value__{text, error}));
+    jsValues.push_back(std::make_unique<napi_value__>(text, error));
     return jsValues.back().get();
 }
 
@@ -60,6 +78,13 @@ void Reset()
     hasCannBackend = true;
     failErrorCreation = failStringCreation = failArrayCreation = failResolve = pendingErrorCreation = pending = false;
     rejected = deleted = destroyed = buildCalls = 0;
+    runCalls = 0;
+    thrown.clear();
+    callbackArgs.clear();
+    queuedData = nullptr;
+    queuedExecute = nullptr;
+    queuedComplete = nullptr;
+    failPropertyRead = false;
     rejection.clear();
     rejectionIsError = false;
     pendingReason = nullptr;
@@ -104,6 +129,52 @@ void RunTensorRoundTrip(const std::vector<int32_t> &shape)
     std::thread predictor([&] { Execute(nullptr, job); }); predictor.join();
     assert(job->error[0] == '\0' && job->logits == expectedLogits);
     Complete(nullptr, napi_ok, job);
+    assert(rejected == 0 && deleted == 1);
+}
+
+napi_value TokenView(bool ids, size_t reportedLength, size_t offset)
+{
+    auto buffer = Value("ArrayBuffer");
+    buffer->arrayBuffer = true;
+    buffer->bytes.resize(offset + 256 + 16, 0x7f);
+    for (int32_t i = 0; i < 64; ++i) {
+        int32_t value = ids ? 100 + i : i % 2;
+        std::memcpy(buffer->bytes.data() + offset + i * sizeof(value), &value, sizeof(value));
+    }
+    auto view = Value("Int32Array");
+    view->typed = true;
+    view->reportedLength = reportedLength;
+    view->offset = offset;
+    view->buffer = buffer;
+    return view;
+}
+
+std::shared_ptr<Session> PrepareNapiPredict(int32_t length, size_t reportedLength, size_t offset)
+{
+    Reset(); buildMode = 3; verifyTokenBuffers = true;
+    inputShapes = {{{1, length, 1, 1}, {1, length, 1, 1}}};
+    auto *job = NewJob(Operation::Load);
+    Execute(nullptr, job);
+    assert(job->session && job->error[0] == '\0');
+    auto session = job->session;
+    delete job;
+    callbackArgs = {Value("session"), TokenView(true, reportedLength, offset), TokenView(false, reportedLength, offset)};
+    return session;
+}
+
+void RunNapiRoundTrip(int32_t length, size_t reportedLength, size_t offset)
+{
+    auto session = PrepareNapiPredict(length, reportedLength, offset);
+    callbackArgs[0]->wrapped = &session;
+    assert(Predict(nullptr, nullptr) && queuedData && queuedExecute && queuedComplete && thrown.empty());
+    auto *job = static_cast<Job *>(queuedData);
+    // The queued job must own copied values, independent of JS buffer lifetime.
+    callbackArgs[1]->buffer->bytes.clear();
+    callbackArgs[2]->buffer->bytes.clear();
+    std::thread worker([&] { queuedExecute(nullptr, queuedData); }); worker.join();
+    assert(job->error[0] == '\0' && job->logits == expectedLogits && runCalls == 1);
+    queuedComplete(nullptr, napi_ok, queuedData);
+    queuedData = nullptr;
     assert(rejected == 0 && deleted == 1);
 }
 } // namespace
@@ -153,17 +224,46 @@ extern "C" napi_status napi_create_double(napi_env, double, napi_value *out) { *
 extern "C" napi_status napi_set_element(napi_env, napi_value, uint32_t, napi_value) { return napi_ok; }
 extern "C" napi_status napi_set_named_property(napi_env, napi_value, const char *, napi_value) { return napi_ok; }
 extern "C" napi_status napi_wrap(napi_env, napi_value, void *, napi_finalize, void *, napi_ref *) { return napi_ok; }
-extern "C" napi_status napi_throw_error(napi_env, const char *, const char *) { return napi_ok; }
-extern "C" napi_status napi_create_promise(napi_env, napi_deferred *, napi_value *) { return napi_ok; }
-extern "C" napi_status napi_create_async_work(napi_env, napi_value, napi_value, napi_async_execute_callback,
-    napi_async_complete_callback, void *, napi_async_work *) { return napi_ok; }
+extern "C" napi_status napi_throw_error(napi_env, const char *, const char *message)
+{ thrown = message; return napi_ok; }
+extern "C" napi_status napi_create_promise(napi_env, napi_deferred *out, napi_value *promise)
+{ *out = &deferred; *promise = Value("promise"); return napi_ok; }
+extern "C" napi_status napi_create_async_work(napi_env, napi_value, napi_value, napi_async_execute_callback execute,
+    napi_async_complete_callback complete, void *data, napi_async_work *out)
+{ queuedExecute = execute; queuedComplete = complete; queuedData = data; *out = &work; return napi_ok; }
 extern "C" napi_status napi_queue_async_work(napi_env, napi_async_work) { return napi_ok; }
-extern "C" napi_status napi_get_typedarray_info(napi_env, napi_value, napi_typedarray_type *, size_t *, void **,
-    napi_value *, size_t *) { return napi_generic_failure; }
-extern "C" napi_status napi_get_cb_info(napi_env, napi_callback_info, size_t *, napi_value *, napi_value *, void **)
-{ return napi_generic_failure; }
-extern "C" napi_status napi_get_arraybuffer_info(napi_env, napi_value, void **, size_t *) { return napi_generic_failure; }
-extern "C" napi_status napi_unwrap(napi_env, napi_value, void **) { return napi_generic_failure; }
+extern "C" napi_status napi_get_typedarray_info(napi_env, napi_value value, napi_typedarray_type *type, size_t *length,
+    void **data, napi_value *buffer, size_t *offset)
+{
+    if (!value->typed) return napi_invalid_arg;
+    *type = value->type; *length = value->reportedLength; *buffer = value->buffer; *offset = value->offset;
+    if (data) *data = value->buffer->bytes.data() + value->offset;
+    return napi_ok;
+}
+extern "C" napi_status napi_get_named_property(napi_env, napi_value object, const char *name, napi_value *out)
+{
+    if (failPropertyRead || !object->typed) return napi_generic_failure;
+    if (std::strcmp(name, "length") != 0 && std::strcmp(name, "byteLength") != 0) return napi_generic_failure;
+    *out = Value("uint32");
+    (*out)->number = std::strcmp(name, "length") == 0 ? object->length : object->byteLength;
+    return napi_ok;
+}
+extern "C" napi_status napi_get_value_uint32(napi_env, napi_value value, uint32_t *out)
+{ *out = value->number; return napi_ok; }
+extern "C" napi_status napi_get_cb_info(napi_env, napi_callback_info, size_t *count, napi_value *args, napi_value *, void **)
+{
+    if (callbackArgs.empty() || *count < callbackArgs.size()) return napi_generic_failure;
+    *count = callbackArgs.size();
+    for (size_t i = 0; i < *count; ++i) args[i] = callbackArgs[i];
+    return napi_ok;
+}
+extern "C" napi_status napi_get_arraybuffer_info(napi_env, napi_value buffer, void **data, size_t *bytes)
+{
+    if (!buffer->arrayBuffer) return napi_arraybuffer_expected;
+    *data = buffer->bytes.empty() ? nullptr : buffer->bytes.data(); *bytes = buffer->bytes.size(); return napi_ok;
+}
+extern "C" napi_status napi_unwrap(napi_env, napi_value value, void **out)
+{ *out = value->wrapped; return napi_ok; }
 extern "C" napi_status napi_define_properties(napi_env, napi_value, size_t, const napi_property_descriptor *) { return napi_ok; }
 
 extern "C" OH_NN_ReturnCode OH_NNDevice_GetAllDevicesID(const size_t **out, uint32_t *count)
@@ -227,6 +327,7 @@ extern "C" OH_NN_ReturnCode OH_NNTensor_Destroy(NN_Tensor **p)
 extern "C" OH_NN_ReturnCode OH_NNExecutor_RunSync(OH_NNExecutor *, NN_Tensor *inputs[], size_t, NN_Tensor *outputs[], size_t)
 {
     MaybeThrow("run");
+    runCalls++;
     if (verifyTokenBuffers) {
         size_t length = 1;
         for (auto dim : inputShapes[0]) length *= static_cast<size_t>(dim);
@@ -310,5 +411,33 @@ int main()
     Reset(); buildMode = 3; nullShape = true; RunLoad("Unsupported token input shape <null>");
     Reset(); buildMode = 3; inputShapes[1] = {1, 32}; RunLoad("NNRT token and mask shapes differ");
     Reset(); buildMode = 3; badElementCount = true; RunLoad("Offline model tensor mismatch: type=");
-    std::cout << "PASS: 44 native scenarios, including 16/32/64-token padded-shape round trips and invalid-shape rejection\n";
+    for (int32_t length : {16, 32, 64}) {
+        for (size_t reportedLength : {64, 256}) {
+            RunNapiRoundTrip(length, reportedLength, 0);
+            RunNapiRoundTrip(length, reportedLength, 16);
+        }
+    }
+    for (int scenario = 0; scenario < 13; ++scenario) {
+        auto current = PrepareNapiPredict(16, 256, 0);
+        callbackArgs[0]->wrapped = &current;
+        auto view = callbackArgs[1];
+        switch (scenario) {
+            case 0: view->type = napi_float32_array; break;
+            case 1: view->length = 256; view->byteLength = 1024; view->buffer->bytes.resize(1024); break;
+            case 2: view->length = 63; view->byteLength = 252; view->reportedLength = 252; break;
+            case 3: view->byteLength = 255; break;
+            case 4: view->reportedLength = 65; break;
+            case 5: view->buffer->bytes.resize(255); break;
+            case 6: view->offset = 4; view->buffer->bytes.resize(256); break;
+            case 7: view->offset = static_cast<size_t>(-1); break;
+            case 8: view->offset = 2; break;
+            case 9: view->buffer->bytes.clear(); break;
+            case 10: view->typed = false; break;
+            case 11: failPropertyRead = true; break;
+            case 12: view->buffer->arrayBuffer = false; break;
+        }
+        assert(!Predict(nullptr, nullptr) && !queuedData && runCalls == 0 && !thrown.empty());
+        if (scenario < 10) assert(thrown.find("reportedLength=") != std::string::npos);
+    }
+    std::cout << "PASS: 69 native scenarios: prior 44 plus 12 N-API round trips and 13 invalid TypedArray cases\n";
 }

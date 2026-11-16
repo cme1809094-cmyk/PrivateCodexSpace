@@ -6,6 +6,7 @@
 #include "tensor_shape.h"
 
 #include <array>
+#include <atomic>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -243,6 +244,7 @@ public:
     }
 
     std::string DeviceName() const { return DescribeDevice(device_); }
+    bool LogInputMetadataOnce() noexcept { return !inputMetadataLogged_.test_and_set(); }
 
 private:
     permission_nnrt::Device device_;
@@ -252,6 +254,7 @@ private:
     size_t idsIndex_ = 0;
     size_t sequenceLength_ = 0;
     std::mutex mutex_;
+    std::atomic_flag inputMetadataLogged_ = ATOMIC_FLAG_INIT;
 };
 
 enum class Operation { Load, Predict };
@@ -398,25 +401,55 @@ napi_value Queue(napi_env env, std::unique_ptr<Job> job)
     return promise;
 }
 
-Tokens ReadTokens(napi_env env, napi_value value)
+uint32_t UintProperty(napi_env env, napi_value object, const char *name)
 {
-    napi_typedarray_type type;
-    size_t length = 0;
-    void *data = nullptr;
-    CheckJs(napi_get_typedarray_info(env, value, &type, &length, &data, nullptr, nullptr),
-        "Expected an Int32Array");
-    if (type != napi_int32_array || length != kSequenceLength || !data) {
-        throw BridgeError("Expected an Int32Array of length 64");
+    napi_value property = nullptr;
+    uint32_t result = 0;
+    CheckJs(napi_get_named_property(env, object, name, &property),
+        (std::string("Cannot read TypedArray property ") + name).c_str());
+    CheckJs(napi_get_value_uint32(env, property, &result),
+        (std::string("Invalid TypedArray property ") + name).c_str());
+    return result;
+}
+
+Tokens ReadTokens(napi_env env, napi_value value, const char *argument, bool logMetadata)
+{
+    napi_typedarray_type type = napi_int8_array;
+    size_t reportedLength = 0;
+    size_t byteOffset = 0;
+    napi_value arrayBuffer = nullptr;
+    // OpenHarmony 5.0 reports ByteLength here; other Node-API engines report
+    // element count. Validate the actual view before using either convention.
+    CheckJs(napi_get_typedarray_info(env, value, &type, &reportedLength, nullptr, &arrayBuffer, &byteOffset),
+        "napi_get_typedarray_info failed for token input");
+    const uint32_t viewLength = UintProperty(env, value, "length");
+    const uint32_t viewBytes = UintProperty(env, value, "byteLength");
+    void *base = nullptr;
+    size_t bufferBytes = 0;
+    if (arrayBuffer) {
+        CheckJs(napi_get_arraybuffer_info(env, arrayBuffer, &base, &bufferBytes),
+            "Cannot read token ArrayBuffer");
     }
+    char metadata[288];
+    std::snprintf(metadata, sizeof(metadata), "%s type=%d reportedLength=%zu viewLength=%u viewBytes=%u offset=%zu bufferBytes=%zu data=%s",
+        argument, static_cast<int>(type), reportedLength, viewLength, viewBytes, byteOffset, bufferBytes,
+        base ? "present" : "null");
+    constexpr size_t expectedBytes = sizeof(Tokens);
+    if (type != napi_int32_array || viewLength != kSequenceLength || viewBytes != expectedBytes
+        || (reportedLength != kSequenceLength && reportedLength != expectedBytes) || !base
+        || byteOffset % sizeof(int32_t) != 0 || byteOffset > bufferBytes || expectedBytes > bufferBytes - byteOffset) {
+        throw BridgeError(std::string("Expected Int32Array(64), 256 bytes; ") + metadata);
+    }
+    if (logMetadata) PermissionLog(metadata, "INPUT");
     Tokens tokens{};
-    std::memcpy(tokens.data(), data, sizeof(tokens));
+    std::memcpy(tokens.data(), static_cast<const uint8_t *>(base) + byteOffset, sizeof(tokens));
     return tokens;
 }
 
 napi_value Devices(napi_env env, napi_callback_info) noexcept
 {
     try {
-        PermissionLog("native bridge 1.0.8: enumerate backends", "DEVICE");
+        PermissionLog("native bridge 1.0.9: enumerate backends", "DEVICE");
         (void)permission_nnrt::GetCannRuntime();
         auto devices = ListDevices();
         napi_value result;
@@ -503,10 +536,13 @@ napi_value Predict(napi_env env, napi_callback_info info) noexcept
         }
         auto job = std::make_unique<Job>(Operation::Predict);
         job->session = *static_cast<std::shared_ptr<Session> *>(holder);
-        job->ids = ReadTokens(env, values[1]);
-        job->mask = ReadTokens(env, values[2]);
+        if (!job->session) throw BridgeError("Invalid HiAI session");
+        const bool logMetadata = job->session->LogInputMetadataOnce();
+        job->ids = ReadTokens(env, values[1], "input_ids", logMetadata);
+        job->mask = ReadTokens(env, values[2], "attention_mask", logMetadata);
         return Queue(env, std::move(job));
     } catch (const BridgeError &error) {
+        PermissionError(error.what(), "INPUT");
         napi_throw_error(env, nullptr, error.what());
         return nullptr;
     } catch (const std::exception &error) {
