@@ -78,6 +78,7 @@ def main():
         "# " + manifest["display_name"] + " 权限识别 Demo\n\n"
         "本工程由 ml/materialize_variant.py 生成，包含配套的三档原生 V2 NPU 模型、CPU 回退模型、词表、阈值和自检向量。\n\n"
         "包名：`" + manifest["bundle_name"] + "`。请在 DevEco Studio 中构建、配置调试签名并安装到 Mate 80 Pro Max。\n\n"
+        "OMC 需要 CANN 的 HIAI_F 后端。应用会先动态加载 CANN Foundation 并记录版本，再枚举后端和检查模型兼容性。通用 NNRT 加速器不等于支持 OMC；不可用时会明确记录原因并回退到同模型 CPU。更新应用时需 Clean/Rebuild native 和 ArkTS。\n\n"
         "离线编译与主机数值对照已通过；HAP 构建、签名和真机精度/性能尚未验证。\n")
     print(destination)
 

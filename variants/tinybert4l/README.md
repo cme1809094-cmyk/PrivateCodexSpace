@@ -32,13 +32,19 @@ python3 ml/materialize_variant.py variants/tinybert4l /absolute/path/to/TinyBERT
 
 在生成目录运行 `python3 ml/verify_artifacts.py` 可核对五个模型文件。用 DevEco Studio 打开后配置签名并构建 HAP。成功加载 NPU 模型后应查看 HiAI 自检结果，再测量时延；应用会保留同模型的 CPU 回退。
 
-### 修复“未枚举到 HIAI_F”
+### NNRT 后端与 native 异常修复（1.0.5）
 
-1.0.3 在 ArkTS 和 C++ 两处按名称匹配 `HIAI_F`，会错误拒绝 `NPU_ohos.boot.hardware.Kirin9020_v2_0` 等 NNRT 后端。1.0.4 统一由 native 层调用 `OH_NNDevice_GetType` 选择 `OH_NN_ACCELERATOR`，将实际设备 ID 用于编译器和张量创建，并在会话及错误信息中保留实际名称、ID 和类型。CPU/GPU 不会因名称包含 NPU 或 HIAI_F 而入选。
+1.0.4 将任意 `OH_NN_ACCELERATOR` 都作为 OMC 目标，这个条件不充分。真机日志中的 `[NNBackend] CreateCompiler failed, only support build NN model and NN model cache.` 对应通用 NNRT 后端拒绝离线 buffer；该后端并不等同于 CANN 的 `HIAI_F`。官方 [CANN 模型集成](https://developer.huawei.com/consumer/cn/doc/HarmonyOS-Guides/cannkit-integration-model/) 使用 `HIAI_F` 加载 OMC，[通用 NNBackend 源码](https://github.com/openharmony/ai_neural_network_runtime/blob/master/frameworks/native/neural_network_runtime/nnbackend.cpp) 明确拒绝 offlineModelBuffer。
 
-已有工程需要更新 `permission_hiai.cpp`、新增 `nnrt_device.h`、更新 `types/libpermission_hiai/Index.d.ts` 和 `PermissionModel.ets`，以及 AppScope 版本信息，然后在 DevEco 中 Clean/Rebuild、签名并重新安装 HAP。仅替换 `.om` 文件或只更新 ArkTS，无法修复旧 native 库中的选择逻辑。也可从最新源码重新生成到一个新目录。
+1.0.5 补充动态加载并保留 `libhiai_foundation.so`，调用 `HMS_HiAI_GetVersion` 后再枚举后端，仅为 OMC 选择 CANN 后端，并在可用时调用模型兼容性检查。Foundation 不可用或 HIAI_F 未注册时，给出明确诊断并使用 CPU 回退。是否能在该手机上注册后端和执行当前 OMC，仍需更新 HAP 后确认，主机测试不代表已恢复实机 NPU 推理。
+
+同时加固 native 边界：FFRT execute/complete 回调捕获标准和未知异常，错误消息使用固定缓冲区；创建 JS Error 失败时不再在 catch 中二次抛 C++ 异常。CMake/Hvigor 显式开启异常及展开信息，移除禁用/忽略异常的选项，并在构建后检查实际库中存在 C++ catch 处理代码。不能仅根据预处理宏判断，因为 `-fignore-exceptions` 仍可能定义 `__EXCEPTIONS`。
+
+建议从最新源码重新生成到一个新目录，再配置签名、Clean/Rebuild 并安装1.0.5。已有工程若手工更新，需同步整个 `entry/src/main/cpp/`、`entry/build-profile.json5`、`PermissionModel.ets` 和 AppScope 版本，不能遗漏新头文件或构建后检查脚本。仅替换 `.om` 或只更新 ArkTS 不够。
 
 已确认此次上报设备为 Mate 80 Pro Max / HarmonyOS 5.0.0。驱动名中的 Kirin9020 字样不等同于已验证的 SoC 型号或模型兼容结论；当前产物仍按 kirin9030 编译。名称检查失败发生在模型加载前，更新后需要观察带实际设备名称的 `OH_NNCompilation_Build`、`OH_NNExecutor_RunSync` 和模型自检结果。
+
+调试时在 HiLog 搜索 `PermissionHiAI`，依次查看 `CANN Foundation loaded, version=...`、HIAI_F 设备信息、模型兼容性、Build 与自检结果。若出现 `Cannot load CANN Foundation`，应先检查系统能力和运行库加载错误，不能通过改设备字符串解决。native 抛出位置若仍需符号化，应使用与崩溃日志 Build ID 完全一致的未剥离 `libpermission_hiai.so`。
 
 ## 重新训练与导出
 

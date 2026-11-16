@@ -10,11 +10,12 @@ std::vector<size_t> ids;
 OH_NN_ReturnCode typeStatus = OH_NN_SUCCESS;
 bool invalidIds = false;
 
-void ExpectFailure(const std::string &message)
+void ExpectFailure(const std::string &message, bool offline = false)
 {
     bool failed = false;
     try {
-        (void)permission_nnrt::SelectAccelerator();
+        if (offline) (void)permission_nnrt::SelectOfflineAccelerator();
+        else (void)permission_nnrt::SelectAccelerator();
     } catch (const std::runtime_error &error) {
         failed = std::string(error.what()).find(message) != std::string::npos;
     }
@@ -64,9 +65,14 @@ int main()
     assert(selected.id == 42 && selected.name == reported);
     assert(permission_nnrt::DescribeDevice(selected).find(reported) != std::string::npos);
     assert(permission_nnrt::DescribeDevice(selected).find("ACCELERATOR") != std::string::npos);
+    ExpectFailure("generic NNRT accelerators cannot load OMC", true);
+
+    hardware.push_back({77, "HIAI_F", OH_NN_ACCELERATOR});
+    assert(permission_nnrt::SelectOfflineAccelerator().id == 77);
 
     hardware = {{9, "HIAI_F", OH_NN_ACCELERATOR}};
     assert(permission_nnrt::SelectAccelerator().id == 9);
+    assert(permission_nnrt::SelectOfflineAccelerator().id == 9);
 
     hardware = {{19, "A future vendor backend", OH_NN_ACCELERATOR}};
     assert(permission_nnrt::SelectAccelerator().id == 19);
@@ -75,6 +81,7 @@ int main()
     hardware = {{1, "NPU_fake", OH_NN_CPU}, {2, "HIAI_F", OH_NN_GPU}, {3, reported, OH_NN_OTHERS}};
     ExpectFailure("No NNRT accelerator");
     ExpectFailure("type CPU");
+    ExpectFailure("CANN offline-model backend", true);
 
     hardware.clear();
     ExpectFailure("enumerated: none");
@@ -86,5 +93,5 @@ int main()
 
     invalidIds = true;
     ExpectFailure("NNRT returned no device IDs");
-    std::cout << "PASS: reported Kirin backend, legacy and arbitrary names, CPU/GPU rejection, empty inventory, query error, invalid inventory\n";
+    std::cout << "PASS: hardware accelerator detection and separate CANN/OMC capability selection, CPU/GPU rejection, empty/error inventories\n";
 }

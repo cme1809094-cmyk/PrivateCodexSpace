@@ -71,5 +71,20 @@ inline Device SelectAccelerator()
     }
     throw std::runtime_error(message + (devices.empty() ? "none" : ""));
 }
+
+inline Device SelectOfflineAccelerator()
+{
+    const auto devices = ListDevices();
+    for (const auto &device : devices) {
+        // CANN OMC loading is a backend capability, not a consequence of having
+        // accelerator hardware. The generic NNBackend rejects offline buffers.
+        if (device.name == "HIAI_F" && device.type != OH_NN_CPU && device.type != OH_NN_GPU) {
+            return device;
+        }
+    }
+    std::string message = "CANN offline-model backend HIAI_F is unavailable; generic NNRT accelerators cannot load OMC. Enumerated: ";
+    for (const auto &device : devices) message += DescribeDevice(device) + "; ";
+    throw std::runtime_error(message + (devices.empty() ? "none" : ""));
+}
 } // namespace permission_nnrt
 #endif

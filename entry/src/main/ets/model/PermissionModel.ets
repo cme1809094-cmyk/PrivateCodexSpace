@@ -70,7 +70,7 @@ export class PermissionModel {
       this.diagnostic = 'NNRT 设备 ' + (names.length > 0 ? names.join('、') : '无');
       const selected: string = accelerator();
       this.hasHiAI = true;
-      this.diagnostic += '\nNNRT 加速设备 ' + selected + '\n按有效 token 选择 16 / 32 / 64，首次使用时加载';
+      this.diagnostic += '\nCANN 离线模型设备 ' + selected + '\n按有效 token 选择 16 / 32 / 64，首次使用时加载';
     } catch (error) {
       this.recordHiAIError(error as Error);
       await this.loadCpu(resources);
@@ -130,8 +130,12 @@ export class PermissionModel {
     return report;
   }
 
-  private recordHiAIError(error: Error): void {
-    const reason: string = error.message || '设备或模型不可用';
+  private errorMessage(error: Error | string): string {
+    return typeof error === 'string' ? error : (error?.message || '设备或模型不可用');
+  }
+
+  private recordHiAIError(error: Error | string): void {
+    const reason: string = this.errorMessage(error);
     this.diagnostic += (this.diagnostic.length > 0 ? '\n' : '') + 'HiAI 回退原因 ' + reason;
     console.warn('PermissionHiAI fallback: ' + reason);
   }
@@ -190,7 +194,7 @@ export class PermissionModel {
         } catch (error) {
           this.hiaiSessions.delete(bucket);
           this.unavailable.add(bucket);
-          this.recordHiAIError(new Error(bucket.toString() + ' token ' + (error as Error).message));
+          this.recordHiAIError(new Error(bucket.toString() + ' token ' + this.errorMessage(error as Error | string)));
         }
       }
     }
@@ -244,7 +248,7 @@ export class PermissionModel {
           const name: string = bucket === 0 ? '旧版 NPU 64 token' : '优化版 NPU ' + bucket.toString() + ' token';
           runners.push(new BenchmarkRunner(name, (): Promise<number[]> => predictHiAI(session, tokens.ids, tokens.mask)));
         } catch (error) {
-          warnings.push('HiAI ' + (bucket === 0 ? '基线' : bucket.toString()) + '：' + (error as Error).message);
+          warnings.push('HiAI ' + (bucket === 0 ? '基线' : bucket.toString()) + '：' + this.errorMessage(error as Error | string));
         }
       }
     }
@@ -252,7 +256,7 @@ export class PermissionModel {
       await this.loadCpu(resources);
       runners.push(new BenchmarkRunner('CPU 64 token', (): Promise<number[]> => this.predictCpu(tokens, resources)));
     } catch (error) {
-      warnings.push('CPU 64 token：' + (error as Error).message);
+      warnings.push('CPU 64 token：' + this.errorMessage(error as Error | string));
     }
     const result: string[] = ['有效 token ' + count.toString() + ' · 每组预热 5 次，记录 50 次'];
     for (const runner of runners) {
@@ -270,7 +274,7 @@ export class PermissionModel {
         result.push(runner.name + ' · P50 ' + ((times[24] + times[25]) / 2).toFixed(1) +
           ' ms · P95 ' + times[47].toFixed(1) + ' ms');
       } catch (error) {
-        warnings.push(runner.name + '：' + (error as Error).message);
+        warnings.push(runner.name + '：' + this.errorMessage(error as Error | string));
       }
     }
     return result.concat(warnings).join('\n');

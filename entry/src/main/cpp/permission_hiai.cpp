@@ -1,10 +1,12 @@
 #include <napi/native_api.h>
 #include <neural_network_runtime/neural_network_core.h>
 #include "nnrt_device.h"
+#include "cann_runtime.h"
 
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 #include <memory>
 #include <mutex>
@@ -13,18 +15,31 @@
 #include <utility>
 #include <vector>
 
+#if !defined(__cpp_exceptions) && !defined(__EXCEPTIONS)
+#error "permission_hiai requires C++ exception handling; remove exception-disabling compiler options"
+#endif
+
 namespace {
 constexpr size_t kSequenceLength = 64;
 constexpr size_t kLabelCount = 5;
 using permission_nnrt::DescribeDevice;
 using permission_nnrt::ListDevices;
-using permission_nnrt::SelectAccelerator;
+using permission_nnrt::SelectOfflineAccelerator;
 using Tokens = std::array<int32_t, kSequenceLength>;
 using Logits = std::array<float, kLabelCount>;
 
 template <typename T, auto Destroy>
 struct NNDeleter {
-    void operator()(T *value) const { Destroy(&value); }
+    void operator()(T *value) const noexcept
+    {
+        try {
+            Destroy(&value);
+        } catch (const std::exception &error) {
+            PermissionLog(error.what());
+        } catch (...) {
+            PermissionLog("Unknown exception during NNRT cleanup");
+        }
+    }
 };
 
 template <typename T, auto Destroy>
@@ -38,8 +53,17 @@ using Tensor = NNPointer<NN_Tensor, OH_NNTensor_Destroy>;
 void Check(OH_NN_ReturnCode code, const std::string &operation)
 {
     if (code != OH_NN_SUCCESS) {
-        throw std::runtime_error(std::string(operation) + " failed (" + std::to_string(code) + ")");
+        const auto message = operation + " failed (NNRT code " + std::to_string(code) + ")";
+        PermissionLog(message.c_str());
+        throw std::runtime_error(message);
     }
+}
+
+permission_nnrt::Device SelectModelDevice()
+{
+    const auto &runtime = permission_nnrt::GetCannRuntime();
+    if (!runtime.Available()) throw std::runtime_error(runtime.Error());
+    return SelectOfflineAccelerator();
 }
 
 void CheckJs(napi_status status, const char *operation)
@@ -76,15 +100,22 @@ void *TensorBuffer(const Tensor &tensor, size_t expectedSize)
 
 class Session {
 public:
-    explicit Session(const std::vector<uint8_t> &model) : device_(SelectAccelerator())
+    explicit Session(const std::vector<uint8_t> &model) : device_(SelectModelDevice())
     {
         const size_t device = device_.id;
         const std::string backend = DescribeDevice(device_);
+        PermissionLog(("Load OMC on " + backend).c_str());
+        const auto &runtime = permission_nnrt::GetCannRuntime();
+        if (runtime.HasCompatibilityCheck() && runtime.CheckCompatibility(model.data(), model.size()) != 0) {
+            throw std::runtime_error("CANN compatibility check rejected the offline model on " + backend);
+        }
+        PermissionLog("OH_NNCompilation_ConstructWithOfflineModelBuffer");
         Compilation compilation(OH_NNCompilation_ConstructWithOfflineModelBuffer(model.data(), model.size()));
         if (!compilation) {
             throw std::runtime_error("Cannot create NNRT compilation from the OM model");
         }
         Check(OH_NNCompilation_SetDevice(compilation.get(), device), "OH_NNCompilation_SetDevice(" + backend + ")");
+        PermissionLog(("OH_NNCompilation_Build(" + backend + ")").c_str());
         Check(OH_NNCompilation_Build(compilation.get()), "OH_NNCompilation_Build(" + backend + ")");
         executor_.reset(OH_NNExecutor_Construct(compilation.get()));
         if (!executor_) {
@@ -184,7 +215,7 @@ struct Job {
     Tokens ids{};
     Tokens mask{};
     Logits logits{};
-    std::string error;
+    std::array<char, 1024> error{};
 };
 
 napi_value JsString(napi_env env, const std::string &text)
@@ -194,14 +225,38 @@ napi_value JsString(napi_env env, const std::string &text)
     return result;
 }
 
-napi_value JsError(napi_env env, const std::string &message)
+void RejectDeferred(napi_env env, napi_deferred deferred, const char *message) noexcept
 {
-    napi_value result;
-    CheckJs(napi_create_error(env, nullptr, JsString(env, message), &result), "Cannot allocate error");
-    return result;
+    // This function is used from catch handlers. Never call CheckJs here:
+    // a second C++ exception while converting the first one aborts FFRT.
+    PermissionLog(message);
+    napi_value reason = nullptr;
+    bool pending = false;
+    if (napi_is_exception_pending(env, &pending) == napi_ok && pending) {
+        (void)napi_get_and_clear_last_exception(env, &reason);
+    }
+    if (!reason) {
+        napi_value text = nullptr;
+        if (napi_create_string_utf8(env, message, NAPI_AUTO_LENGTH, &text) == napi_ok) {
+            if (napi_create_error(env, nullptr, text, &reason) != napi_ok) reason = text;
+        }
+    }
+    if (!reason) (void)napi_get_undefined(env, &reason);
+    pending = false;
+    if (napi_is_exception_pending(env, &pending) == napi_ok && pending) {
+        napi_value pendingReason = nullptr;
+        if (napi_get_and_clear_last_exception(env, &pendingReason) == napi_ok && pendingReason) reason = pendingReason;
+    }
+    if (!reason) {
+        PermissionLog("Cannot allocate a JS rejection value; original failure logged above");
+        return;
+    }
+    if (napi_reject_deferred(env, deferred, reason) != napi_ok) {
+        PermissionLog("Cannot reject native promise; original failure logged above");
+    }
 }
 
-void Execute(napi_env, void *data)
+void Execute(napi_env, void *data) noexcept
 {
     auto &job = *static_cast<Job *>(data);
     try {
@@ -211,7 +266,11 @@ void Execute(napi_env, void *data)
             job.logits = job.session->Predict(job.ids, job.mask);
         }
     } catch (const std::exception &error) {
-        job.error = error.what();
+        std::snprintf(job.error.data(), job.error.size(), "%s", error.what());
+        PermissionLog(job.error.data());
+    } catch (...) {
+        std::snprintf(job.error.data(), job.error.size(), "Unknown native exception during NNRT work");
+        PermissionLog(job.error.data());
     }
 }
 
@@ -237,19 +296,21 @@ napi_value JobResult(napi_env env, const Job &job)
     return result;
 }
 
-void Complete(napi_env env, napi_status status, void *data)
+void Complete(napi_env env, napi_status status, void *data) noexcept
 {
     std::unique_ptr<Job> job(static_cast<Job *>(data));
     try {
         if (status != napi_ok) {
-            throw std::runtime_error("HiAI async operation cancelled");
+            RejectDeferred(env, job->deferred, "HiAI async operation cancelled");
+        } else if (job->error[0] != '\0') {
+            RejectDeferred(env, job->deferred, job->error.data());
+        } else {
+            CheckJs(napi_resolve_deferred(env, job->deferred, JobResult(env, *job)), "Cannot resolve native promise");
         }
-        if (!job->error.empty()) {
-            throw std::runtime_error(job->error);
-        }
-        napi_resolve_deferred(env, job->deferred, JobResult(env, *job));
     } catch (const std::exception &error) {
-        napi_reject_deferred(env, job->deferred, JsError(env, error.what()));
+        RejectDeferred(env, job->deferred, error.what());
+    } catch (...) {
+        RejectDeferred(env, job->deferred, "Unknown native exception while completing NNRT work");
     }
     napi_delete_async_work(env, job->work);
 }
@@ -283,9 +344,10 @@ Tokens ReadTokens(napi_env env, napi_value value)
     return tokens;
 }
 
-napi_value Devices(napi_env env, napi_callback_info)
+napi_value Devices(napi_env env, napi_callback_info) noexcept
 {
     try {
+        (void)permission_nnrt::GetCannRuntime();
         auto devices = ListDevices();
         napi_value result;
         CheckJs(napi_create_array_with_length(env, devices.size(), &result), "Cannot allocate device list");
@@ -297,20 +359,27 @@ napi_value Devices(napi_env env, napi_callback_info)
     } catch (const std::exception &error) {
         napi_throw_error(env, nullptr, error.what());
         return nullptr;
-    }
-}
-
-napi_value Accelerator(napi_env env, napi_callback_info)
-{
-    try {
-        return JsString(env, DescribeDevice(SelectAccelerator()));
-    } catch (const std::exception &error) {
-        napi_throw_error(env, nullptr, error.what());
+    } catch (...) {
+        napi_throw_error(env, nullptr, "Unknown native exception during device enumeration");
         return nullptr;
     }
 }
 
-napi_value Load(napi_env env, napi_callback_info info)
+napi_value Accelerator(napi_env env, napi_callback_info) noexcept
+{
+    try {
+        const auto device = SelectModelDevice();
+        return JsString(env, DescribeDevice(device) + " · CANN " + permission_nnrt::GetCannRuntime().Version());
+    } catch (const std::exception &error) {
+        napi_throw_error(env, nullptr, error.what());
+        return nullptr;
+    } catch (...) {
+        napi_throw_error(env, nullptr, "Unknown native exception during CANN backend selection");
+        return nullptr;
+    }
+}
+
+napi_value Load(napi_env env, napi_callback_info info) noexcept
 {
     try {
         size_t argc = 1;
@@ -332,10 +401,13 @@ napi_value Load(napi_env env, napi_callback_info info)
     } catch (const std::exception &error) {
         napi_throw_error(env, nullptr, error.what());
         return nullptr;
+    } catch (...) {
+        napi_throw_error(env, nullptr, "Unknown native exception while scheduling model load");
+        return nullptr;
     }
 }
 
-napi_value Predict(napi_env env, napi_callback_info info)
+napi_value Predict(napi_env env, napi_callback_info info) noexcept
 {
     try {
         size_t argc = 3;
@@ -356,6 +428,9 @@ napi_value Predict(napi_env env, napi_callback_info info)
         return Queue(env, std::move(job));
     } catch (const std::exception &error) {
         napi_throw_error(env, nullptr, error.what());
+        return nullptr;
+    } catch (...) {
+        napi_throw_error(env, nullptr, "Unknown native exception while scheduling inference");
         return nullptr;
     }
 }

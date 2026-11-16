@@ -18,17 +18,24 @@ const native = {
     if (state.error) throw new Error(state.error);
     return state.backend;
   },
-  load: () => { throw new Error('Startup must not load an OMC before its bucket is needed'); },
+  load: async () => {
+    if (!state.allowLoad) throw new Error('Startup must not load an OMC before its bucket is needed');
+    state.nativeLoads++;
+    throw state.loadError;
+  },
   predict: () => { throw new Error('Unexpected inference during startup'); }
 };
 globalThis.__permissionTest = {
   native,
   util: { TextDecoder: { create: () => ({ decodeToString: b => new TextDecoder().decode(b) }) } },
   mindSporeLite: {
-    DataType: { NUMBER_TYPE_INT32: 4 },
+    DataType: { NUMBER_TYPE_INT32: 4, NUMBER_TYPE_FLOAT32: 11 },
     loadModelFromBuffer: async () => {
       state.cpuLoads++;
-      return { getInputs: () => ['input_ids', 'attention_mask'].map(name => ({ name, shape: [1, 64], dtype: 4 })) };
+      return {
+        getInputs: () => ['input_ids', 'attention_mask'].map(name => ({ name, shape: [1, 64], dtype: 4, setData: () => {} })),
+        predict: async () => [{ dtype: 11, elementNum: 5, getData: () => new Float32Array(5).buffer }]
+      };
     }
   }
 };
@@ -49,8 +56,8 @@ try {
     'const canIUse=()=>true;\n' + code;
   fs.writeFileSync(path.join(temporary, 'PermissionModel.mts'), code);
   const { PermissionModel } = await import(pathToFileURL(path.join(temporary, 'PermissionModel.mts')).href);
-  for (const backend of [reported, 'HIAI_F (ID 9, type ACCELERATOR)', 'Future vendor (ID 19, type ACCELERATOR)']) {
-    state = { devices: [backend], backend, selected: 0, cpuLoads: 0 };
+  for (const backend of ['HIAI_F (ID 9, type ACCELERATOR) · CANN test-version']) {
+    state = { devices: [reported, backend], backend, selected: 0, cpuLoads: 0 };
     const model = new PermissionModel();
     await model.load(resources);
     assert.equal(state.selected, 1);
@@ -58,14 +65,24 @@ try {
     assert.ok(model.diagnostic.includes(backend));
     assert.ok(!model.diagnostic.includes('回退原因'));
   }
-  for (const error of ['No NNRT accelerator is available; enumerated: CPU', 'OH_NNDevice_GetType(42) failed (1)']) {
-    state = { devices: ['CPU (ID 4, type CPU)'], error, selected: 0, cpuLoads: 0 };
+  for (const error of ['CANN offline-model backend HIAI_F is unavailable; generic NNRT accelerators cannot load OMC',
+                      'Cannot load CANN Foundation', 'OH_NNDevice_GetType(42) failed (1)']) {
+    state = { devices: [reported], error, selected: 0, cpuLoads: 0 };
     const model = new PermissionModel();
     await model.load(resources);
     assert.equal(state.cpuLoads, 1);
     assert.ok(model.diagnostic.includes(error));
   }
-  console.log('PASS: ArkTS startup accepts reported/legacy/future accelerator names and preserves CPU fallback/query diagnostics');
+  const loadError = 'OH_NNCompilation_Build(HIAI_F) failed (NNRT code 1)';
+  state = { devices: ['HIAI_F'], backend: 'HIAI_F', allowLoad: true, loadError, nativeLoads: 0, selected: 0, cpuLoads: 0 };
+  const model = new PermissionModel();
+  await model.load(resources);
+  const result = await model.predict('测试');
+  assert.equal(state.nativeLoads, 3);
+  assert.equal(state.cpuLoads, 1);
+  assert.ok(result.backend.includes('CPU'));
+  assert.ok(model.diagnostic.includes(loadError));
+  console.log('PASS: ArkTS startup selects CANN for OMC and preserves CPU fallback for generic NNRT/missing Foundation/query errors');
 } finally {
   fs.rmSync(temporary, { recursive: true, force: true });
   delete globalThis.__permissionTest;

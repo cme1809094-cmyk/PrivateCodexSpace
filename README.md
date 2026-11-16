@@ -4,7 +4,7 @@
 
 本工程的模型二进制使用 Git LFS。完整克隆后执行 `git lfs pull`，再执行 `python3 ml/verify_artifacts.py` 校验六个模型文件。工具链配置和编译统一在 Codex 环境进行。
 
-另提供 [中文 TinyBERT 4L 试验版本](variants/tinybert4l/README.md)。它有独立训练得到的分类头、词表、阈值、CPU 回退模型和三档原生 V2 NPU 模型；可通过 `ml/materialize_variant.py` 生成独立包名的 HarmonyOS 工程。
+另提供 [中文 TinyBERT 4L 试验版本](variants/tinybert4l/README.md)。它有独立训练得到的分类头、词表、阈值、CPU 回退模型和三档原生 V2 NPU 模型；可通过 `ml/materialize_variant.py` 生成独立包名的 HarmonyOS 工程。直接打开仓库根目录构建的是 MiniRBT 工程；测试 TinyBERT 时请先生成对应的独立工程。
 
 ## 模型质量与当前准备程度
 
@@ -53,9 +53,11 @@ python3 ml/native_v2/check_host_permissions.py "$PWD" /path/to/native-build/v2_X
 
 ## 安装与测量
 
-1. 用 DevEco Studio 打开此工程，连接 Mate 80 Pro Max，配置调试签名。包名为 `com.intentlab.permissiondemohiaperf`，版本是 1.0.4。本仓库提供源码与模型，需要重新构建并签名 HAP；不包含已更新原生 V2 模型的安装包。
-2. 输入一条中文操作指令，查看后端是否显示实际 NNRT 加速器名称，再查看诊断中的模型自检。设备按 `OH_NNDevice_GetType` 返回的 `OH_NN_ACCELERATOR` 选择，不要求名为 `HIAI_F`。出错时应用会显示原因，并允许退到 MindSpore Lite CPU 继续演示。
+1. 用 DevEco Studio 打开此工程，连接 Mate 80 Pro Max，配置调试签名。包名为 `com.intentlab.permissiondemohiaperf`，版本是 1.0.5。本仓库提供源码与模型，需要重新构建并签名 HAP；不包含已更新原生 V2 模型的安装包。
+2. 输入一条中文操作指令，检查实际 CANN 后端和模型自检。OMC 需要 CANN 的 `HIAI_F` 后端；通用 NNRT 加速器存在并不代表它支持离线 OMC。1.0.5 会先加载 `libhiai_foundation.so` 并查询版本，再枚举设备和检查模型兼容性。失败时应用显示原因，并退到配套的 MindSpore Lite CPU 模型。
 3. 点击「测量推理时延」。界面里的「旧版 NPU 64 token」指本包内的 9030 全查询对照。各模型使用相同的分词结果，预热 5 次、测量 50 次。p50/p95 含推理接口、张量复制和调度。冷启动、分词和自检位于测速区间之外。
+
+根目录工程是 MiniRBT，包名为 `com.intentlab.permissiondemohiaperf`；通过 `variants/tinybert4l` 生成的独立工程包名为 `com.intentlab.permissiondemotinybert4l`。调试时先确认包名、所用 rawfile 和阈值来自同一个版本。
 
 ## 历史兼容模型的重新构建
 

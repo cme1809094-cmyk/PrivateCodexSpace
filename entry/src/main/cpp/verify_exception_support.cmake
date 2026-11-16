@@ -1,0 +1,12 @@
+if(NOT NM_TOOL OR NOT EXISTS "${NATIVE_LIBRARY}")
+    message(FATAL_ERROR "Cannot verify native exception support: missing nm tool or library")
+endif()
+execute_process(COMMAND "${NM_TOOL}" -u "${NATIVE_LIBRARY}"
+    RESULT_VARIABLE status OUTPUT_VARIABLE symbols ERROR_VARIABLE diagnostic)
+if(NOT status EQUAL 0)
+    message(FATAL_ERROR "Cannot inspect native exception support: ${diagnostic}")
+endif()
+if(NOT symbols MATCHES "__cxa_begin_catch")
+    message(FATAL_ERROR "permission_hiai has no C++ catch handlers; remove -fignore-exceptions and rebuild")
+endif()
+message(STATUS "permission_hiai C++ catch handlers verified")
