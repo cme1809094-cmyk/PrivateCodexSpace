@@ -1,4 +1,5 @@
 import { systemDateTime } from '@kit.BasicServicesKit';
+import { hilog } from '@kit.PerformanceAnalysisKit';
 import { devices, accelerator, load as loadHiAI, predict as predictHiAI, HiAISession } from 'libpermission_hiai.so';
 import { mindSporeLite } from '@kit.MindSporeLiteKit';
 import { resourceManager } from '@kit.LocalizationKit';
@@ -87,7 +88,10 @@ export class PermissionModel {
     const suffix: string = bucket === 0 ? 'baseline' : bucket.toString();
     const raw: Uint8Array = await resources.getRawFileContent('permission_' + suffix + '.om');
     const buffer: ArrayBuffer = raw.buffer.slice(raw.byteOffset, raw.byteOffset + raw.byteLength);
+    hilog.info(0xFF00, 'PermissionNPU', '[PNPU][LOAD] bucket=%{public}d model=permission_%{public}s.om bytes=%{public}d begin',
+      bucket, suffix, buffer.byteLength);
     const session: HiAISession = await loadHiAI(buffer);
+    hilog.info(0xFF00, 'PermissionNPU', '[PNPU][LOAD] bucket=%{public}d ready device=%{public}s', bucket, session.device);
     const report: string = await this.checkReference(resources, tokenizer, session, bucket === 0 ? 64 : bucket);
     this.hiaiSessions.set(bucket, session);
     this.diagnostic += '\n' + (bucket === 0 ? '基线' : bucket.toString() + ' token') + ' ' + report;
@@ -124,6 +128,8 @@ export class PermissionModel {
     }
     const report: string = 'HiAI 自检 ' + matched.toString() + '/' + checked.toString() +
       ' · 最大 logit 差 ' + maxError.toFixed(4);
+    hilog.info(0xFF00, 'PermissionNPU', '[PNPU][SELFTEST] tokens=%{public}d matched=%{public}d checked=%{public}d maxError=%{public}s',
+      length, matched, checked, maxError.toFixed(6));
     if (checked === 0 || matched !== checked) {
       throw new Error(report);
     }
@@ -137,7 +143,7 @@ export class PermissionModel {
   private recordHiAIError(error: Error | string): void {
     const reason: string = this.errorMessage(error);
     this.diagnostic += (this.diagnostic.length > 0 ? '\n' : '') + 'HiAI 回退原因 ' + reason;
-    console.warn('PermissionHiAI fallback: ' + reason);
+    hilog.warn(0xFF00, 'PermissionNPU', '[PNPU][FALLBACK] %{public}s', reason);
   }
 
   private async loadCpu(resources: resourceManager.ResourceManager): Promise<void> {
@@ -153,6 +159,7 @@ export class PermissionModel {
       target: ['cpu'],
       cpu: { threadNum: 2, precisionMode: 'enforce_fp32' }
     };
+    hilog.info(0xFF00, 'PermissionNPU', '[PNPU][CPU] load permission.ms begin');
     const model: mindSporeLite.Model = await mindSporeLite.loadModelFromBuffer(buffer, context);
     const inputs: mindSporeLite.MSTensor[] = model.getInputs();
     if (inputs.length !== 2 || !inputs.some((tensor: mindSporeLite.MSTensor): boolean => tensor.name === 'input_ids') ||
@@ -166,6 +173,7 @@ export class PermissionModel {
       }
     }
     this.model = model;
+    hilog.info(0xFF00, 'PermissionNPU', '[PNPU][CPU] model ready');
   }
 
   async predict(text: string): Promise<InferenceResult> {
@@ -248,7 +256,9 @@ export class PermissionModel {
           const name: string = bucket === 0 ? '旧版 NPU 64 token' : '优化版 NPU ' + bucket.toString() + ' token';
           runners.push(new BenchmarkRunner(name, (): Promise<number[]> => predictHiAI(session, tokens.ids, tokens.mask)));
         } catch (error) {
-          warnings.push('HiAI ' + (bucket === 0 ? '基线' : bucket.toString()) + '：' + this.errorMessage(error as Error | string));
+          const reason: string = 'HiAI ' + (bucket === 0 ? '基线' : bucket.toString()) + '：' + this.errorMessage(error as Error | string);
+          warnings.push(reason);
+          hilog.warn(0xFF00, 'PermissionNPU', '[PNPU][BENCH] %{public}s', reason);
         }
       }
     }
@@ -256,7 +266,9 @@ export class PermissionModel {
       await this.loadCpu(resources);
       runners.push(new BenchmarkRunner('CPU 64 token', (): Promise<number[]> => this.predictCpu(tokens, resources)));
     } catch (error) {
-      warnings.push('CPU 64 token：' + this.errorMessage(error as Error | string));
+      const reason: string = 'CPU 64 token：' + this.errorMessage(error as Error | string);
+      warnings.push(reason);
+      hilog.warn(0xFF00, 'PermissionNPU', '[PNPU][BENCH] %{public}s', reason);
     }
     const result: string[] = ['有效 token ' + count.toString() + ' · 每组预热 5 次，记录 50 次'];
     for (const runner of runners) {
@@ -274,7 +286,9 @@ export class PermissionModel {
         result.push(runner.name + ' · P50 ' + ((times[24] + times[25]) / 2).toFixed(1) +
           ' ms · P95 ' + times[47].toFixed(1) + ' ms');
       } catch (error) {
-        warnings.push(runner.name + '：' + this.errorMessage(error as Error | string));
+        const reason: string = runner.name + '：' + this.errorMessage(error as Error | string);
+        warnings.push(reason);
+        hilog.warn(0xFF00, 'PermissionNPU', '[PNPU][BENCH] %{public}s', reason);
       }
     }
     return result.concat(warnings).join('\n');

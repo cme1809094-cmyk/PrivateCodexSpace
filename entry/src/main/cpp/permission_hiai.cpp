@@ -37,9 +37,9 @@ struct NNDeleter {
         try {
             Destroy(&value);
         } catch (const std::exception &error) {
-            PermissionLog(error.what());
+            PermissionLog(error.what(), "CLEANUP", PermissionLogLevel::Warn);
         } catch (...) {
-            PermissionLog("Unknown exception during NNRT cleanup");
+            PermissionLog("Unknown exception during NNRT cleanup", "CLEANUP", PermissionLogLevel::Warn);
         }
     }
 };
@@ -56,7 +56,7 @@ void Check(OH_NN_ReturnCode code, const std::string &operation)
 {
     if (code != OH_NN_SUCCESS) {
         const auto message = operation + " failed (NNRT code " + std::to_string(code) + ")";
-        PermissionLog(message.c_str());
+        PermissionLog(message.c_str(), "API", PermissionLogLevel::Debug);
         throw std::runtime_error(message);
     }
 }
@@ -121,7 +121,7 @@ public:
         device_ = trace.Call("Select CANN HIAI_F backend", [] { return SelectModelDevice(); });
         const size_t device = device_.id;
         const std::string backend = DescribeDevice(device_);
-        PermissionLog(("Load OMC bytes=" + std::to_string(model.size()) + " on " + backend).c_str());
+        PermissionLog(("Load OMC bytes=" + std::to_string(model.size()) + " on " + backend).c_str(), "LOAD");
         if (runtime->HasCompatibilityCheck()) {
             const int compatibility = trace.Call("HMS_HiAICompatibility_CheckFromBuffer", [&] {
                 return runtime->CheckCompatibility(model.data(), model.size());
@@ -269,11 +269,11 @@ napi_value JsString(napi_env env, const std::string &text)
     return result;
 }
 
-void RejectDeferred(napi_env env, napi_deferred deferred, const char *message) noexcept
+void RejectDeferred(napi_env env, napi_deferred deferred, const char *message, bool alreadyLogged = false) noexcept
 {
     // This function is used from catch handlers. Never call CheckJs here:
     // a second C++ exception while converting the first one aborts FFRT.
-    PermissionLog(message);
+    if (!alreadyLogged) PermissionError(message);
     napi_value reason = nullptr;
     bool pending = false;
     if (napi_is_exception_pending(env, &pending) == napi_ok && pending) {
@@ -292,11 +292,11 @@ void RejectDeferred(napi_env env, napi_deferred deferred, const char *message) n
         if (napi_get_and_clear_last_exception(env, &pendingReason) == napi_ok && pendingReason) reason = pendingReason;
     }
     if (!reason) {
-        PermissionLog("Cannot allocate a JS rejection value; original failure logged above");
+        PermissionError("Cannot allocate a JS rejection value; original failure logged above");
         return;
     }
     if (napi_reject_deferred(env, deferred, reason) != napi_ok) {
-        PermissionLog("Cannot reject native promise; original failure logged above");
+        PermissionError("Cannot reject native promise; original failure logged above");
     }
 }
 
@@ -312,21 +312,21 @@ void Execute(napi_env, void *data) noexcept
         }
     } catch (const std::exception &error) {
         job.trace.Failure(job.error.data(), job.error.size(), operation, error.what());
-        PermissionLog(job.error.data());
+        PermissionError(job.error.data());
     } catch (const std::string &error) {
         job.trace.Failure(job.error.data(), job.error.size(), operation, error.c_str());
-        PermissionLog(job.error.data());
+        PermissionError(job.error.data());
     } catch (const char *error) {
         job.trace.Failure(job.error.data(), job.error.size(), operation, error);
-        PermissionLog(job.error.data());
+        PermissionError(job.error.data());
     } catch (int error) {
         char detail[64];
         std::snprintf(detail, sizeof(detail), "Native exception int=%d", error);
         job.trace.Failure(job.error.data(), job.error.size(), operation, detail);
-        PermissionLog(job.error.data());
+        PermissionError(job.error.data());
     } catch (...) {
         job.trace.Failure(job.error.data(), job.error.size(), operation, "Unknown native exception");
-        PermissionLog(job.error.data());
+        PermissionError(job.error.data());
     }
 }
 
@@ -359,7 +359,7 @@ void Complete(napi_env env, napi_status status, void *data) noexcept
         if (status != napi_ok) {
             RejectDeferred(env, job->deferred, "HiAI async operation cancelled");
         } else if (job->error[0] != '\0') {
-            RejectDeferred(env, job->deferred, job->error.data());
+            RejectDeferred(env, job->deferred, job->error.data(), true);
         } else {
             CheckJs(napi_resolve_deferred(env, job->deferred, JobResult(env, *job)), "Cannot resolve native promise");
         }
@@ -403,13 +403,13 @@ Tokens ReadTokens(napi_env env, napi_value value)
 napi_value Devices(napi_env env, napi_callback_info) noexcept
 {
     try {
-        PermissionLog("PermissionHiAI native bridge 1.0.6: enumerate backends");
+        PermissionLog("native bridge 1.0.7: enumerate backends", "DEVICE");
         (void)permission_nnrt::GetCannRuntime();
         auto devices = ListDevices();
         napi_value result;
         CheckJs(napi_create_array_with_length(env, devices.size(), &result), "Cannot allocate device list");
         for (uint32_t i = 0; i < devices.size(); ++i) {
-            PermissionLog(("NNRT device " + DescribeDevice(devices[i])).c_str());
+            PermissionLog(("NNRT device " + DescribeDevice(devices[i])).c_str(), "DEVICE");
             CheckJs(napi_set_element(env, result, i, JsString(env,
                 DescribeDevice(devices[i]))), "Cannot set device");
         }

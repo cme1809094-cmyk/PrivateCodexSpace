@@ -30,3 +30,5 @@ The runner builds a host-only fake CANN library in a temporary directory. Never 
 GCC and Clang runs passed. A host CMake smoke build with public SDK headers and placeholder link libraries also confirmed that injected `-fignore-exceptions`/`-fno-exceptions` options were removed and the DSO contained catch/unwind tables. The post-build checker rejects a deliberately built DSO without catch handlers. These checks do not build a deployable HAP or establish phone/model compatibility.
 
 The device type API is documented in [HarmonyOS NNRT C API](https://developer.huawei.com/consumer/cn/doc/harmonyos-references/capi-neural-network-core-h/).
+
+Since 1.0.7, native and ArkTS diagnostics use HiLog tag `PermissionNPU` and message prefix `[PNPU]`. The ArkTS host mock captures HiLog calls and checks that detailed fallback messages retain that tag across all three buckets. Native fault-injection output includes `[ERROR]` at Error level; detailed tensor calls use Debug and compatibility/Build/executor milestones use Info. The worker's failure is not logged again when rejecting its promise. See the root README for filters and stage labels.

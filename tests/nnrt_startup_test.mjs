@@ -10,6 +10,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const temporary = fs.mkdtempSync(path.join(process.env.NNRT_TEST_WORK || os.tmpdir(), 'nnrt-startup-'));
 const source = path.join(root, 'entry/src/main/ets/model');
 let state;
+const logs = [];
+const hilog = Object.fromEntries(['info', 'warn'].map(level => [level, (...args) => logs.push({level, args})]));
 const reported = 'NPU_ohos.boot.hardware.Kirin9020_v2_0 (ID 42, type ACCELERATOR)';
 const native = {
   devices: () => state.devices,
@@ -27,6 +29,7 @@ const native = {
 };
 globalThis.__permissionTest = {
   native,
+  hilog,
   util: { TextDecoder: { create: () => ({ decodeToString: b => new TextDecoder().decode(b) }) } },
   mindSporeLite: {
     DataType: { NUMBER_TYPE_INT32: 4, NUMBER_TYPE_FLOAT32: 11 },
@@ -51,7 +54,7 @@ try {
   code = code.replace(/^import .*from '@kit\.[^']+';\r?\n/gm, '')
     .replace(/^import .*from 'libpermission_hiai.so';\r?\n/gm, '')
     .replace("from './WordPiece'", "from './WordPiece.mts'");
-  code = 'const {native,util,mindSporeLite}=globalThis.__permissionTest;\n' +
+  code = 'const {native,util,mindSporeLite,hilog}=globalThis.__permissionTest;\n' +
     'const {devices,accelerator,load:loadHiAI,predict:predictHiAI}=native;\n' +
     'const canIUse=()=>true;\n' + code;
   fs.writeFileSync(path.join(temporary, 'PermissionModel.mts'), code);
@@ -73,7 +76,7 @@ try {
     assert.equal(state.cpuLoads, 1);
     assert.ok(model.diagnostic.includes(error));
   }
-  const loadError = 'Load OMC failed at OH_NNCompilation_Build (not returned); exception_type=i; CANN=test; bridge=1.0.6; detail=Native exception int=17';
+  const loadError = 'Load OMC failed at OH_NNCompilation_Build (not returned); exception_type=i; CANN=test; bridge=1.0.7; detail=Native exception int=17';
   state = { devices: ['HIAI_F'], backend: 'HIAI_F', allowLoad: true, loadError, nativeLoads: 0, selected: 0, cpuLoads: 0 };
   const model = new PermissionModel();
   await model.load(resources);
@@ -82,6 +85,8 @@ try {
   assert.equal(state.cpuLoads, 1);
   assert.ok(result.backend.includes('CPU'));
   assert.ok(model.diagnostic.includes(loadError));
+  assert.ok(logs.every(({args}) => args[1] === 'PermissionNPU' && args[2].startsWith('[PNPU]')));
+  assert.equal(logs.filter(({args}) => args[2].startsWith('[PNPU][FALLBACK]') && args[3].includes(loadError)).length, 3);
   console.log('PASS: ArkTS startup selects CANN for OMC and preserves CPU fallback for generic NNRT/missing Foundation/query errors');
 } finally {
   fs.rmSync(temporary, { recursive: true, force: true });

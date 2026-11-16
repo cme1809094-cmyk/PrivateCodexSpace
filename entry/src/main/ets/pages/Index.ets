@@ -1,5 +1,6 @@
 import { common } from '@kit.AbilityKit';
 import { LengthMetrics } from '@kit.ArkUI';
+import { hilog } from '@kit.PerformanceAnalysisKit';
 import { PermissionModel, InferenceResult } from '../model/PermissionModel';
 
 const INK: string = '#142E26';
@@ -61,8 +62,8 @@ struct Index {
       await this.model.load(context.resourceManager);
       this.ready = true;
     } catch (error) {
-      console.error('PermissionDemo initialization failed: ' + JSON.stringify(error));
       this.errorMessage = (error as Error).message || '模型加载失败。';
+      hilog.error(0xFF00, 'PermissionNPU', '[PNPU][ERROR] initialize: %{public}s', this.errorMessage);
     } finally {
       this.diagnostic = this.model.diagnostic;
       this.busy = false;
@@ -103,6 +104,7 @@ struct Index {
     } catch (error) {
       const failure: Error = error as Error;
       this.errorMessage = failure.message || '推理失败，请重试。';
+      hilog.error(0xFF00, 'PermissionNPU', '[PNPU][ERROR] recognize: %{public}s', this.errorMessage);
     } finally {
       this.diagnostic = this.model.diagnostic;
       this.busy = false;
@@ -120,6 +122,7 @@ struct Index {
       this.benchmarkReport = await this.model.benchmark(this.instruction.trim());
     } catch (error) {
       this.errorMessage = (error as Error).message || '性能测试失败';
+      hilog.error(0xFF00, 'PermissionNPU', '[PNPU][ERROR] benchmark: %{public}s', this.errorMessage);
     } finally {
       this.diagnostic = this.model.diagnostic;
       this.busy = false;

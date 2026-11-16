@@ -22,14 +22,14 @@ public:
             if (!handle_) {
                 const char *detail = dlerror();
                 std::snprintf(error_, sizeof(error_), "Cannot load CANN Foundation: %s", detail ? detail : "dlopen failed");
-                PermissionLog(error_);
+                PermissionError(error_, "RUNTIME");
                 return;
             }
             auto version = reinterpret_cast<VersionFunction>(dlsym(handle_, "HMS_HiAI_GetVersion"));
             compatibility_ = reinterpret_cast<CompatibilityFunction>(dlsym(handle_, "HMS_HiAICompatibility_CheckFromBuffer"));
             if (!version) {
                 std::snprintf(error_, sizeof(error_), "CANN Foundation has no HMS_HiAI_GetVersion symbol");
-                PermissionLog(error_);
+                PermissionError(error_, "RUNTIME");
                 return;
             }
             const char *value = version();
@@ -37,15 +37,15 @@ public:
             available_ = true;
             char message[256];
             std::snprintf(message, sizeof(message), "CANN Foundation loaded, version=%s", version_);
-            PermissionLog(message);
+            PermissionLog(message, "RUNTIME");
         } catch (const std::exception &error) {
             std::snprintf(error_, sizeof(error_), "CANN initialization exception: %s", error.what());
             available_ = false;
-            PermissionLog(error_);
+            PermissionError(error_, "RUNTIME");
         } catch (...) {
             std::snprintf(error_, sizeof(error_), "Unknown CANN initialization exception");
             available_ = false;
-            PermissionLog(error_);
+            PermissionError(error_, "RUNTIME");
         }
     }
 

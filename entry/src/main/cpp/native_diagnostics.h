@@ -3,6 +3,7 @@
 
 #include "native_log.h"
 #include <cstdio>
+#include <cstring>
 #include <type_traits>
 #include <utility>
 #if __has_include(<cxxabi.h>)
@@ -39,7 +40,12 @@ public:
         if (index < 0) std::snprintf(stage_, sizeof(stage_), "%s", operation);
         else std::snprintf(stage_, sizeof(stage_), "%s[index=%d]", operation, index);
         std::snprintf(returned_, sizeof(returned_), "not returned");
-        if (verbose_) PermissionLog(stage_);
+        // Keep initialization milestones at Info; tensor API detail is Debug.
+        const auto level = std::strcmp(operation, "HMS_HiAICompatibility_CheckFromBuffer") == 0
+            || std::strcmp(operation, "OH_NNCompilation_Build") == 0
+            || std::strcmp(operation, "OH_NNExecutor_Construct") == 0
+            ? PermissionLogLevel::Info : PermissionLogLevel::Debug;
+        if (verbose_) PermissionLog(stage_, "API", level);
         auto result = std::forward<Function>(function)();
         using Result = decltype(result);
         if constexpr (std::is_enum_v<Result> || std::is_integral_v<Result>) {
@@ -52,14 +58,14 @@ public:
         if (verbose_) {
             char message[288];
             std::snprintf(message, sizeof(message), "%s -> %s", stage_, returned_);
-            PermissionLog(message);
+            PermissionLog(message, "API", level);
         }
         return result;
     }
 
     void Failure(char *buffer, size_t size, const char *operation, const char *detail) const noexcept
     {
-        std::snprintf(buffer, size, "%s failed at %s (%s); exception_type=%.160s; CANN=%s; bridge=1.0.6; detail=%s",
+        std::snprintf(buffer, size, "%s failed at %s (%s); exception_type=%.160s; CANN=%s; bridge=1.0.7; detail=%s",
             operation, stage_, returned_, CurrentExceptionType(), runtime_, detail ? detail : "<no message>");
     }
 
