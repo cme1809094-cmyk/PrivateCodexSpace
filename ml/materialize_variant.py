@@ -79,7 +79,7 @@ def main():
         "本工程由 ml/materialize_variant.py 生成，包含配套的三档原生 V2 NPU 模型、CPU 回退模型、词表、阈值和自检向量。\n\n"
         "包名：`" + manifest["bundle_name"] + "`。请在 DevEco Studio 中构建、配置调试签名并安装到 Mate 80 Pro Max。\n\n"
         "OMC 需要 CANN 的 HIAI_F 后端。应用会先动态加载 CANN Foundation 并记录版本，再枚举后端和检查模型兼容性。通用 NNRT 加速器不等于支持 OMC；不可用时会明确记录原因并回退到同模型 CPU。更新应用时需 Clean/Rebuild native 和 ArkTS。\n\n"
-        "若回退提示包含 failed at / exception_type，请保留完整内容。1.0.6 起提示包含最后调用、返回状态、异常类型和 CANN 版本。1.0.7 的 HiLog Tag 为 PermissionNPU，消息前缀为 [PNPU]；显示 Info/Warn/Error，保留 [RUNTIME] 到首条 [ERROR] 和 [FALLBACK]。命令行可用 hdc hilog -T PermissionNPU。未知异常的真机根因仍需这些信息确认。\n\n"
+        "若回退提示包含 failed at / exception_type，请保留完整内容。1.0.6 起提示包含最后调用、返回状态、异常类型和 CANN 版本。1.0.7 的 HiLog Tag 为 PermissionNPU，消息前缀为 [PNPU]；显示 Info/Warn/Error，保留 [RUNTIME] 到首条 [ERROR] 和 [FALLBACK]。命令行可用 hdc hilog -T PermissionNPU。1.0.8 以 [TENSOR] 记录输入 rank/shape，并支持连续 token 向量的单例维度表示；应用校验错误保留原始消息。真机 RunSync 和自检仍需验证。\n\n"
         "离线编译与主机数值对照已通过；HAP 构建、签名和真机精度/性能尚未验证。\n")
     print(destination)
 

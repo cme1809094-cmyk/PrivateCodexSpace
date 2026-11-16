@@ -32,7 +32,7 @@ python3 ml/materialize_variant.py variants/tinybert4l /absolute/path/to/TinyBERT
 
 在生成目录运行 `python3 ml/verify_artifacts.py` 可核对五个模型文件。用 DevEco Studio 打开后配置签名并构建 HAP。成功加载 NPU 模型后应查看 HiAI 自检结果，再测量时延；应用会保留同模型的 CPU 回退。
 
-### NNRT 后端与 native 异常诊断（1.0.7）
+### NNRT 后端与 native 异常诊断（1.0.8）
 
 1.0.4 将任意 `OH_NN_ACCELERATOR` 都作为 OMC 目标，这个条件不充分。真机日志中的 `[NNBackend] CreateCompiler failed, only support build NN model and NN model cache.` 对应通用 NNRT 后端拒绝离线 buffer；该后端并不等同于 CANN 的 `HIAI_F`。官方 [CANN 模型集成](https://developer.huawei.com/consumer/cn/doc/HarmonyOS-Guides/cannkit-integration-model/) 使用 `HIAI_F` 加载 OMC，[通用 NNBackend 源码](https://github.com/openharmony/ai_neural_network_runtime/blob/master/frameworks/native/neural_network_runtime/nnbackend.cpp) 明确拒绝 offlineModelBuffer。
 
@@ -42,13 +42,15 @@ python3 ml/materialize_variant.py variants/tinybert4l /absolute/path/to/TinyBERT
 
 1.0.5 的后续日志进入 CANN 模型加载后仍报 `Unknown native exception during NNRT work`，未给出具体失败接口。1.0.6 用 Job 持有的记录保留最后调用和返回状态，并将异常类型、CANN 版本、原生桥接版本放进回退提示。字符串、整数异常保留内容；未知类型不做不安全的异常对象转换。这不等于已解决真机执行问题，仍需新日志确认兼容性检查、Build、张量分配或 RunSync 的实际失败位置。
 
-建议从最新源码重新生成到一个新目录，再配置签名、Clean/Rebuild 并安装1.0.7。已有工程若手工更新，需同步整个 `entry/src/main/cpp/`（含新增 `native_diagnostics.h`）、`entry/build-profile.json5`、`PermissionModel.ets` 和 AppScope 版本，不能遗漏新头文件或构建后检查脚本。仅替换 `.om` 或只更新 ArkTS 不够。
+建议从最新源码重新生成到一个新目录，再配置签名、Clean/Rebuild 并安装1.0.8。已有工程若手工更新，需同步整个 `entry/src/main/cpp/`（含 `native_diagnostics.h`、`tensor_shape.h`、`bridge_error.h`）、`entry/build-profile.json5`、`PermissionModel.ets` 和 AppScope 版本，不能遗漏新头文件或构建后检查脚本。仅替换 `.om` 或只更新 ArkTS 不够。
 
 已确认此次上报设备为 Mate 80 Pro Max / HarmonyOS 5.0.0。驱动名中的 Kirin9020 字样不等同于已验证的 SoC 型号或模型兼容结论；当前产物仍按 kirin9030 编译。名称检查失败发生在模型加载前，更新后需要观察带实际设备名称的 `OH_NNCompilation_Build`、`OH_NNExecutor_RunSync` 和模型自检结果。
 
-调试时在 HiLog 按 Tag `PermissionNPU` 过滤或搜索 `[PNPU]`，日志级别包含 Info/Warn/Error，依次查看 `CANN Foundation loaded, version=...`、HIAI_F 设备信息、模型兼容性、Build 与自检结果。回退提示应包含 `failed at ...; exception_type=...; CANN=...; bridge=1.0.7`。若出现 `Cannot load CANN Foundation`，应先检查系统能力和运行库加载错误，不能通过改设备字符串解决。native 抛出位置若仍需符号化，应使用与崩溃日志 Build ID 完全一致的未剥离 `libpermission_hiai.so`。
+调试时在 HiLog 按 Tag `PermissionNPU` 过滤或搜索 `[PNPU]`，日志级别包含 Info/Warn/Error，依次查看 `CANN Foundation loaded, version=...`、HIAI_F 设备信息、模型兼容性、Build 与自检结果。回退提示应包含 `failed at ...; exception_type=...; CANN=...; bridge=1.0.8`。若出现 `Cannot load CANN Foundation`，应先检查系统能力和运行库加载错误，不能通过改设备字符串解决。native 抛出位置若仍需符号化，应使用与崩溃日志 Build ID 完全一致的未剥离 `libpermission_hiai.so`。
 
 1.0.7 的原生与 ArkTS 日志统一采用 `PermissionNPU` Tag 和 `[PNPU]` 消息前缀；先看 `[RUNTIME]`、`[DEVICE]`、`[LOAD]`、`[API]`，再保留首条 `[ERROR]` 与 `[FALLBACK]`。`[SELFTEST]` 表示自检，`[CPU]` 表示 CPU 模型状态。详细张量调用为 Debug，普通推理和测速循环不输出逐次成功日志。命令行可用 `hdc hilog -T PermissionNPU`。
+
+1.0.8 适配 token 输入的等价单例维度表示，同时保留长度 16/32/64、int32、元素数及输入名称检查。`[PNPU][TENSOR]` 和失败提示会记录实际形状；应用自身的校验错误使用显式捕获的 BridgeError 保留原始消息。旧日志已证明 MiniRBT 三档通过 HIAI_F 的兼容性检查、Build 和 Executor 创建，失败位于应用形状校验，但尚未记录实际维度。这不能代替 TinyBERT 的实机 RunSync 和参考自检。
 
 ## 重新训练与导出
 

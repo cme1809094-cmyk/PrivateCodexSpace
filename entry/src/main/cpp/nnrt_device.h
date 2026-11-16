@@ -3,7 +3,7 @@
 
 #include <neural_network_runtime/neural_network_core.h>
 
-#include <stdexcept>
+#include "bridge_error.h"
 #include <string>
 #include <vector>
 
@@ -33,7 +33,7 @@ inline std::string DescribeDevice(const Device &device)
 inline void CheckDeviceQuery(OH_NN_ReturnCode code, const std::string &operation)
 {
     if (code != OH_NN_SUCCESS) {
-        throw std::runtime_error(operation + " failed (" + std::to_string(code) + ")");
+        throw BridgeError(operation + " failed (" + std::to_string(code) + ")");
     }
 }
 
@@ -43,7 +43,7 @@ inline std::vector<Device> ListDevices()
     uint32_t count = 0;
     CheckDeviceQuery(OH_NNDevice_GetAllDevicesID(&ids, &count), "OH_NNDevice_GetAllDevicesID");
     if (count != 0 && !ids) {
-        throw std::runtime_error("NNRT returned no device IDs");
+        throw BridgeError("NNRT returned no device IDs");
     }
     std::vector<Device> devices;
     for (uint32_t i = 0; i < count; ++i) {
@@ -69,7 +69,7 @@ inline Device SelectAccelerator()
     for (const auto &device : devices) {
         message += DescribeDevice(device) + "; ";
     }
-    throw std::runtime_error(message + (devices.empty() ? "none" : ""));
+    throw BridgeError(message + (devices.empty() ? "none" : ""));
 }
 
 inline Device SelectOfflineAccelerator()
@@ -84,7 +84,7 @@ inline Device SelectOfflineAccelerator()
     }
     std::string message = "CANN offline-model backend HIAI_F is unavailable; generic NNRT accelerators cannot load OMC. Enumerated: ";
     for (const auto &device : devices) message += DescribeDevice(device) + "; ";
-    throw std::runtime_error(message + (devices.empty() ? "none" : ""));
+    throw BridgeError(message + (devices.empty() ? "none" : ""));
 }
 } // namespace permission_nnrt
 #endif

@@ -76,7 +76,7 @@ try {
     assert.equal(state.cpuLoads, 1);
     assert.ok(model.diagnostic.includes(error));
   }
-  const loadError = 'Load OMC failed at OH_NNCompilation_Build (not returned); exception_type=i; CANN=test; bridge=1.0.7; detail=Native exception int=17';
+  const loadError = 'Load OMC failed at OH_NNCompilation_Build (not returned); exception_type=i; CANN=test; bridge=1.0.8; detail=Native exception int=17';
   state = { devices: ['HIAI_F'], backend: 'HIAI_F', allowLoad: true, loadError, nativeLoads: 0, selected: 0, cpuLoads: 0 };
   const model = new PermissionModel();
   await model.load(resources);

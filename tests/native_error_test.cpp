@@ -30,6 +30,11 @@ int compilationToken;
 int executorToken;
 const char *faultAt = nullptr;
 bool badTensorType = false;
+bool nullShape = false;
+bool badElementCount = false;
+bool verifyTokenBuffers = false;
+std::array<std::vector<int32_t>, 2> inputShapes{{{1, 16}, {1, 16}}};
+const Logits expectedLogits{{0.5f, -0.25f, 1.5f, -2.0f, 0.0f}};
 struct VendorFault {};
 napi_value pendingReason = nullptr;
 
@@ -49,6 +54,8 @@ void Reset()
     buildMode = 0;
     faultAt = nullptr;
     badTensorType = false;
+    nullShape = badElementCount = verifyTokenBuffers = false;
+    inputShapes = {{{1, 16}, {1, 16}}};
     compatibility = 0;
     hasCannBackend = true;
     failErrorCreation = failStringCreation = failArrayCreation = failResolve = pendingErrorCreation = pending = false;
@@ -78,6 +85,26 @@ void RunLoad(const std::string &expected)
     Complete(nullptr, napi_ok, job);
     assert(rejected == 1 && deleted == 1);
     assert(rejection.find(expected) != std::string::npos);
+}
+
+void RunTensorRoundTrip(const std::vector<int32_t> &shape)
+{
+    Reset();
+    buildMode = 3;
+    inputShapes = {{shape, shape}};
+    verifyTokenBuffers = true;
+    auto *job = NewJob(Operation::Load);
+    std::thread loader([&] { Execute(nullptr, job); }); loader.join();
+    assert(job->session && job->error[0] == '\0');
+    job->operation = Operation::Predict;
+    for (size_t i = 0; i < job->ids.size(); ++i) {
+        job->ids[i] = static_cast<int32_t>(100 + i);
+        job->mask[i] = i % 2;
+    }
+    std::thread predictor([&] { Execute(nullptr, job); }); predictor.join();
+    assert(job->error[0] == '\0' && job->logits == expectedLogits);
+    Complete(nullptr, napi_ok, job);
+    assert(rejected == 0 && deleted == 1);
 }
 } // namespace
 
@@ -174,9 +201,17 @@ extern "C" NN_TensorDesc *OH_NNExecutor_CreateOutputTensorDesc(const OH_NNExecut
 extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetDataType(const NN_TensorDesc *desc, OH_NN_DataType *type)
 { *type = desc->output ? OH_NN_FLOAT32 : (badTensorType ? OH_NN_INT64 : OH_NN_INT32); return OH_NN_SUCCESS; }
 extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetElementCount(const NN_TensorDesc *desc, size_t *count)
-{ *count = desc->output ? 5 : 16; return OH_NN_SUCCESS; }
-extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetShape(const NN_TensorDesc *, int32_t **shape, size_t *rank)
-{ static int32_t dims[] = {1, 16}; *shape = dims; *rank = 2; return OH_NN_SUCCESS; }
+{
+    *count = 5;
+    if (!desc->output) {
+        *count = 1;
+        for (auto dim : inputShapes[desc->index]) *count *= static_cast<size_t>(dim);
+        if (badElementCount) ++*count;
+    }
+    return OH_NN_SUCCESS;
+}
+extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetShape(const NN_TensorDesc *desc, int32_t **shape, size_t *rank)
+{ auto &dims = inputShapes[desc->index]; *shape = nullShape ? nullptr : dims.data(); *rank = dims.size(); return OH_NN_SUCCESS; }
 extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetName(const NN_TensorDesc *desc, const char **name)
 { *name = desc->index == 0 ? "input_ids" : "attention_mask"; return OH_NN_SUCCESS; }
 extern "C" OH_NN_ReturnCode OH_NNTensorDesc_Destroy(NN_TensorDesc **p)
@@ -189,8 +224,22 @@ extern "C" void *OH_NNTensor_GetDataBuffer(const NN_Tensor *tensor)
 { return const_cast<uint8_t *>(tensor->bytes.data()); }
 extern "C" OH_NN_ReturnCode OH_NNTensor_Destroy(NN_Tensor **p)
 { delete *p; *p = nullptr; return OH_NN_SUCCESS; }
-extern "C" OH_NN_ReturnCode OH_NNExecutor_RunSync(OH_NNExecutor *, NN_Tensor *[], size_t, NN_Tensor *[], size_t)
-{ MaybeThrow("run"); return OH_NN_SUCCESS; }
+extern "C" OH_NN_ReturnCode OH_NNExecutor_RunSync(OH_NNExecutor *, NN_Tensor *inputs[], size_t, NN_Tensor *outputs[], size_t)
+{
+    MaybeThrow("run");
+    if (verifyTokenBuffers) {
+        size_t length = 1;
+        for (auto dim : inputShapes[0]) length *= static_cast<size_t>(dim);
+        for (size_t i = 0; i < length; ++i) {
+            int32_t id = 0, mask = 0;
+            std::memcpy(&id, inputs[0]->bytes.data() + i * sizeof(int32_t), sizeof(int32_t));
+            std::memcpy(&mask, inputs[1]->bytes.data() + i * sizeof(int32_t), sizeof(int32_t));
+            assert(id == static_cast<int32_t>(100 + i) && mask == static_cast<int32_t>(i % 2));
+        }
+    }
+    std::memcpy(outputs[0]->bytes.data(), expectedLogits.data(), sizeof(expectedLogits));
+    return OH_NN_SUCCESS;
+}
 
 int main()
 {
@@ -243,5 +292,23 @@ int main()
     assert(rejected == 1 && deleted == 2);
     assert(rejection.find("Predict failed at OH_NNExecutor_RunSync (not returned)") != std::string::npos);
     assert(rejection.find("VendorFault") != std::string::npos);
-    std::cout << "PASS: 21 native load/predict/completion scenarios; failures retain API, return status and exception type\n";
+    session.reset();
+    for (int32_t length : {16, 32, 64}) {
+        RunTensorRoundTrip({length});
+        RunTensorRoundTrip({1, length});
+        RunTensorRoundTrip({1, length, 1, 1});
+        RunTensorRoundTrip({1, 1, 1, length});
+    }
+    for (const std::vector<int32_t> &shape : std::vector<std::vector<int32_t>>{
+            {2, 8}, {1, 17}, {1, -1}, {0, 16}, {16, 16}, {1, 1}, {}, {1, 1, 1, 1, 1, 1, 1, 1, 16}}) {
+        Reset(); buildMode = 3; inputShapes[0] = shape;
+        RunLoad("Unsupported token input shape");
+        assert(rejection.find("Validate token input shape") != std::string::npos);
+        assert(rejection.find("BridgeError") != std::string::npos);
+        assert(rejection.find("Unknown native exception") == std::string::npos);
+    }
+    Reset(); buildMode = 3; nullShape = true; RunLoad("Unsupported token input shape <null>");
+    Reset(); buildMode = 3; inputShapes[1] = {1, 32}; RunLoad("NNRT token and mask shapes differ");
+    Reset(); buildMode = 3; badElementCount = true; RunLoad("Offline model tensor mismatch: type=");
+    std::cout << "PASS: 44 native scenarios, including 16/32/64-token padded-shape round trips and invalid-shape rejection\n";
 }

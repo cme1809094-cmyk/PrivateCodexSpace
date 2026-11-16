@@ -16,7 +16,7 @@ void ExpectFailure(const std::string &message, bool offline = false)
     try {
         if (offline) (void)permission_nnrt::SelectOfflineAccelerator();
         else (void)permission_nnrt::SelectAccelerator();
-    } catch (const std::runtime_error &error) {
+    } catch (const permission_nnrt::BridgeError &error) {
         failed = std::string(error.what()).find(message) != std::string::npos;
     }
     assert(failed);

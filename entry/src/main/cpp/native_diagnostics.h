@@ -4,6 +4,7 @@
 #include "native_log.h"
 #include <cstdio>
 #include <cstring>
+#include <string>
 #include <type_traits>
 #include <utility>
 #if __has_include(<cxxabi.h>)
@@ -34,6 +35,11 @@ public:
         std::snprintf(runtime_, sizeof(runtime_), "%s", version && *version ? version : "<unavailable>");
     }
 
+    void SetTensorContext(const char *kind, size_t index, const std::string &shape) noexcept
+    {
+        std::snprintf(tensor_, sizeof(tensor_), "%s[%zu] shape=%s", kind, index, shape.c_str());
+    }
+
     template <typename Function>
     auto Call(const char *operation, Function &&function, int index = -1)
     {
@@ -48,7 +54,9 @@ public:
         if (verbose_) PermissionLog(stage_, "API", level);
         auto result = std::forward<Function>(function)();
         using Result = decltype(result);
-        if constexpr (std::is_enum_v<Result> || std::is_integral_v<Result>) {
+        if constexpr (std::is_same_v<Result, size_t>) {
+            std::snprintf(returned_, sizeof(returned_), "value=%zu", result);
+        } else if constexpr (std::is_enum_v<Result> || std::is_integral_v<Result>) {
             std::snprintf(returned_, sizeof(returned_), "code=%lld", static_cast<long long>(result));
         } else if constexpr (std::is_pointer_v<Result>) {
             std::snprintf(returned_, sizeof(returned_), "%s", result ? "non-null" : "null");
@@ -65,14 +73,15 @@ public:
 
     void Failure(char *buffer, size_t size, const char *operation, const char *detail) const noexcept
     {
-        std::snprintf(buffer, size, "%s failed at %s (%s); exception_type=%.160s; CANN=%s; bridge=1.0.7; detail=%s",
-            operation, stage_, returned_, CurrentExceptionType(), runtime_, detail ? detail : "<no message>");
+        std::snprintf(buffer, size, "%s failed at %s (%s); tensor=%s; exception_type=%.160s; CANN=%s; bridge=1.0.8; detail=%s",
+            operation, stage_, returned_, tensor_, CurrentExceptionType(), runtime_, detail ? detail : "<no message>");
     }
 
 private:
     char stage_[192] = "worker entry";
     char returned_[64] = "not called";
     char runtime_[128] = "<unavailable>";
+    char tensor_[192] = "<none>";
     bool verbose_;
 };
 } // namespace permission_nnrt
