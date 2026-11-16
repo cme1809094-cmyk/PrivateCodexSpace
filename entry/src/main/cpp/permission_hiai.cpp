@@ -1,5 +1,6 @@
 #include <napi/native_api.h>
 #include <neural_network_runtime/neural_network_core.h>
+#include "nnrt_device.h"
 
 #include <array>
 #include <cmath>
@@ -15,7 +16,9 @@
 namespace {
 constexpr size_t kSequenceLength = 64;
 constexpr size_t kLabelCount = 5;
-constexpr const char *kDeviceName = "HIAI_F";
+using permission_nnrt::DescribeDevice;
+using permission_nnrt::ListDevices;
+using permission_nnrt::SelectAccelerator;
 using Tokens = std::array<int32_t, kSequenceLength>;
 using Logits = std::array<float, kLabelCount>;
 
@@ -32,7 +35,7 @@ using Executor = NNPointer<OH_NNExecutor, OH_NNExecutor_Destroy>;
 using Descriptor = NNPointer<NN_TensorDesc, OH_NNTensorDesc_Destroy>;
 using Tensor = NNPointer<NN_Tensor, OH_NNTensor_Destroy>;
 
-void Check(OH_NN_ReturnCode code, const char *operation)
+void Check(OH_NN_ReturnCode code, const std::string &operation)
 {
     if (code != OH_NN_SUCCESS) {
         throw std::runtime_error(std::string(operation) + " failed (" + std::to_string(code) + ")");
@@ -44,38 +47,6 @@ void CheckJs(napi_status status, const char *operation)
     if (status != napi_ok) {
         throw std::runtime_error(operation);
     }
-}
-
-struct Device {
-    size_t id;
-    std::string name;
-};
-
-std::vector<Device> ListDevices()
-{
-    const size_t *ids = nullptr;
-    uint32_t count = 0;
-    Check(OH_NNDevice_GetAllDevicesID(&ids, &count), "OH_NNDevice_GetAllDevicesID");
-    if (count != 0 && !ids) {
-        throw std::runtime_error("NNRT returned no device IDs");
-    }
-    std::vector<Device> devices;
-    for (uint32_t i = 0; i < count; ++i) {
-        const char *name = nullptr;
-        Check(OH_NNDevice_GetName(ids[i], &name), "OH_NNDevice_GetName");
-        devices.push_back({ids[i], name ? name : "<unnamed>"});
-    }
-    return devices;
-}
-
-size_t SelectDevice()
-{
-    for (const auto &device : ListDevices()) {
-        if (device.name == kDeviceName) {
-            return device.id;
-        }
-    }
-    throw std::runtime_error("NNRT device HIAI_F is unavailable");
 }
 
 void ValidateTensor(const Descriptor &descriptor, OH_NN_DataType expectedType, size_t expectedElements)
@@ -105,15 +76,16 @@ void *TensorBuffer(const Tensor &tensor, size_t expectedSize)
 
 class Session {
 public:
-    explicit Session(const std::vector<uint8_t> &model)
+    explicit Session(const std::vector<uint8_t> &model) : device_(SelectAccelerator())
     {
-        const size_t device = SelectDevice();
+        const size_t device = device_.id;
+        const std::string backend = DescribeDevice(device_);
         Compilation compilation(OH_NNCompilation_ConstructWithOfflineModelBuffer(model.data(), model.size()));
         if (!compilation) {
             throw std::runtime_error("Cannot create NNRT compilation from the OM model");
         }
-        Check(OH_NNCompilation_SetDevice(compilation.get(), device), "OH_NNCompilation_SetDevice(HIAI_F)");
-        Check(OH_NNCompilation_Build(compilation.get()), "OH_NNCompilation_Build(HIAI_F)");
+        Check(OH_NNCompilation_SetDevice(compilation.get(), device), "OH_NNCompilation_SetDevice(" + backend + ")");
+        Check(OH_NNCompilation_Build(compilation.get()), "OH_NNCompilation_Build(" + backend + ")");
         executor_.reset(OH_NNExecutor_Construct(compilation.get()));
         if (!executor_) {
             throw std::runtime_error("OH_NNExecutor_Construct failed");
@@ -177,7 +149,7 @@ public:
         NN_Tensor *inputTensors[] = {inputs_[0].get(), inputs_[1].get()};
         NN_Tensor *outputTensors[] = {output_.get()};
         Check(OH_NNExecutor_RunSync(executor_.get(), inputTensors, 2, outputTensors, 1),
-            "OH_NNExecutor_RunSync(HIAI_F)");
+            "OH_NNExecutor_RunSync(" + DescribeDevice(device_) + ")");
         Logits logits{};
         std::memcpy(logits.data(), TensorBuffer(output_, sizeof(logits)), sizeof(logits));
         for (const float value : logits) {
@@ -188,7 +160,10 @@ public:
         return logits;
     }
 
+    std::string DeviceName() const { return DescribeDevice(device_); }
+
 private:
+    permission_nnrt::Device device_;
     Executor executor_;
     std::array<Tensor, 2> inputs_;
     Tensor output_;
@@ -250,7 +225,7 @@ napi_value JobResult(napi_env env, const Job &job)
             [](napi_env, void *data, void *) { delete static_cast<std::shared_ptr<Session> *>(data); },
             nullptr, nullptr), "Cannot wrap session");
         holder.release();
-        CheckJs(napi_set_named_property(env, result, "device", JsString(env, kDeviceName)), "Cannot set device");
+        CheckJs(napi_set_named_property(env, result, "device", JsString(env, job.session->DeviceName())), "Cannot set device");
     } else {
         CheckJs(napi_create_array_with_length(env, job.logits.size(), &result), "Cannot allocate logits array");
         for (uint32_t i = 0; i < job.logits.size(); ++i) {
@@ -316,9 +291,19 @@ napi_value Devices(napi_env env, napi_callback_info)
         CheckJs(napi_create_array_with_length(env, devices.size(), &result), "Cannot allocate device list");
         for (uint32_t i = 0; i < devices.size(); ++i) {
             CheckJs(napi_set_element(env, result, i, JsString(env,
-                devices[i].name + " (ID " + std::to_string(devices[i].id) + ")")), "Cannot set device");
+                DescribeDevice(devices[i]))), "Cannot set device");
         }
         return result;
+    } catch (const std::exception &error) {
+        napi_throw_error(env, nullptr, error.what());
+        return nullptr;
+    }
+}
+
+napi_value Accelerator(napi_env env, napi_callback_info)
+{
+    try {
+        return JsString(env, DescribeDevice(SelectAccelerator()));
     } catch (const std::exception &error) {
         napi_throw_error(env, nullptr, error.what());
         return nullptr;
@@ -379,10 +364,11 @@ napi_value Init(napi_env env, napi_value exports)
 {
     napi_property_descriptor properties[] = {
         {"devices", nullptr, Devices, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"accelerator", nullptr, Accelerator, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"load", nullptr, Load, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"predict", nullptr, Predict, nullptr, nullptr, nullptr, napi_default, nullptr},
     };
-    if (napi_define_properties(env, exports, 3, properties) != napi_ok) {
+    if (napi_define_properties(env, exports, sizeof(properties) / sizeof(properties[0]), properties) != napi_ok) {
         return nullptr;
     }
     return exports;

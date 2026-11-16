@@ -53,8 +53,8 @@ python3 ml/native_v2/check_host_permissions.py "$PWD" /path/to/native-build/v2_X
 
 ## 安装与测量
 
-1. 用 DevEco Studio 打开此工程，连接 Mate 80 Pro Max，配置调试签名。包名为 `com.intentlab.permissiondemohiaperf`，版本是 1.0.3。本仓库提供源码与模型，需要重新构建并签名 HAP；不包含已更新原生 V2 模型的安装包。
-2. 输入一条中文操作指令，查看后端是否显示 `HIAI_F`，再查看诊断中的模型自检。出错时应用会显示原因，并允许退到 MindSpore Lite CPU 继续演示。
+1. 用 DevEco Studio 打开此工程，连接 Mate 80 Pro Max，配置调试签名。包名为 `com.intentlab.permissiondemohiaperf`，版本是 1.0.4。本仓库提供源码与模型，需要重新构建并签名 HAP；不包含已更新原生 V2 模型的安装包。
+2. 输入一条中文操作指令，查看后端是否显示实际 NNRT 加速器名称，再查看诊断中的模型自检。设备按 `OH_NNDevice_GetType` 返回的 `OH_NN_ACCELERATOR` 选择，不要求名为 `HIAI_F`。出错时应用会显示原因，并允许退到 MindSpore Lite CPU 继续演示。
 3. 点击「测量推理时延」。界面里的「旧版 NPU 64 token」指本包内的 9030 全查询对照。各模型使用相同的分词结果，预热 5 次、测量 50 次。p50/p95 含推理接口、张量复制和调度。冷启动、分词和自检位于测速区间之外。
 
 ## 历史兼容模型的重新构建

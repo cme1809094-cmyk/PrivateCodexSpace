@@ -32,6 +32,14 @@ python3 ml/materialize_variant.py variants/tinybert4l /absolute/path/to/TinyBERT
 
 在生成目录运行 `python3 ml/verify_artifacts.py` 可核对五个模型文件。用 DevEco Studio 打开后配置签名并构建 HAP。成功加载 NPU 模型后应查看 HiAI 自检结果，再测量时延；应用会保留同模型的 CPU 回退。
 
+### 修复“未枚举到 HIAI_F”
+
+1.0.3 在 ArkTS 和 C++ 两处按名称匹配 `HIAI_F`，会错误拒绝 `NPU_ohos.boot.hardware.Kirin9020_v2_0` 等 NNRT 后端。1.0.4 统一由 native 层调用 `OH_NNDevice_GetType` 选择 `OH_NN_ACCELERATOR`，将实际设备 ID 用于编译器和张量创建，并在会话及错误信息中保留实际名称、ID 和类型。CPU/GPU 不会因名称包含 NPU 或 HIAI_F 而入选。
+
+已有工程需要更新 `permission_hiai.cpp`、新增 `nnrt_device.h`、更新 `types/libpermission_hiai/Index.d.ts` 和 `PermissionModel.ets`，以及 AppScope 版本信息，然后在 DevEco 中 Clean/Rebuild、签名并重新安装 HAP。仅替换 `.om` 文件或只更新 ArkTS，无法修复旧 native 库中的选择逻辑。也可从最新源码重新生成到一个新目录。
+
+已确认此次上报设备为 Mate 80 Pro Max / HarmonyOS 5.0.0。驱动名中的 Kirin9020 字样不等同于已验证的 SoC 型号或模型兼容结论；当前产物仍按 kirin9030 编译。名称检查失败发生在模型加载前，更新后需要观察带实际设备名称的 `OH_NNCompilation_Build`、`OH_NNExecutor_RunSync` 和模型自检结果。
+
 ## 重新训练与导出
 
 使用独立 Python 3.10 环境，避免改变 CANN 的 Python 依赖：

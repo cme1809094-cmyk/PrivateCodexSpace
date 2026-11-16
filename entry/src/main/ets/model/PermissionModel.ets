@@ -1,5 +1,5 @@
 import { systemDateTime } from '@kit.BasicServicesKit';
-import { devices, load as loadHiAI, predict as predictHiAI, HiAISession } from 'libpermission_hiai.so';
+import { devices, accelerator, load as loadHiAI, predict as predictHiAI, HiAISession } from 'libpermission_hiai.so';
 import { mindSporeLite } from '@kit.MindSporeLiteKit';
 import { resourceManager } from '@kit.LocalizationKit';
 import { util } from '@kit.ArkTS';
@@ -68,11 +68,9 @@ export class PermissionModel {
     try {
       const names: string[] = devices();
       this.diagnostic = 'NNRT 设备 ' + (names.length > 0 ? names.join('、') : '无');
-      if (!names.some((name: string): boolean => name.startsWith('HIAI_F (ID '))) {
-        throw new Error('未枚举到 HIAI_F');
-      }
+      const selected: string = accelerator();
       this.hasHiAI = true;
-      this.diagnostic += '\nHiAI 按有效 token 选择 16 / 32 / 64，首次使用时加载';
+      this.diagnostic += '\nNNRT 加速设备 ' + selected + '\n按有效 token 选择 16 / 32 / 64，首次使用时加载';
     } catch (error) {
       this.recordHiAIError(error as Error);
       await this.loadCpu(resources);
