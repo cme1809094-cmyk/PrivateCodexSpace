@@ -1,0 +1,24 @@
+{
+  "model_id": "huawei-noah/TinyBERT_4L_zh",
+  "revision": "152bf15d86715b41dd89c1e03cf5664963d9b005",
+  "files": [
+    {
+      "name": "config.json",
+      "bytes": 430,
+      "sha256": "d93cd853e1be7f53fad2cd59b78471480af6dff1888cc26064f011ce448dd468",
+      "lfs_sha256_verified": false
+    },
+    {
+      "name": "vocab.txt",
+      "bytes": 109534,
+      "sha256": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a",
+      "lfs_sha256_verified": false
+    },
+    {
+      "name": "pytorch_model.bin",
+      "bytes": 47138484,
+      "sha256": "b4aec782e4a56727bb6ba1dcac8e6c3319460e58e11254f7e43a2dccee0c19c1",
+      "lfs_sha256_verified": true
+    }
+  ]
+}

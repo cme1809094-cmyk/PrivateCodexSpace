@@ -1,0 +1,49 @@
+{
+  "scope": "Same 33 bundled synthetic held-out phrases; no independent real-world evaluation",
+  "models": {
+    "MiniRBT-H256": {
+      "samples": 33,
+      "exact": 24,
+      "overpredicted_permission_samples": 4,
+      "micro_precision": 0.8947368421052632,
+      "micro_recall": 0.85,
+      "micro_f1": 0.8717948717948718,
+      "false_positive_by_label": [
+        1,
+        2,
+        1,
+        0,
+        0
+      ],
+      "false_negative_by_label": [
+        2,
+        1,
+        0,
+        1,
+        2
+      ]
+    },
+    "TinyBERT-4L-zh": {
+      "samples": 33,
+      "exact": 25,
+      "overpredicted_permission_samples": 3,
+      "micro_precision": 0.918918918918919,
+      "micro_recall": 0.85,
+      "micro_f1": 0.8831168831168831,
+      "false_positive_by_label": [
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "false_negative_by_label": [
+        1,
+        2,
+        0,
+        0,
+        3
+      ]
+    }
+  }
+}

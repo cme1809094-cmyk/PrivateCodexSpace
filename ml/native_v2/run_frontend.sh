@@ -17,6 +17,7 @@ platform="$DDK_PATH/tools/platform/kirin9030"
 loader=${OMG_LOADER:-/lib64/ld-linux-x86-64.so.2}
 python_bin=${PYTHON_BIN:-python3}
 printf 'Build directory %s\n' "$out"
+"$python_bin" "$ml/inspect_bert.py" "$ml/permission.onnx" > "$out/architecture.json"
 
 g++ -std=c++17 -shared -fPIC -I"$include" \
   "$here/plugin/onnx_native.cpp" "$here/plugin/onnx_prototypes.cpp" \
@@ -44,7 +45,7 @@ for length in 16 32 64; do
         --output_type=logits:FP32)
   "$loader" "$master/omg" "${args[@]}" --target=om --output=frontend > frontend.log 2>&1
   "$loader" "$master/omg" --mode=1 --om=frontend.om --json=frontend.json > inspect.log 2>&1
-  "$python_bin" "$here/verify_frontend.py" "$length" frontend.json > frontend-verified.json
+  "$python_bin" "$here/verify_frontend.py" "$length" frontend.json --architecture "$out/architecture.json" > frontend-verified.json
   printf 'Length %s verified in %s/frontend-verified.json\n' "$length" "$dir"
 done
 

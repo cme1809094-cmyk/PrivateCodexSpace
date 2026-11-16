@@ -1,0 +1,93 @@
+{
+  "id": "tinybert4l",
+  "display_name": "TinyBERT 4L",
+  "bundle_name": "com.intentlab.permissiondemotinybert4l",
+  "device_tested": false,
+  "hap_built": false,
+  "artifacts": [
+    {
+      "source": "models/permission.onnx",
+      "target": "ml/permission.onnx",
+      "bytes": 45754377,
+      "sha256": "464823b0db1731a3007ec289e38f89743b06b578dfaef59b9a558176dae81dca"
+    },
+    {
+      "source": "models/permission.ms",
+      "target": "entry/src/main/resources/rawfile/permission.ms",
+      "bytes": 45240352,
+      "sha256": "d15efcd1f12b87c114d8d1fb5a10d8db36181a83d3a224e79bd7dd355c3a6de1"
+    },
+    {
+      "source": "models/permission_16.om",
+      "target": "entry/src/main/resources/rawfile/permission_16.om",
+      "bytes": 24524711,
+      "sha256": "12751d1b8f44a961fde4d951e493557dc3ec0cfe17aa222386decb249faebbec"
+    },
+    {
+      "source": "models/permission_32.om",
+      "target": "entry/src/main/resources/rawfile/permission_32.om",
+      "bytes": 24544692,
+      "sha256": "c1fc6cb367f678f8ec4ed507b0e89833d7bb4afaa79d6ae93b9f6899d9310b3d"
+    },
+    {
+      "source": "models/permission_64.om",
+      "target": "entry/src/main/resources/rawfile/permission_64.om",
+      "bytes": 24584700,
+      "sha256": "1ae220144d27386ab83cd39cba5c2c6c20a01b4900d51cc432d2855e931c01d8"
+    },
+    {
+      "source": "vocab.txt",
+      "target": "entry/src/main/resources/rawfile/vocab.txt",
+      "bytes": 109534,
+      "sha256": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a"
+    },
+    {
+      "source": "model_config.json",
+      "target": "entry/src/main/resources/rawfile/model_config.json",
+      "bytes": 47,
+      "sha256": "f832c0dd99446a369d1215b954d6947878c463fbab112f9078ea622a906aeae5"
+    },
+    {
+      "source": "hiai_reference.json",
+      "target": "entry/src/main/resources/rawfile/hiai_reference.json",
+      "bytes": 6944,
+      "sha256": "c8b0a7355061af5ba3125449e7d23a3923a60b3a43930b50162529f2ed95ed71"
+    },
+    {
+      "source": "test_vectors.json",
+      "target": "ml/test_vectors.json",
+      "bytes": 50461,
+      "sha256": "66986906eca694fd976760952998fc96a8742cfc698b102ad6c9c223634135fd"
+    },
+    {
+      "source": "metrics.json",
+      "target": "ml/metrics.json",
+      "bytes": 1512,
+      "sha256": "60c7b8a87adaa5795f906c1a55960b68deddd00d3ddd56f8baf2b549a3581ed7"
+    },
+    {
+      "source": "encoder-config.json",
+      "target": "ml/encoder-config.json",
+      "bytes": 1013,
+      "sha256": "5d4aa45be4d677b3495505955708f1ed18f434a1c6039f6a0698acfed29b27b9"
+    },
+    {
+      "source": "native-verification.json",
+      "target": "ml/kirin9030-native-v2-verification.json",
+      "bytes": 28952,
+      "sha256": "f12d67e1030d9374bf11a011d3ef9cce1f8180105a74649254252be94f139f7e"
+    },
+    {
+      "source": "LICENSE-TinyBERT.txt",
+      "target": "ml/LICENSE-TinyBERT.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "source": "THIRD-PARTY-NOTICES.txt",
+      "target": "ml/THIRD-PARTY-NOTICES.txt",
+      "bytes": 12212,
+      "sha256": "bb4fa00182a4a519acd1dbf942c5024e461e00c514d61881126b87688a52a9bd"
+    }
+  ]
+}

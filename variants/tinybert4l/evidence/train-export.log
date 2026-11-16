@@ -1,0 +1,85 @@
+Some weights of BertForSequenceClassification were not initialized from the model checkpoint at /workspace/work/tinybert/downloads and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Loaded 4 layers, 12 heads, hidden=312
+epoch 6: {'samples': 31, 'exact': 9, 'overpredicted': 2, 'missed_by_label': [7, 7, 2, 4, 5]}
+epoch 12: {'samples': 31, 'exact': 15, 'overpredicted': 0, 'missed_by_label': [7, 6, 3, 1, 2]}
+epoch 18: {'samples': 31, 'exact': 23, 'overpredicted': 2, 'missed_by_label': [3, 1, 1, 1, 1]}
+epoch 24: {'samples': 31, 'exact': 24, 'overpredicted': 1, 'missed_by_label': [1, 3, 0, 1, 1]}
+epoch 30: {'samples': 31, 'exact': 25, 'overpredicted': 0, 'missed_by_label': [1, 3, 0, 1, 1]}
+epoch 36: {'samples': 31, 'exact': 25, 'overpredicted': 1, 'missed_by_label': [1, 2, 0, 1, 1]}
+/workspace/work/git-upload/PrivateCodexSpace/ml/train_export.py:151: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter will be the default. To switch now, set dynamo=True in torch.onnx.export. This new exporter supports features like exporting LLMs with DynamicCache. We encourage you to try it and share feedback to help improve the experience. Learn more about the new export logic: https://pytorch.org/docs/stable/onnx_dynamo.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html.
+  torch.onnx.export(
+{
+  "checkpoint": "huawei-noah/TinyBERT_4L_zh",
+  "revision": "152bf15d86715b41dd89c1e03cf5664963d9b005",
+  "synthetic_data": true,
+  "architecture": {
+    "num_hidden_layers": 4,
+    "hidden_size": 312,
+    "intermediate_size": 1200,
+    "num_attention_heads": 12,
+    "vocab_size": 21128
+  },
+  "parameter_count": 11420885,
+  "pretrained_loading": {
+    "missing_keys": [
+      "classifier.bias",
+      "classifier.weight"
+    ],
+    "unexpected_keys": [
+      "cls.predictions.bias",
+      "cls.predictions.decoder.weight",
+      "cls.predictions.transform.LayerNorm.bias",
+      "cls.predictions.transform.LayerNorm.weight",
+      "cls.predictions.transform.dense.bias",
+      "cls.predictions.transform.dense.weight",
+      "cls.seq_relationship.bias",
+      "cls.seq_relationship.weight",
+      "fit_dense.bias",
+      "fit_dense.weight"
+    ],
+    "mismatched_keys": [],
+    "error_msgs": []
+  },
+  "labels": [
+    "camera",
+    "microphone",
+    "coarse_location",
+    "fine_location",
+    "out_of_scope"
+  ],
+  "training_samples": 99,
+  "selected_epoch": 23,
+  "thresholds": [
+    0.55,
+    0.65,
+    0.475,
+    0.6,
+    0.55
+  ],
+  "validation": {
+    "samples": 31,
+    "exact": 26,
+    "overpredicted": 0,
+    "missed_by_label": [
+      1,
+      2,
+      0,
+      1,
+      1
+    ]
+  },
+  "test": {
+    "samples": 33,
+    "exact": 25,
+    "overpredicted": 3,
+    "missed_by_label": [
+      1,
+      2,
+      0,
+      0,
+      3
+    ]
+  },
+  "pytorch_onnx_max_abs_logit_error": 5.662441253662109e-06
+}

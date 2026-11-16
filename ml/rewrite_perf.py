@@ -1,4 +1,4 @@
-"""Specialize MiniRBT sequence shape and remove final-layer non-CLS queries."""
+"""Specialize exported BERT sequence shape and remove final-layer non-CLS queries."""
 
 import argparse
 from pathlib import Path
@@ -6,9 +6,9 @@ from pathlib import Path
 import numpy as np
 import onnx
 from onnx import helper, numpy_helper, shape_inference
+from inspect_bert import inspect_model
 
 
-ATTENTION = "/classifier/bert/encoder/layer.5/attention"
 EMBEDDINGS = "/classifier/bert/embeddings"
 CONTEXT_SHAPE = "/attention/self/Constant_4"
 INPUT_LENGTH = 64
@@ -20,6 +20,11 @@ def replace_constant(node, array):
 
 def rewrite(source, length, cls_only):
     model = onnx.load(source)
+    structure = inspect_model(model)
+    last_layer = structure["num_hidden_layers"] - 1
+    attention = f"/classifier/bert/encoder/layer.{last_layer}/attention"
+    previous_layer = f"layer.{last_layer - 1}/output/LayerNorm/Add_1_output_0"
+    hidden = structure["hidden_size"]
     graph = model.graph
     for inp in graph.input:
         shape = inp.type.tensor_type.shape.dim
@@ -38,19 +43,19 @@ def rewrite(source, length, cls_only):
             replace_constant(node, tensor[:, :length])
         if name.endswith(CONTEXT_SHAPE):
             shape = numpy_helper.to_array(node.attribute[0].t).copy()
-            if tuple(shape) != (1, INPUT_LENGTH, 256):
+            if tuple(shape) != (1, INPUT_LENGTH, hidden):
                 raise ValueError(f"Unexpected context shape for {name}")
-            shape[1] = 1 if cls_only and name.startswith(ATTENTION) else length
+            shape[1] = 1 if cls_only and name.startswith(attention) else length
             replace_constant(node, shape)
-        if cls_only and name == ATTENTION + "/self/query/MatMul":
-            selected = ATTENTION + "/cls_input"
+        if cls_only and name == attention + "/self/query/MatMul":
+            selected = attention + "/cls_input"
             previous = node.input[0]
             indices = selected + "_indices"
             graph.initializer.append(numpy_helper.from_array(np.array([0], np.int64), indices))
             nodes.append(helper.make_node("Gather", [previous, indices], [selected], name=selected, axis=1))
             node.input[0] = selected
-        if cls_only and name == ATTENTION + "/output/Add":
-            if selected is None or not node.input[1].endswith("layer.4/output/LayerNorm/Add_1_output_0"):
+        if cls_only and name == attention + "/output/Add":
+            if selected is None or not node.input[1].endswith(previous_layer):
                 raise ValueError("Unexpected final-layer residual")
             node.input[1] = selected
         nodes.append(node)

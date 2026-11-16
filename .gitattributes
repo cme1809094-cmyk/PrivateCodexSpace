@@ -4,3 +4,5 @@
 *.ms filter=lfs diff=lfs merge=lfs -text
 # Keep original vendor log whitespace in verification evidence.
 ml/native_v2/evidence/**/*.log -whitespace
+variants/**/evidence/**/*.log -whitespace
+variants/**/THIRD-PARTY-NOTICES.txt -whitespace

@@ -2,6 +2,7 @@
 import argparse
 from collections import Counter
 from pathlib import Path
+import re
 
 import numpy as np
 import onnx
@@ -11,6 +12,10 @@ from onnx import TensorProto, helper, numpy_helper, shape_inference
 def prepare(source):
     model = shape_inference.infer_shapes(onnx.load(source))
     graph = model.graph
+    layers = {int(m[1]) for n in graph.node
+              if (m := re.search(r"/encoder/layer\.(\d+)/", n.name))}
+    if not layers or layers != set(range(len(layers))):
+        raise ValueError(f"Unexpected encoder layers {layers}")
     shapes = {v.name: [d.dim_value for d in v.type.tensor_type.shape.dim]
               for v in (*graph.input, *graph.value_info, *graph.output)}
     nodes = []
@@ -49,8 +54,8 @@ def prepare(source):
         dims = prefix + "/unpack_dims"
         graph.initializer.append(numpy_helper.from_array(np.array(shapes[n.output[0]], np.int64), dims))
         op("Reshape", [result, dims], "unpack", output=n.output[0])
-    if count != {"MatMul": 12, "Softmax": 6}:
-        raise ValueError(f"Unexpected MiniRBT operator count: {count}")
+    if count != {"MatMul": 2 * len(layers), "Softmax": len(layers)}:
+        raise ValueError(f"Unexpected BERT operator count: {count}")
     del graph.node[:]
     graph.node.extend(nodes)
     del graph.value_info[:]

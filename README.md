@@ -4,6 +4,8 @@
 
 本工程的模型二进制使用 Git LFS。完整克隆后执行 `git lfs pull`，再执行 `python3 ml/verify_artifacts.py` 校验六个模型文件。工具链配置和编译统一在 Codex 环境进行。
 
+另提供 [中文 TinyBERT 4L 试验版本](variants/tinybert4l/README.md)。它有独立训练得到的分类头、词表、阈值、CPU 回退模型和三档原生 V2 NPU 模型；可通过 `ml/materialize_variant.py` 生成独立包名的 HarmonyOS 工程。
+
 ## 模型质量与当前准备程度
 
 `ml/metrics.json` 记录的训练集是 99 条合成中文样本，验证集为 31 条、完全匹配 30 条，测试集为 33 条、完全匹配 24 条（约 72.7%），其中 4 条存在多预测标签。这是既有训练报告，本次没有重新训练或独立复评。标签是 camera、microphone、coarse_location、fine_location 和 out_of_scope。

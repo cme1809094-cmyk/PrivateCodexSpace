@@ -1,0 +1,244 @@
+{
+  "length": 16,
+  "architecture": {
+    "num_hidden_layers": 4,
+    "hidden_size": 312,
+    "num_attention_heads": 12,
+    "head_size": 26,
+    "input_length": 64,
+    "vocab_size": 21128
+  },
+  "counts": {
+    "BatchMatMulV2": 8,
+    "SoftmaxV2": 4
+  },
+  "ir_layout_labels": {
+    "NCHW": 32
+  },
+  "nodes": [
+    {
+      "name": "/classifier/bert/encoder/layer.0/attention/self/MatMul/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          12,
+          16,
+          26
+        ],
+        [
+          12,
+          26,
+          16
+        ],
+        [
+          12,
+          16,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.0/attention/self/Softmax/native/SoftmaxV2",
+      "type": "SoftmaxV2",
+      "shapes": [
+        [
+          192,
+          16
+        ],
+        [
+          192,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.0/attention/self/MatMul_1/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          12,
+          16,
+          16
+        ],
+        [
+          12,
+          16,
+          26
+        ],
+        [
+          12,
+          16,
+          26
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.1/attention/self/MatMul/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          12,
+          16,
+          26
+        ],
+        [
+          12,
+          26,
+          16
+        ],
+        [
+          12,
+          16,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.1/attention/self/Softmax/native/SoftmaxV2",
+      "type": "SoftmaxV2",
+      "shapes": [
+        [
+          192,
+          16
+        ],
+        [
+          192,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.1/attention/self/MatMul_1/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          12,
+          16,
+          16
+        ],
+        [
+          12,
+          16,
+          26
+        ],
+        [
+          12,
+          16,
+          26
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.2/attention/self/MatMul/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          12,
+          16,
+          26
+        ],
+        [
+          12,
+          26,
+          16
+        ],
+        [
+          12,
+          16,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.2/attention/self/Softmax/native/SoftmaxV2",
+      "type": "SoftmaxV2",
+      "shapes": [
+        [
+          192,
+          16
+        ],
+        [
+          192,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.2/attention/self/MatMul_1/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          12,
+          16,
+          16
+        ],
+        [
+          12,
+          16,
+          26
+        ],
+        [
+          12,
+          16,
+          26
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.3/attention/self/MatMul/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          12,
+          1,
+          26
+        ],
+        [
+          12,
+          26,
+          16
+        ],
+        [
+          12,
+          1,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.3/attention/self/Softmax/native/SoftmaxV2",
+      "type": "SoftmaxV2",
+      "shapes": [
+        [
+          12,
+          16
+        ],
+        [
+          12,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "/classifier/bert/encoder/layer.3/attention/self/MatMul_1/native/MatMulV2",
+      "type": "BatchMatMulV2",
+      "shapes": [
+        [
+          12,
+          1,
+          16
+        ],
+        [
+          12,
+          16,
+          26
+        ],
+        [
+          12,
+          1,
+          26
+        ]
+      ]
+    }
+  ]
+}

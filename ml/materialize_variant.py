@@ -1,0 +1,86 @@
+"""Create an isolated HarmonyOS project with a variant's models and metadata."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import re
+import shutil
+
+
+def digest(path):
+    result = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            result.update(chunk)
+    return result.hexdigest()
+
+
+def main():
+    root = Path(__file__).resolve().parents[1]
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("variant", type=Path)
+    parser.add_argument("destination", type=Path)
+    args = parser.parse_args()
+    variant, destination = args.variant.resolve(), args.destination.resolve()
+    if destination == root or root in destination.parents or variant in destination.parents:
+        raise ValueError("Choose a destination outside the source checkout")
+    if destination.exists():
+        raise ValueError("Destination already exists; choose a new project directory")
+    manifest = json.loads((variant / "variant.json").read_text())
+    for artifact in manifest["artifacts"]:
+        source = variant / artifact["source"]
+        if not source.is_file() or source.stat().st_size != artifact["bytes"] or digest(source) != artifact["sha256"]:
+            raise ValueError(f"Missing or invalid {source}; run git lfs pull")
+        target = destination / artifact["target"]
+        if destination not in target.resolve().parents:
+            raise ValueError("Artifact target escapes destination")
+    shutil.copytree(root, destination, ignore=shutil.ignore_patterns(
+        ".git", "variants", "evidence", "*.om", "*.omc", "*.ms", "*.onnx", "__pycache__",
+        "model-build", "build", "oh_modules", ".hvigor", ".idea", ".cxx", "local.properties"))
+    for artifact in manifest["artifacts"]:
+        target = destination / artifact["target"]
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(variant / artifact["source"], target)
+    evidence = destination / "ml/native_v2/evidence" / manifest["id"]
+    shutil.copytree(variant / "evidence", evidence)
+    report_path = destination / "ml/kirin9030-native-v2-verification.json"
+    report = json.loads(report_path.read_text())
+    for length, bucket in report["buckets"].items():
+        bucket["model"] = f"entry/src/main/resources/rawfile/permission_{length}.om"
+        bucket["backend_log"] = f"ml/native_v2/evidence/{manifest['id']}/l{length}/backend.log"
+        bucket["model_dump"] = f"ml/native_v2/evidence/{manifest['id']}/l{length}/mobile.json"
+    report["mindspore_lite_cpu"]["evidence"] = f"ml/native_v2/evidence/{manifest['id']}/ms-verify.log"
+    report["training_metrics"] = "ml/metrics.json"
+    report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    model_manifest = {"source_variant": manifest["id"], "device_tested": False, "artifacts": [
+        {"path": a["target"], "bytes": a["bytes"], "sha256": a["sha256"]}
+        for a in manifest["artifacts"] if Path(a["source"]).suffix in {".onnx", ".om", ".ms"}]}
+    (destination / "ml/artifact-manifest.json").write_text(json.dumps(model_manifest, indent=2) + "\n")
+    profile = destination / "AppScope/app.json5"
+    profile.write_text(re.sub(r'"bundleName"\s*:\s*"[^"]+"',
+                             '"bundleName": "' + manifest["bundle_name"] + '"', profile.read_text()))
+    for path in (destination / "AppScope/resources/base/element/string.json",
+                 destination / "entry/src/main/resources/base/element/string.json"):
+        strings = json.loads(path.read_text())
+        for item in strings.get("string", []):
+            if item["name"] in {"app_name", "EntryAbility_label", "EntryAbility_desc"}:
+                item["value"] = manifest["display_name"] + " 权限识别"
+        path.write_text(json.dumps(strings, ensure_ascii=False, indent=2) + "\n")
+    model_code = destination / "entry/src/main/ets/model/PermissionModel.ets"
+    code = model_code.read_text().replace("for (const bucket of [0, 16, 32, 64])", "for (const bucket of [16, 32, 64])")
+    code = code.replace("'优化版 NPU '", "'" + manifest["display_name"] + " NPU '")
+    model_code.write_text(code)
+    page = destination / "entry/src/main/ets/pages/Index.ets"
+    page.write_text(page.read_text().replace("MiniRBT", manifest["display_name"]))
+    bridge = destination / "entry/src/main/cpp/permission_hiai.cpp"
+    bridge.write_text(bridge.read_text().replace("MiniRBT", manifest["display_name"]))
+    (destination / "README.md").write_text(
+        "# " + manifest["display_name"] + " 权限识别 Demo\n\n"
+        "本工程由 ml/materialize_variant.py 生成，包含配套的三档原生 V2 NPU 模型、CPU 回退模型、词表、阈值和自检向量。\n\n"
+        "包名：`" + manifest["bundle_name"] + "`。请在 DevEco Studio 中构建、配置调试签名并安装到 Mate 80 Pro Max。\n\n"
+        "离线编译与主机数值对照已通过；HAP 构建、签名和真机精度/性能尚未验证。\n")
+    print(destination)
+
+
+if __name__ == "__main__":
+    main()

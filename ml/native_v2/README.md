@@ -2,6 +2,8 @@
 
 目标为 Kirin 9030 插件与 Mate 80 Pro Max。模型使用已有的 MiniRBT 权重，序列长度为 16、32、64，注意力共 6 层、8 个头，末层只计算 CLS query。
 
+本脚本现已通过 `ml/inspect_bert.py` 从原始 ONNX 读取 BERT 层数、隐藏维度、注意力头数及每头维度，再执行末层 CLS 裁剪和逐节点验收。已验证的另一种结构为中文 TinyBERT 4L（4层、12头、每头26维）；其记录见 `variants/tinybert4l/`，每档应有8个 BatchMatMulV2 和4个 SoftmaxV2。下文原始表格与历史探针仍描述 MiniRBT；新结构需要使用对应模型的测试向量、阈值、词表及 CPU 回退模型。
+
 | 检查 | 实测结果 |
 |---|---|
 | OMG 导入 | 三档中间图均保留 12 个 `BatchMatMulV2` 和 6 个 `SoftmaxV2`。检查覆盖 FP16、形状与算子属性。旧 OMG 的导出 JSON 将这些描述符标为 `NCHW`，最终内核使用的布局待验证。 |

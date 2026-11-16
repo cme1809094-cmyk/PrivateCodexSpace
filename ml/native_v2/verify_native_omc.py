@@ -7,7 +7,6 @@ from pathlib import Path
 import re
 
 
-EXPECTED = {"BatchMatMulV2": 12, "SoftmaxV2": 6}
 TILING = re.compile(r"Do general op tiling success.*OpType:\[([^]]+)\], OpName:\[([^]]+)\]")
 RUNTIME = re.compile(r"set smDesc kernel_type of OP\[([^,]+),(BatchMatMulV2|SoftmaxV2)\] == (\d+), set blockDim == (\d+)")
 KERNEL = re.compile(r"SaveKernelBinInfo.*stubName = ([^,]+), kernelSize = (\d+)")
@@ -20,7 +19,9 @@ def check(condition, message):
 
 def verify(directory, length):
     frontend = json.loads((directory / "frontend-verified.json").read_text())
-    check(frontend["counts"] == EXPECTED, f"{length}: wrong frontend V2 counts")
+    layers = frontend.get("architecture", {}).get("num_hidden_layers", 6)
+    expected = {"BatchMatMulV2": 2 * layers, "SoftmaxV2": layers}
+    check(frontend["counts"] == expected, f"{length}: wrong frontend V2 counts")
     wanted = {n["name"]: n["type"] for n in frontend["nodes"]}
     log = (directory / "backend.log").read_text()
     lines = log.splitlines()
@@ -38,11 +39,11 @@ def verify(directory, length):
         if match:
             kernels[match[1]] = {"bytes": int(match[2]), "line": number}
     check(set(tiling) == set(wanted) == set(runtime), f"{length}: missing or extra V2 tasks")
-    check(Counter(n["type"] for n in runtime.values()) == EXPECTED, "wrong runtime V2 counts")
+    check(Counter(n["type"] for n in runtime.values()) == expected, "wrong runtime V2 counts")
     check("CoreNum is 0" not in log, f"{length}: zero-core tiling error")
     binary = (directory / "mobile.omc").read_bytes()
-    native_kernels = {k: v for k, v in kernels.items() if k.startswith(tuple(t + "_" for t in EXPECTED))}
-    for kind in EXPECTED:
+    native_kernels = {k: v for k, v in kernels.items() if k.startswith(tuple(t + "_" for t in expected))}
+    for kind in expected:
         check(any(k.startswith(kind + "_") for k in native_kernels), f"{length}: no {kind} binary")
     for name, info in native_kernels.items():
         check(info["bytes"] > 0 and name.encode() in binary, f"{length}: kernel absent from OMC: {name}")

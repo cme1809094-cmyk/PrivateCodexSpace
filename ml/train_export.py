@@ -10,7 +10,7 @@ import numpy as np
 import onnx
 import onnxruntime as ort
 import torch
-from transformers import AutoModelForSequenceClassification, BertTokenizerFast
+from transformers import BertConfig, BertForSequenceClassification, BertTokenizerFast
 
 from dataset import CAPABILITIES, load_split
 
@@ -79,24 +79,37 @@ def tune_thresholds(probabilities, labels):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base", default=MODEL_ID)
+    parser.add_argument("--source-id", help="Public model ID to record when --base is a local snapshot")
+    parser.add_argument("--revision", help="Pinned source revision")
     parser.add_argument("--epochs", type=int, default=36)
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--output", type=Path, default=ROOT / "model-build")
+    parser.add_argument("--raw", type=Path, default=RAW, help="Destination for model-specific vocab and thresholds")
     args = parser.parse_args()
 
     torch.set_num_threads(args.threads)
     torch.manual_seed(2026)
     random.seed(2026)
     args.output.mkdir(parents=True, exist_ok=True)
-    RAW.mkdir(parents=True, exist_ok=True)
+    raw = args.raw
+    raw.mkdir(parents=True, exist_ok=True)
 
-    kwargs = {"revision": REVISION} if args.base == MODEL_ID else {}
+    revision = args.revision or (REVISION if args.base == MODEL_ID else None)
+    kwargs = {"revision": revision} if revision else {}
     tokenizer = BertTokenizerFast.from_pretrained(args.base, **kwargs)
-    model = AutoModelForSequenceClassification.from_pretrained(
-        args.base, num_labels=len(CAPABILITIES), problem_type="multi_label_classification",
-        id2label=dict(enumerate(CAPABILITIES)), label2id={k:i for i,k in enumerate(CAPABILITIES)},
-        attn_implementation="eager", **kwargs,
+    config = BertConfig.from_pretrained(args.base, **kwargs)
+    config.num_labels = len(CAPABILITIES)
+    config.problem_type = "multi_label_classification"
+    config.id2label = dict(enumerate(CAPABILITIES))
+    config.label2id = {k:i for i,k in enumerate(CAPABILITIES)}
+    model, loading = BertForSequenceClassification.from_pretrained(
+        args.base, config=config, attn_implementation="eager", output_loading_info=True, **kwargs,
     )
+    missing_encoder = [key for key in loading["missing_keys"]
+                       if key.startswith("bert.") and not key.startswith("bert.pooler.")]
+    if missing_encoder or loading.get("mismatched_keys"):
+        raise ValueError(f"Pretrained encoder weights were not loaded: {loading}")
+    print(f"Loaded {config.num_hidden_layers} layers, {config.num_attention_heads} heads, hidden={config.hidden_size}", flush=True)
     train_rows = load_split("train")
     train_inputs, train_labels = encode(tokenizer, train_rows, 32)
     val_inputs, val_labels = encode(tokenizer, load_split("validation"), LENGTH)
@@ -130,7 +143,7 @@ def main():
     checkpoint = args.output / "checkpoint"
     model.save_pretrained(checkpoint)
     tokenizer.save_pretrained(checkpoint)
-    tokenizer.save_vocabulary(str(RAW))
+    tokenizer.save_vocabulary(str(raw))
 
     wrapper = ExportModel(model).eval()
     sample = tuple(test_inputs[key][:1].to(torch.int32) for key in ("input_ids", "attention_mask"))
@@ -157,14 +170,21 @@ def main():
                         "attention_mask": inputs[1][0].tolist(), "logits": reference[0].tolist()})
     test_prob = scores(model, test_inputs)
     test = evaluate(test_prob, test_labels, thresholds)
-    report = {"checkpoint": MODEL_ID, "revision": REVISION, "synthetic_data": True,
+    report = {"checkpoint": args.source_id or args.base, "revision": revision, "synthetic_data": True,
+              "architecture": {k:getattr(config,k) for k in ("num_hidden_layers", "hidden_size", "intermediate_size", "num_attention_heads", "vocab_size")},
+              "parameter_count": sum(p.numel() for p in model.parameters()),
+              "pretrained_loading": loading,
               "labels": CAPABILITIES, "training_samples": len(train_rows), "selected_epoch": epoch,
               "thresholds": thresholds, "validation": validation, "test": test,
               "pytorch_onnx_max_abs_logit_error": max_error}
-    (RAW / "model_config.json").write_text(
+    (raw / "model_config.json").write_text(
         json.dumps({"thresholds": thresholds}, ensure_ascii=False) + "\n", encoding="utf-8")
+    (raw / "hiai_reference.json").write_text(
+        json.dumps([{"text": row["text"], "logits": row["logits"]} for row in vectors],
+                   ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (args.output / "metrics.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (args.output / "golden.json").write_text(json.dumps(vectors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (args.output / "test_vectors.json").write_text(json.dumps(vectors, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2), flush=True)
 
 
