@@ -1,7 +1,7 @@
 {
   "archive": "HarmonyPermissionDemo-Kirin9030-native-v2-fix.zip",
   "archive_sha256": "3b6902fa6ffc7af7b7b367bbfd1f38967b5e468a453e7a73f9f1d763e6c60a4c",
-  "full_project_transfer": "blocked by download_file 32 MiB transfer limit; need raw split chunks below that limit",
+  "full_project_transfer": "Restored from seven Google Drive parts; original ZIP SHA-256 and CRC checks passed.",
   "control": {
     "BatchMatMulV2": "18/18",
     "SoftmaxV2": "0/6; CoreNum is 0"
@@ -17,14 +17,54 @@
     "origin_format_false_control_passed": true
   },
   "not_yet_validated": [
-    "original MiniRBT 16/32/64 full graphs",
-    "all 18 V2 nodes bound to NPU in each full model",
-    "permission output parity on target device",
-    "on-device performance"
+    "NNRT/HiAI loading and OMC execution on Mate 80 Pro Max",
+    "on-device permission accuracy and runtime fallback",
+    "on-device latency and peak memory",
+    "new HAP compilation and signing"
   ],
   "atc_control": "host syscall checks pass, but Add single-op fails in RunCustomPass; isolated OMC validation uses direct OMG.",
   "modified_files": [
     "plugin/native_tiling_schema.cpp",
-    "README.md"
-  ]
+    "README.md",
+    "run_frontend.sh",
+    "inspect_mobile.sh",
+    "verify_native_omc.py"
+  ],
+  "date_utc": "2026-11-16",
+  "workflow": "Toolchain preparation, graph rewriting and offline compilation run in Codex. SSH is not required.",
+  "full_project_zip_sha256": "3c95eb293e647a6804e18558c731b16e23ce1a54739b125505a4ee6a1455018d",
+  "control_scope": "Historical standalone host tiling results before initializing the zero blockDim budget.",
+  "full_model_verification": {
+    "lengths": [
+      16,
+      32,
+      64
+    ],
+    "passed": 3,
+    "per_model_native_nodes": {
+      "BatchMatMulV2": 12,
+      "SoftmaxV2": 6
+    },
+    "per_model_partitions": {
+      "NPUCL": 1,
+      "CPUCL": 0
+    },
+    "legacy_softmax_emitted": false,
+    "evidence": "ml/kirin9030-native-v2-verification.json",
+    "logs_and_dumps": "ml/native_v2/evidence/full/"
+  },
+  "host_onnx_permission_parity": {
+    "16": "27/27",
+    "32": "33/33",
+    "64": "33/33",
+    "max_logit_error": 6.556510925292969e-06,
+    "scope": "CPU comparison of the standard ONNX forms; not execution of the compiled OMC files."
+  },
+  "training_report": {
+    "source": "ml/metrics.json",
+    "synthetic_training_samples": 99,
+    "test_exact_matches": 24,
+    "test_samples": 33,
+    "retrained_this_session": false
+  }
 }
