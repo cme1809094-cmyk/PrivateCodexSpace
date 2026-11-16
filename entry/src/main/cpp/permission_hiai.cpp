@@ -2,6 +2,7 @@
 #include <neural_network_runtime/neural_network_core.h>
 #include "nnrt_device.h"
 #include "cann_runtime.h"
+#include "native_diagnostics.h"
 
 #include <array>
 #include <cmath>
@@ -25,6 +26,7 @@ constexpr size_t kLabelCount = 5;
 using permission_nnrt::DescribeDevice;
 using permission_nnrt::ListDevices;
 using permission_nnrt::SelectOfflineAccelerator;
+using permission_nnrt::NativeTrace;
 using Tokens = std::array<int32_t, kSequenceLength>;
 using Logits = std::array<float, kLabelCount>;
 
@@ -73,25 +75,35 @@ void CheckJs(napi_status status, const char *operation)
     }
 }
 
-void ValidateTensor(const Descriptor &descriptor, OH_NN_DataType expectedType, size_t expectedElements)
+void ValidateTensor(const Descriptor &descriptor, OH_NN_DataType expectedType, size_t expectedElements,
+    NativeTrace &trace, int index)
 {
     if (!descriptor) {
         throw std::runtime_error("NNRT returned no tensor descriptor");
     }
     OH_NN_DataType type;
     size_t elements = 0;
-    Check(OH_NNTensorDesc_GetDataType(descriptor.get(), &type), "OH_NNTensorDesc_GetDataType");
-    Check(OH_NNTensorDesc_GetElementCount(descriptor.get(), &elements), "OH_NNTensorDesc_GetElementCount");
+    Check(trace.Call("OH_NNTensorDesc_GetDataType", [&] {
+        return OH_NNTensorDesc_GetDataType(descriptor.get(), &type);
+    }, index), "OH_NNTensorDesc_GetDataType");
+    Check(trace.Call("OH_NNTensorDesc_GetElementCount", [&] {
+        return OH_NNTensorDesc_GetElementCount(descriptor.get(), &elements);
+    }, index), "OH_NNTensorDesc_GetElementCount");
     if (type != expectedType || elements != expectedElements) {
-        throw std::runtime_error("Offline model tensor type or element count does not match MiniRBT");
+        throw std::runtime_error("Offline model tensor mismatch: type=" + std::to_string(type)
+            + ", elements=" + std::to_string(elements) + "; expected type=" + std::to_string(expectedType)
+            + ", elements=" + std::to_string(expectedElements));
     }
 }
 
-void *TensorBuffer(const Tensor &tensor, size_t expectedSize)
+void *TensorBuffer(const Tensor &tensor, size_t expectedSize, NativeTrace &trace, int index)
 {
     size_t size = 0;
-    Check(OH_NNTensor_GetSize(tensor.get(), &size), "OH_NNTensor_GetSize");
-    void *buffer = OH_NNTensor_GetDataBuffer(tensor.get());
+    Check(trace.Call("OH_NNTensor_GetSize", [&] { return OH_NNTensor_GetSize(tensor.get(), &size); }, index),
+        "OH_NNTensor_GetSize");
+    void *buffer = trace.Call("OH_NNTensor_GetDataBuffer", [&] {
+        return OH_NNTensor_GetDataBuffer(tensor.get());
+    }, index);
     if (!buffer || size < expectedSize) {
         throw std::runtime_error("NNRT tensor buffer is too small");
     }
@@ -100,44 +112,66 @@ void *TensorBuffer(const Tensor &tensor, size_t expectedSize)
 
 class Session {
 public:
-    explicit Session(const std::vector<uint8_t> &model) : device_(SelectModelDevice())
+    explicit Session(const std::vector<uint8_t> &model, NativeTrace &trace)
     {
+        const auto *runtime = trace.Call("Initialize CANN Foundation", [] {
+            return &permission_nnrt::GetCannRuntime();
+        });
+        trace.SetRuntimeVersion(runtime->Version());
+        device_ = trace.Call("Select CANN HIAI_F backend", [] { return SelectModelDevice(); });
         const size_t device = device_.id;
         const std::string backend = DescribeDevice(device_);
-        PermissionLog(("Load OMC on " + backend).c_str());
-        const auto &runtime = permission_nnrt::GetCannRuntime();
-        if (runtime.HasCompatibilityCheck() && runtime.CheckCompatibility(model.data(), model.size()) != 0) {
-            throw std::runtime_error("CANN compatibility check rejected the offline model on " + backend);
+        PermissionLog(("Load OMC bytes=" + std::to_string(model.size()) + " on " + backend).c_str());
+        if (runtime->HasCompatibilityCheck()) {
+            const int compatibility = trace.Call("HMS_HiAICompatibility_CheckFromBuffer", [&] {
+                return runtime->CheckCompatibility(model.data(), model.size());
+            });
+            if (compatibility != 0) {
+                throw std::runtime_error("CANN compatibility check rejected the offline model on " + backend
+                    + " (result " + std::to_string(compatibility) + ")");
+            }
         }
-        PermissionLog("OH_NNCompilation_ConstructWithOfflineModelBuffer");
-        Compilation compilation(OH_NNCompilation_ConstructWithOfflineModelBuffer(model.data(), model.size()));
+        Compilation compilation(trace.Call("OH_NNCompilation_ConstructWithOfflineModelBuffer", [&] {
+            return OH_NNCompilation_ConstructWithOfflineModelBuffer(model.data(), model.size());
+        }));
         if (!compilation) {
             throw std::runtime_error("Cannot create NNRT compilation from the OM model");
         }
-        Check(OH_NNCompilation_SetDevice(compilation.get(), device), "OH_NNCompilation_SetDevice(" + backend + ")");
-        PermissionLog(("OH_NNCompilation_Build(" + backend + ")").c_str());
-        Check(OH_NNCompilation_Build(compilation.get()), "OH_NNCompilation_Build(" + backend + ")");
-        executor_.reset(OH_NNExecutor_Construct(compilation.get()));
+        Check(trace.Call("OH_NNCompilation_SetDevice", [&] {
+            return OH_NNCompilation_SetDevice(compilation.get(), device);
+        }), "OH_NNCompilation_SetDevice(" + backend + ")");
+        Check(trace.Call("OH_NNCompilation_Build", [&] {
+            return OH_NNCompilation_Build(compilation.get());
+        }), "OH_NNCompilation_Build(" + backend + ")");
+        executor_.reset(trace.Call("OH_NNExecutor_Construct", [&] { return OH_NNExecutor_Construct(compilation.get()); }));
         if (!executor_) {
             throw std::runtime_error("OH_NNExecutor_Construct failed");
         }
         size_t inputCount = 0;
         size_t outputCount = 0;
-        Check(OH_NNExecutor_GetInputCount(executor_.get(), &inputCount), "OH_NNExecutor_GetInputCount");
-        Check(OH_NNExecutor_GetOutputCount(executor_.get(), &outputCount), "OH_NNExecutor_GetOutputCount");
+        Check(trace.Call("OH_NNExecutor_GetInputCount", [&] {
+            return OH_NNExecutor_GetInputCount(executor_.get(), &inputCount);
+        }), "OH_NNExecutor_GetInputCount");
+        Check(trace.Call("OH_NNExecutor_GetOutputCount", [&] {
+            return OH_NNExecutor_GetOutputCount(executor_.get(), &outputCount);
+        }), "OH_NNExecutor_GetOutputCount");
         if (inputCount != inputs_.size() || outputCount != 1) {
             throw std::runtime_error("Offline model must expose two inputs and one output");
         }
         bool foundIds = false;
         bool foundMask = false;
         for (size_t index = 0; index < inputCount; ++index) {
-            Descriptor descriptor(OH_NNExecutor_CreateInputTensorDesc(executor_.get(), index));
+            Descriptor descriptor(trace.Call("OH_NNExecutor_CreateInputTensorDesc", [&] {
+                return OH_NNExecutor_CreateInputTensorDesc(executor_.get(), index);
+            }, static_cast<int>(index)));
             if (!descriptor) {
                 throw std::runtime_error("NNRT returned no input tensor descriptor");
             }
             int32_t *shape = nullptr;
             size_t rank = 0;
-            Check(OH_NNTensorDesc_GetShape(descriptor.get(), &shape, &rank), "OH_NNTensorDesc_GetShape");
+            Check(trace.Call("OH_NNTensorDesc_GetShape", [&] {
+                return OH_NNTensorDesc_GetShape(descriptor.get(), &shape, &rank);
+            }, static_cast<int>(index)), "OH_NNTensorDesc_GetShape");
             if (!shape || rank != 2 || shape[0] != 1 || (shape[1] != 16 && shape[1] != 32 && shape[1] != 64)) {
                 throw std::runtime_error("Expected NNRT token shape [1,16], [1,32] or [1,64]");
             }
@@ -146,9 +180,11 @@ public:
                 throw std::runtime_error("NNRT token and mask shapes differ");
             }
             sequenceLength_ = length;
-            ValidateTensor(descriptor, OH_NN_INT32, sequenceLength_);
+            ValidateTensor(descriptor, OH_NN_INT32, sequenceLength_, trace, static_cast<int>(index));
             const char *name = nullptr;
-            Check(OH_NNTensorDesc_GetName(descriptor.get(), &name), "OH_NNTensorDesc_GetName");
+            Check(trace.Call("OH_NNTensorDesc_GetName", [&] {
+                return OH_NNTensorDesc_GetName(descriptor.get(), &name);
+            }, static_cast<int>(index)), "OH_NNTensorDesc_GetName");
             const std::string inputName = name ? name : "";
             if (inputName == "input_ids" && !foundIds) {
                 idsIndex_ = index;
@@ -158,31 +194,38 @@ public:
             } else {
                 throw std::runtime_error("Unexpected OM input name: " + inputName);
             }
-            inputs_[index].reset(OH_NNTensor_Create(device, descriptor.get()));
+            inputs_[index].reset(trace.Call("OH_NNTensor_Create input", [&] {
+                return OH_NNTensor_Create(device, descriptor.get());
+            }, static_cast<int>(index)));
             if (!inputs_[index]) {
                 throw std::runtime_error("OH_NNTensor_Create input failed");
             }
         }
-        Descriptor descriptor(OH_NNExecutor_CreateOutputTensorDesc(executor_.get(), 0));
-        ValidateTensor(descriptor, OH_NN_FLOAT32, kLabelCount);
-        output_.reset(OH_NNTensor_Create(device, descriptor.get()));
+        Descriptor descriptor(trace.Call("OH_NNExecutor_CreateOutputTensorDesc", [&] {
+            return OH_NNExecutor_CreateOutputTensorDesc(executor_.get(), 0);
+        }));
+        ValidateTensor(descriptor, OH_NN_FLOAT32, kLabelCount, trace, 0);
+        output_.reset(trace.Call("OH_NNTensor_Create output", [&] { return OH_NNTensor_Create(device, descriptor.get()); }));
         if (!output_) {
             throw std::runtime_error("OH_NNTensor_Create output failed");
         }
     }
 
-    Logits Predict(const Tokens &ids, const Tokens &mask)
+    Logits Predict(const Tokens &ids, const Tokens &mask, NativeTrace &trace)
     {
         std::lock_guard<std::mutex> lock(mutex_);
+        trace.SetRuntimeVersion(permission_nnrt::GetCannRuntime().Version());
         const size_t bytes = sequenceLength_ * sizeof(int32_t);
-        std::memcpy(TensorBuffer(inputs_[idsIndex_], bytes), ids.data(), bytes);
-        std::memcpy(TensorBuffer(inputs_[1 - idsIndex_], bytes), mask.data(), bytes);
+        std::memcpy(TensorBuffer(inputs_[idsIndex_], bytes, trace, static_cast<int>(idsIndex_)), ids.data(), bytes);
+        std::memcpy(TensorBuffer(inputs_[1 - idsIndex_], bytes, trace, static_cast<int>(1 - idsIndex_)), mask.data(), bytes);
         NN_Tensor *inputTensors[] = {inputs_[0].get(), inputs_[1].get()};
         NN_Tensor *outputTensors[] = {output_.get()};
-        Check(OH_NNExecutor_RunSync(executor_.get(), inputTensors, 2, outputTensors, 1),
+        Check(trace.Call("OH_NNExecutor_RunSync", [&] {
+            return OH_NNExecutor_RunSync(executor_.get(), inputTensors, 2, outputTensors, 1);
+        }),
             "OH_NNExecutor_RunSync(" + DescribeDevice(device_) + ")");
         Logits logits{};
-        std::memcpy(logits.data(), TensorBuffer(output_, sizeof(logits)), sizeof(logits));
+        std::memcpy(logits.data(), TensorBuffer(output_, sizeof(logits), trace, 0), sizeof(logits));
         for (const float value : logits) {
             if (!std::isfinite(value)) {
                 throw std::runtime_error("HiAI returned non-finite logits");
@@ -206,7 +249,7 @@ private:
 enum class Operation { Load, Predict };
 
 struct Job {
-    explicit Job(Operation requested) : operation(requested) {}
+    explicit Job(Operation requested) : operation(requested), trace(requested == Operation::Load) {}
     Operation operation;
     napi_async_work work = nullptr;
     napi_deferred deferred = nullptr;
@@ -216,6 +259,7 @@ struct Job {
     Tokens mask{};
     Logits logits{};
     std::array<char, 1024> error{};
+    NativeTrace trace;
 };
 
 napi_value JsString(napi_env env, const std::string &text)
@@ -259,17 +303,29 @@ void RejectDeferred(napi_env env, napi_deferred deferred, const char *message) n
 void Execute(napi_env, void *data) noexcept
 {
     auto &job = *static_cast<Job *>(data);
+    const char *operation = job.operation == Operation::Load ? "Load OMC" : "Predict";
     try {
         if (job.operation == Operation::Load) {
-            job.session = std::make_shared<Session>(job.model);
+            job.session = std::make_shared<Session>(job.model, job.trace);
         } else {
-            job.logits = job.session->Predict(job.ids, job.mask);
+            job.logits = job.session->Predict(job.ids, job.mask, job.trace);
         }
     } catch (const std::exception &error) {
-        std::snprintf(job.error.data(), job.error.size(), "%s", error.what());
+        job.trace.Failure(job.error.data(), job.error.size(), operation, error.what());
+        PermissionLog(job.error.data());
+    } catch (const std::string &error) {
+        job.trace.Failure(job.error.data(), job.error.size(), operation, error.c_str());
+        PermissionLog(job.error.data());
+    } catch (const char *error) {
+        job.trace.Failure(job.error.data(), job.error.size(), operation, error);
+        PermissionLog(job.error.data());
+    } catch (int error) {
+        char detail[64];
+        std::snprintf(detail, sizeof(detail), "Native exception int=%d", error);
+        job.trace.Failure(job.error.data(), job.error.size(), operation, detail);
         PermissionLog(job.error.data());
     } catch (...) {
-        std::snprintf(job.error.data(), job.error.size(), "Unknown native exception during NNRT work");
+        job.trace.Failure(job.error.data(), job.error.size(), operation, "Unknown native exception");
         PermissionLog(job.error.data());
     }
 }
@@ -347,11 +403,13 @@ Tokens ReadTokens(napi_env env, napi_value value)
 napi_value Devices(napi_env env, napi_callback_info) noexcept
 {
     try {
+        PermissionLog("PermissionHiAI native bridge 1.0.6: enumerate backends");
         (void)permission_nnrt::GetCannRuntime();
         auto devices = ListDevices();
         napi_value result;
         CheckJs(napi_create_array_with_length(env, devices.size(), &result), "Cannot allocate device list");
         for (uint32_t i = 0; i < devices.size(); ++i) {
+            PermissionLog(("NNRT device " + DescribeDevice(devices[i])).c_str());
             CheckJs(napi_set_element(env, result, i, JsString(env,
                 DescribeDevice(devices[i]))), "Cannot set device");
         }

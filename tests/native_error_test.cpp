@@ -7,6 +7,8 @@
 struct napi_value__ { std::string text; bool isError = false; };
 struct napi_deferred__ {};
 struct napi_async_work__ {};
+struct NN_TensorDesc { size_t index; bool output; };
+struct NN_Tensor { std::array<uint8_t, 256> bytes{}; };
 
 namespace {
 int buildMode = 0;
@@ -25,7 +27,16 @@ std::vector<std::unique_ptr<napi_value__>> jsValues;
 napi_deferred__ deferred;
 napi_async_work__ work;
 int compilationToken;
+int executorToken;
+const char *faultAt = nullptr;
+bool badTensorType = false;
+struct VendorFault {};
 napi_value pendingReason = nullptr;
+
+void MaybeThrow(const char *operation)
+{
+    if (faultAt && std::strcmp(faultAt, operation) == 0) throw VendorFault{};
+}
 
 napi_value Value(const std::string &text, bool error = false)
 {
@@ -36,6 +47,8 @@ napi_value Value(const std::string &text, bool error = false)
 void Reset()
 {
     buildMode = 0;
+    faultAt = nullptr;
+    badTensorType = false;
     compatibility = 0;
     hasCannBackend = true;
     failErrorCreation = failStringCreation = failArrayCreation = failResolve = pendingErrorCreation = pending = false;
@@ -61,13 +74,14 @@ void RunLoad(const std::string &expected)
     std::thread worker([&] { Execute(nullptr, job); });
     worker.join();
     assert(std::string(job->error.data()).find(expected) != std::string::npos);
+    assert(std::string(job->error.data()).find("exception_type=") != std::string::npos);
     Complete(nullptr, napi_ok, job);
     assert(rejected == 1 && deleted == 1);
     assert(rejection.find(expected) != std::string::npos);
 }
 } // namespace
 
-extern "C" int PermissionTestCompatibility() { return compatibility; }
+extern "C" int PermissionTestCompatibility() { MaybeThrow("compatibility"); return compatibility; }
 extern "C" void napi_module_register(napi_module *) {}
 extern "C" napi_status napi_create_string_utf8(napi_env, const char *s, size_t n, napi_value *out)
 {
@@ -140,26 +154,43 @@ extern "C" OH_NN_ReturnCode OH_NNCompilation_Build(OH_NNCompilation *)
     buildCalls++;
     if (buildMode == 1) throw std::runtime_error("injected vendor exception");
     if (buildMode == 2) throw 17;
-    return OH_NN_FAILED;
+    if (buildMode == 4) throw std::string("vendor string detail");
+    if (buildMode == 5) throw "vendor C string detail";
+    if (buildMode == 6) throw VendorFault{};
+    return buildMode == 3 ? OH_NN_SUCCESS : OH_NN_FAILED;
 }
 extern "C" void OH_NNCompilation_Destroy(OH_NNCompilation **p) { destroyed++; *p = nullptr; }
-extern "C" OH_NNExecutor *OH_NNExecutor_Construct(OH_NNCompilation *) { return nullptr; }
+extern "C" OH_NNExecutor *OH_NNExecutor_Construct(OH_NNCompilation *)
+{ MaybeThrow("executor"); return reinterpret_cast<OH_NNExecutor *>(&executorToken); }
 extern "C" void OH_NNExecutor_Destroy(OH_NNExecutor **) {}
-extern "C" OH_NN_ReturnCode OH_NNExecutor_GetInputCount(const OH_NNExecutor *, size_t *) { return OH_NN_FAILED; }
-extern "C" OH_NN_ReturnCode OH_NNExecutor_GetOutputCount(const OH_NNExecutor *, size_t *) { return OH_NN_FAILED; }
-extern "C" NN_TensorDesc *OH_NNExecutor_CreateInputTensorDesc(const OH_NNExecutor *, size_t) { return nullptr; }
-extern "C" NN_TensorDesc *OH_NNExecutor_CreateOutputTensorDesc(const OH_NNExecutor *, size_t) { return nullptr; }
-extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetDataType(const NN_TensorDesc *, OH_NN_DataType *) { return OH_NN_FAILED; }
-extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetElementCount(const NN_TensorDesc *, size_t *) { return OH_NN_FAILED; }
-extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetShape(const NN_TensorDesc *, int32_t **, size_t *) { return OH_NN_FAILED; }
-extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetName(const NN_TensorDesc *, const char **) { return OH_NN_FAILED; }
-extern "C" OH_NN_ReturnCode OH_NNTensorDesc_Destroy(NN_TensorDesc **) { return OH_NN_SUCCESS; }
-extern "C" NN_Tensor *OH_NNTensor_Create(size_t, NN_TensorDesc *) { return nullptr; }
-extern "C" OH_NN_ReturnCode OH_NNTensor_GetSize(const NN_Tensor *, size_t *) { return OH_NN_FAILED; }
-extern "C" void *OH_NNTensor_GetDataBuffer(const NN_Tensor *) { return nullptr; }
-extern "C" OH_NN_ReturnCode OH_NNTensor_Destroy(NN_Tensor **) { return OH_NN_SUCCESS; }
+extern "C" OH_NN_ReturnCode OH_NNExecutor_GetInputCount(const OH_NNExecutor *, size_t *count)
+{ *count = 2; return OH_NN_SUCCESS; }
+extern "C" OH_NN_ReturnCode OH_NNExecutor_GetOutputCount(const OH_NNExecutor *, size_t *count)
+{ *count = 1; return OH_NN_SUCCESS; }
+extern "C" NN_TensorDesc *OH_NNExecutor_CreateInputTensorDesc(const OH_NNExecutor *, size_t index)
+{ MaybeThrow("input descriptor"); return new NN_TensorDesc{index, false}; }
+extern "C" NN_TensorDesc *OH_NNExecutor_CreateOutputTensorDesc(const OH_NNExecutor *, size_t index)
+{ return new NN_TensorDesc{index, true}; }
+extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetDataType(const NN_TensorDesc *desc, OH_NN_DataType *type)
+{ *type = desc->output ? OH_NN_FLOAT32 : (badTensorType ? OH_NN_INT64 : OH_NN_INT32); return OH_NN_SUCCESS; }
+extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetElementCount(const NN_TensorDesc *desc, size_t *count)
+{ *count = desc->output ? 5 : 16; return OH_NN_SUCCESS; }
+extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetShape(const NN_TensorDesc *, int32_t **shape, size_t *rank)
+{ static int32_t dims[] = {1, 16}; *shape = dims; *rank = 2; return OH_NN_SUCCESS; }
+extern "C" OH_NN_ReturnCode OH_NNTensorDesc_GetName(const NN_TensorDesc *desc, const char **name)
+{ *name = desc->index == 0 ? "input_ids" : "attention_mask"; return OH_NN_SUCCESS; }
+extern "C" OH_NN_ReturnCode OH_NNTensorDesc_Destroy(NN_TensorDesc **p)
+{ delete *p; *p = nullptr; return OH_NN_SUCCESS; }
+extern "C" NN_Tensor *OH_NNTensor_Create(size_t, NN_TensorDesc *)
+{ MaybeThrow("tensor"); return new NN_Tensor; }
+extern "C" OH_NN_ReturnCode OH_NNTensor_GetSize(const NN_Tensor *, size_t *size)
+{ *size = 256; return OH_NN_SUCCESS; }
+extern "C" void *OH_NNTensor_GetDataBuffer(const NN_Tensor *tensor)
+{ return const_cast<uint8_t *>(tensor->bytes.data()); }
+extern "C" OH_NN_ReturnCode OH_NNTensor_Destroy(NN_Tensor **p)
+{ delete *p; *p = nullptr; return OH_NN_SUCCESS; }
 extern "C" OH_NN_ReturnCode OH_NNExecutor_RunSync(OH_NNExecutor *, NN_Tensor *[], size_t, NN_Tensor *[], size_t)
-{ return OH_NN_FAILED; }
+{ MaybeThrow("run"); return OH_NN_SUCCESS; }
 
 int main()
 {
@@ -167,7 +198,20 @@ int main()
     Reset(); hasCannBackend = false; RunLoad("generic NNRT accelerators cannot load OMC"); assert(buildCalls == 0);
     Reset(); compatibility = 1; RunLoad("compatibility check rejected"); assert(buildCalls == 0);
     Reset(); buildMode = 1; RunLoad("injected vendor exception"); assert(destroyed == 1);
-    Reset(); buildMode = 2; RunLoad("Unknown native exception"); assert(destroyed == 1);
+    Reset(); buildMode = 2; RunLoad("Native exception int=17"); assert(destroyed == 1);
+    assert(rejection.find("OH_NNCompilation_Build (not returned)") != std::string::npos);
+    assert(rejection.find("exception_type=i;") != std::string::npos);
+    Reset(); buildMode = 4; RunLoad("vendor string detail");
+    Reset(); buildMode = 5; RunLoad("vendor C string detail");
+    Reset(); buildMode = 6; RunLoad("Unknown native exception");
+    assert(rejection.find("VendorFault") != std::string::npos);
+    Reset(); faultAt = "compatibility"; RunLoad("HMS_HiAICompatibility_CheckFromBuffer (not returned)");
+    assert(buildCalls == 0);
+    Reset(); buildMode = 3; faultAt = "executor"; RunLoad("OH_NNExecutor_Construct (not returned)");
+    Reset(); buildMode = 3; faultAt = "input descriptor";
+    RunLoad("OH_NNExecutor_CreateInputTensorDesc[index=0] (not returned)");
+    Reset(); buildMode = 3; faultAt = "tensor"; RunLoad("OH_NNTensor_Create input[index=0] (not returned)");
+    Reset(); buildMode = 3; badTensorType = true; RunLoad("Offline model tensor mismatch: type=");
     Reset(); failErrorCreation = true; RunLoad("OH_NNCompilation_Build"); assert(!rejectionIsError);
     Reset(); pendingErrorCreation = true;
     auto *job = NewJob(Operation::Load); std::snprintf(job->error.data(), job->error.size(), "original failure");
@@ -183,5 +227,21 @@ int main()
     assert(rejected == 1 && deleted == 1 && rejection.find("Cannot resolve native promise") != std::string::npos);
     Reset(); Complete(nullptr, napi_generic_failure, NewJob(Operation::Load));
     assert(rejection.find("cancelled") != std::string::npos && deleted == 1);
-    std::cout << "PASS: 11 native worker/completion fault-injection cases; no exceptions escaped callbacks\n";
+    Reset(); buildMode = 3;
+    job = NewJob(Operation::Load);
+    Execute(nullptr, job);
+    assert(job->session && job->error[0] == '\0');
+    auto session = job->session;
+    delete job;
+    job = NewJob(Operation::Predict); job->session = session;
+    Execute(nullptr, job); assert(job->error[0] == '\0');
+    Complete(nullptr, napi_ok, job); assert(rejected == 0 && deleted == 1);
+    faultAt = "run";
+    job = NewJob(Operation::Predict); job->session = session;
+    std::thread worker([&] { Execute(nullptr, job); }); worker.join();
+    Complete(nullptr, napi_ok, job);
+    assert(rejected == 1 && deleted == 2);
+    assert(rejection.find("Predict failed at OH_NNExecutor_RunSync (not returned)") != std::string::npos);
+    assert(rejection.find("VendorFault") != std::string::npos);
+    std::cout << "PASS: 21 native load/predict/completion scenarios; failures retain API, return status and exception type\n";
 }

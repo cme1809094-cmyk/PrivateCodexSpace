@@ -53,11 +53,17 @@ python3 ml/native_v2/check_host_permissions.py "$PWD" /path/to/native-build/v2_X
 
 ## 安装与测量
 
-1. 用 DevEco Studio 打开此工程，连接 Mate 80 Pro Max，配置调试签名。包名为 `com.intentlab.permissiondemohiaperf`，版本是 1.0.5。本仓库提供源码与模型，需要重新构建并签名 HAP；不包含已更新原生 V2 模型的安装包。
-2. 输入一条中文操作指令，检查实际 CANN 后端和模型自检。OMC 需要 CANN 的 `HIAI_F` 后端；通用 NNRT 加速器存在并不代表它支持离线 OMC。1.0.5 会先加载 `libhiai_foundation.so` 并查询版本，再枚举设备和检查模型兼容性。失败时应用显示原因，并退到配套的 MindSpore Lite CPU 模型。
+1. 用 DevEco Studio 打开此工程，连接 Mate 80 Pro Max，配置调试签名。包名为 `com.intentlab.permissiondemohiaperf`，版本是 1.0.6。本仓库提供源码与模型，需要重新构建并签名 HAP；不包含已更新原生 V2 模型的安装包。
+2. 输入一条中文操作指令，检查实际 CANN 后端和模型自检。OMC 需要 CANN 的 `HIAI_F` 后端；通用 NNRT 加速器存在并不代表它支持离线 OMC。应用先加载 `libhiai_foundation.so` 并查询版本，再枚举设备和检查模型兼容性。失败时应用显示原因，并退到配套的 MindSpore Lite CPU 模型。
 3. 点击「测量推理时延」。界面里的「旧版 NPU 64 token」指本包内的 9030 全查询对照。各模型使用相同的分词结果，预热 5 次、测量 50 次。p50/p95 含推理接口、张量复制和调度。冷启动、分词和自检位于测速区间之外。
 
 根目录工程是 MiniRBT，包名为 `com.intentlab.permissiondemohiaperf`；通过 `variants/tinybert4l` 生成的独立工程包名为 `com.intentlab.permissiondemotinybert4l`。调试时先确认包名、所用 rawfile 和阈值来自同一个版本。
+
+1.0.5 的后续真机日志已出现 CANN / AI_NPUCL 的模型加载记录，但三档随后都回退为 `Unknown native exception during NNRT work`。这条消息来自桥接层的 `catch (...)`，只说明未匹配 `std::exception`，不能据此确定是 Softmax、芯片目标、权限或某一个 NNRT 接口失败。附件缺少原生 Info 日志，`hiai foundation not support extension config` 与 `hiappevent` 的目录错误也不足以单独证明根因。
+
+1.0.6 修复诊断信息丢失：回退提示直接保留 `Load OMC` / `Predict`、最后调用的 API、返回状态、异常 ABI 类型、CANN 版本和原生桥接版本。字符串和整数异常保留原值；未知异常只读取类型信息，不强制转换异常对象。构造器展开和资源清理不会覆盖原始位置。模型加载各调用前后记录 Info 日志，正常推理不输出逐调用日志。更新后 Clean/Rebuild，保留包含 Info 级别、标签 `PermissionHiAI` 的日志；即使过滤 Info，界面的完整回退提示也应带 `failed at ...; exception_type=...; CANN=...; bridge=1.0.6`。这是定位增强，尚未确认修复真机 NPU 执行失败。
+
+补充的启动日志显示 `init hiai foundation success` 和内部版本 `109.633.120.010`，同时有 `nnrt_device_service` 获取失败及后端注册失败。[NNRT 的 HDI 注册源码](https://github.com/openharmony/ai_neural_network_runtime/blob/master/frameworks/native/neural_network_runtime/register_hdi_device_v2_0.cpp) 在设备服务不可用时返回空后端，[注册管理器](https://github.com/openharmony/ai_neural_network_runtime/blob/master/frameworks/native/neural_network_core/backend_manager.cpp) 随后输出对应注册错误；这本身不证明独立注册的 CANN HIAI_F 也不可用。需要实际枚举结果和同一次模型请求的失败步骤来确定。内部版本日志也不能代替 `HMS_HiAI_GetVersion` 的桥接层输出。
 
 ## 历史兼容模型的重新构建
 
