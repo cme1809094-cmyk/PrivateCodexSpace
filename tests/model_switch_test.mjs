@@ -18,6 +18,7 @@ const catalog = structuredClone(productionCatalog);
 for (const p of catalog.profiles) for (const a of p.assets) a.bytes = 8;
 const metadata = new Map();
 const vectors = new Map();
+const referenceCases = new Map();
 const key = (ids, mask) => Array.from(ids).join(',') + ':' + Array.from(mask).join(',');
 const codeFor = id => id === 'minirbt' ? 1 : 2;
 const profileFor = value => catalog.profiles.find(p => codeFor(p.id) === value);
@@ -50,6 +51,15 @@ const native = {
     let logits = vectors.get(session.profile).get(key(ids, mask));
     if (!logits) logits = [2, -2, 2, -2, -2];
     logits = [...logits];
+    const referenceCase = referenceCases.get(session.profile).find(c => c.key === key(ids,mask));
+    if (referenceCase && session.bucket === 16 && state.failReferenceCase === referenceCase.id) {
+      throw new Error('Injected RunSync reference failure');
+    }
+    if (referenceCase && state.flipCases?.includes(referenceCase.id)) {
+      const threshold = 0.55;
+      const boundary = Math.log(threshold/(1-threshold));
+      logits[0] = logits[0] >= boundary ? boundary - 0.01 : boundary + 0.01;
+    }
     if (session.bucket === 16 && state.corrupt === 'nan') logits[0] = NaN;
     if (session.bucket === 16 && state.corrupt === 'short') logits.pop();
     if (session.bucket === 16 && state.corrupt === 'labels') logits = logits.map(v => -v);
@@ -73,6 +83,7 @@ globalThis.__permissionTest = {
   hilog: Object.fromEntries(['info', 'warn'].map(level => [level, (...args) => logs.push({ level, args })])),
   util: { TextDecoder: { create: () => ({ decodeToString: b => new TextDecoder().decode(b) }) } },
   systemDateTime: { TimeType: { ACTIVE: 1 }, getUptime: () => (clock += 1000000) },
+  deviceInfo: { productModel: 'Mock Mate', osFullName: 'Mock OS', sdkApiVersion: 21 },
   mindSporeLite: {
     DataType: { NUMBER_TYPE_INT32: 4, NUMBER_TYPE_FLOAT32: 11 },
     loadModelFromBuffer: async buffer => {
@@ -115,7 +126,7 @@ try {
   code = code.replace(/^import .*from '@kit\.[^']+';\r?\n/gm, '')
     .replace(/^import .*from 'libpermission_hiai.so';\r?\n/gm, '')
     .replace("from './WordPiece'", "from './WordPiece.mts'");
-  code = 'const {native,util,mindSporeLite,hilog,systemDateTime}=globalThis.__permissionTest;\n' +
+  code = 'const {native,util,mindSporeLite,hilog,systemDateTime,deviceInfo}=globalThis.__permissionTest;\n' +
     'const {devices,accelerator,load:loadHiAI,predict:predictHiAI,dispose:disposeHiAI}=native;\n' +
     'const canIUse=()=>true;\n' + code;
   fs.writeFileSync(path.join(temporary, 'PermissionModel.mts'), code);
@@ -134,6 +145,10 @@ try {
     }
     const refs = JSON.parse(metadata.get(p.assetPrefix + 'hiai_reference.json'));
     vectors.set(p.id, new Map(refs.map(r => { const t = tokenizer.encode(r.text); return [key(t.ids,t.mask),r.logits]; })));
+    referenceCases.set(p.id, refs.map((r,i) => {
+      const t = tokenizer.encode(r.text);
+      return {id:i+1, key:key(t.ids,t.mask), count:t.mask.reduce((a,b)=>a+b,0)};
+    }));
     for (const asset of p.assets) {
       const checked = refs.filter(r => {
         const t = tokenizer.encode(r.text);
@@ -221,7 +236,9 @@ try {
     const progress = [];
     const report = await m.acceptNpu(message => progress.push(message));
     assert.equal(report.passed, true);
-    assert.equal(report.appVersion, '1.1.1');
+    assert.equal(report.appVersion, '1.1.2');
+    assert.equal(report.schemaVersion, 2);
+    assert.deepEqual({...report.runtimeSystem}, {productModel:'Mock Mate', osFullName:'Mock OS', sdkApiVersion:21, error:''});
     assert.equal(report.modelId, 'tinybert4l');
     assert.ok(report.runtimeBackend.includes('CANN mock'));
     assert.equal(report.cpuFallbackAllowed, false);
@@ -233,6 +250,10 @@ try {
       assert.equal(b.timing.sampleRuns, 50);
       assert.ok(Number.isFinite(b.timing.p95Ms));
       assert.equal(b.manifestSha256, productionCatalog.profiles[1].assets.find(a => a.bucket === b.bucket).sha256);
+      assert.equal(b.cases.length, b.checked);
+      assert.deepEqual(b.labelMismatchCaseIds, []);
+      assert.deepEqual(b.driftCaseIds, []);
+      assert.ok(b.cases.every(c => c.labelsMatch && c.withinLogitLimit && c.inputIds.length === 0));
     }
     assert.equal(state.cpuLoads.length, 0);
     assert.equal(state.live.size, 0);
@@ -259,6 +280,23 @@ try {
       if (corrupt === 'drift') {
         assert.equal(report.buckets[0].matched, 27);
         assert.ok(report.buckets[0].maxLogitError > report.maxLogitErrorLimit);
+        assert.equal(report.buckets[0].labelMismatchCaseIds.length, 0);
+        assert.equal(report.buckets[0].driftCaseIds.length, 27);
+        assert.ok(report.buckets[0].device.includes('HIAI_F'));
+        assert.equal(report.buckets[0].bytesVerified, true);
+        for (const c of report.buckets[0].cases) {
+          assert.equal(c.inputIds.length, 64);
+          assert.equal(c.attentionMask.reduce((a,b) => a+b,0), c.tokenCount);
+          assert.equal(c.npuMargins.length, 5);
+          assert.equal(c.referenceMargins.length, 5);
+          assert.equal(c.changedLabels.length, 0);
+        }
+      }
+      if (corrupt === 'nan' || corrupt === 'short') {
+        assert.equal(report.buckets[0].cases.length, 1);
+        assert.match(report.buckets[0].cases[0].error, /有限 logit/);
+        assert.deepEqual(report.buckets[0].labelMismatchCaseIds, []);
+        assert.equal(report.buckets[0].cases[0].inputIds.length, 64);
       }
     });
   }
@@ -281,6 +319,53 @@ try {
     assert.ok(logs.some(({args}) => args[2].startsWith('[PNPU][CLEANUP]')));
     assert.equal(report.buckets[1].passed, true);
     assert.equal(report.buckets[2].passed, true);
+  });
+  await scenario('Reported 26/27 and 30/33 failure pattern retains original case IDs and per-label margins', async () => {
+    const m = await start();
+    const refs = referenceCases.get('tinybert4l');
+    state.flipCases = [refs.find(c => c.count <= 16).id, ...refs.filter(c => c.count > 16).slice(0,2).map(c => c.id)];
+    const report = await m.acceptNpu(() => {});
+    assert.equal(report.passed, false);
+    assert.deepEqual(report.buckets.map(b => b.matched), [26,30,30]);
+    for (const b of report.buckets) {
+      const expected = refs.filter(c => c.count <= b.bucket && state.flipCases.includes(c.id)).map(c => c.id);
+      assert.deepEqual(b.labelMismatchCaseIds, expected);
+      assert.equal(b.cases.length, b.checked);
+      for (const id of expected) {
+        const c = b.cases.find(c => c.caseId === id);
+        assert.deepEqual(c.changedLabels, ['camera']);
+        assert.ok(c.referenceMargins[0] * c.npuMargins[0] < 0);
+        assert.equal(c.inputIds.length, 64);
+        assert.equal(c.npuLogits.length, 5);
+      }
+    }
+    assert.equal(state.cpuLoads.length, 0);
+    assert.ok(logs.some(({args}) => args[2].startsWith('[PNPU][DIFF]')));
+  });
+  await scenario('Interrupted self-test exports the last failed case and previous successful results', async () => {
+    const m = await start();
+    state.failReferenceCase = 3;
+    const report = await m.acceptNpu(() => {});
+    const bucket = report.buckets[0];
+    assert.equal(bucket.passed, false);
+    assert.equal(bucket.checked, 2);
+    assert.equal(bucket.cases.length, 3);
+    assert.equal(bucket.cases[2].caseId, 3);
+    assert.match(bucket.cases[2].error, /RunSync reference failure/);
+    assert.equal(bucket.cases[2].inputIds.length, 64);
+    assert.equal(report.buckets[1].passed, true);
+  });
+  await scenario('Unavailable system metadata cannot suppress or fabricate the NPU result', async () => {
+    const info = globalThis.__permissionTest.deviceInfo;
+    Object.defineProperty(info,'osFullName',{configurable:true,get:()=>{throw new Error('Unavailable system metadata');}});
+    try {
+      const m = await start();
+      const report = await m.acceptNpu(() => {});
+      assert.equal(report.passed, true);
+      assert.match(report.runtimeSystem.error, /Unavailable system metadata/);
+    } finally {
+      Object.defineProperty(info,'osFullName',{configurable:true,writable:true,value:'Mock OS'});
+    }
   });
   await scenario('Missing NPU cannot pass acceptance through CPU fallback', async () => {
     state.noNpu = true;

@@ -1,0 +1,98 @@
+> hvigor UP-TO-DATE :entry:default@PreBuild...
+> hvigor Finished :entry:default@GenerateMetadata... after 5 ms
+> hvigor Finished :entry:default@ConfigureCmake... after 69 ms
+> hvigor Finished :entry:default@MergeProfile... after 4 ms
+> hvigor Finished :entry:default@CreateBuildProfile... after 2 ms
+> hvigor Finished :entry:default@PreCheckSyscap... after 1 ms
+> hvigor Finished :entry:default@ProcessIntegratedHsp... after 1 ms
+> hvigor Finished :entry:default@BuildNativeWithCmake... after 26 ms
+> hvigor Finished :entry:default@MakePackInfo... after 3 ms
+> hvigor Finished :entry:default@ProcessProfile... after 151 ms
+> hvigor Finished :entry:default@SyscapTransform... after 13 ms
+> hvigor Finished :entry:default@GeneratePkgContextInfo... after 2 ms
+> hvigor Finished :entry:default@ProcessResource... after 3 ms
+> hvigor Finished :entry:default@ProcessRouterMap... after 4 ms
+> hvigor Finished :entry:default@BuildNativeWithNinja... after 1 s 492 ms
+> hvigor Finished :entry:default@GenerateLoaderJson... after 19 ms
+> hvigor Finished :entry:default@CompileResource... after 1 s 470 ms
+> hvigor Finished :entry:default@BuildJS... after 10 ms
+> hvigor Finished :entry:default@ProcessLibs... after 172 ms
+> hvigor Finished :entry:default@DoNativeStrip... after 63 ms
+> hvigor Finished :entry:default@CacheNativeLibs... after 513 ms
+> hvigor WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:419:46
+ The system capacity of this api 'mindSporeLite' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:419:60
+ The system capacity of this api 'loadModelFromBuffer' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:420:52
+ The system capacity of this api 'getInputs' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:421:97
+ The system capacity of this api 'name' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:422:74
+ The system capacity of this api 'name' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:426:18
+ The system capacity of this api 'shape' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:426:47
+ The system capacity of this api 'shape' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:426:72
+ The system capacity of this api 'shape' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:427:18
+ The system capacity of this api 'dtype' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:427:28
+ The system capacity of this api 'mindSporeLite' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:427:42
+ The system capacity of this api 'DataType' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:427:51
+ The system capacity of this api 'NUMBER_TYPE_INT32' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:428:52
+ The system capacity of this api 'name' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:495:52
+ The system capacity of this api 'getInputs' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:497:14
+ The system capacity of this api 'setData' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:497:29
+ The system capacity of this api 'name' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:499:59
+ The system capacity of this api 'predict' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:500:44
+ The system capacity of this api 'elementNum' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:501:20
+ The system capacity of this api 'dtype' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:501:30
+ The system capacity of this api 'mindSporeLite' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:501:44
+ The system capacity of this api 'DataType' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:501:53
+ The system capacity of this api 'NUMBER_TYPE_FLOAT32' is not supported on all devices
+
+WARN: ArkTS:WARN File: /workspace/work/git-upload/PrivateCodexSpace/entry/src/main/ets/model/PermissionModel.ets:504:69
+ The system capacity of this api 'getData' is not supported on all devices
+
+
+> hvigor Finished :entry:default@CompileArkTS... after 10 s 546 ms
+> hvigor Finished :entry:default@GeneratePkgModuleJson... after 2 ms
+> hvigor Finished :entry:default@PackageHap... after 523 ms
+> hvigor WARN: No signingConfig found for product default
+> hvigor Finished :entry:default@SignHap... after 2 ms
+> hvigor Finished :entry:assembleHap... after 1 ms
+> hvigor BUILD SUCCESSFUL in 14 s 938 ms

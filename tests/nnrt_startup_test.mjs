@@ -58,7 +58,7 @@ try {
   code = code.replace(/^import .*from '@kit\.[^']+';\r?\n/gm, '')
     .replace(/^import .*from 'libpermission_hiai.so';\r?\n/gm, '')
     .replace("from './WordPiece'", "from './WordPiece.mts'");
-  code = 'const {native,util,mindSporeLite,hilog}=globalThis.__permissionTest;\n' +
+  code = 'const {native,util,mindSporeLite,hilog,deviceInfo}=globalThis.__permissionTest;\n' +
     'const {devices,accelerator,load:loadHiAI,predict:predictHiAI,dispose:disposeHiAI}=native;\n' +
     'const canIUse=()=>true;\n' + code;
   fs.writeFileSync(path.join(temporary, 'PermissionModel.mts'), code);

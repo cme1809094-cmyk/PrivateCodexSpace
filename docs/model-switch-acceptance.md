@@ -1,4 +1,4 @@
-# 双模型切换与 TinyBERT 验收 · 1.1.1
+# 双模型切换与 TinyBERT 验收 · 1.1.2
 
 仓库根目录现在构建同一个双模型应用，包名仍为 com.intentlab.permissiondemohiaperf。默认选择 TinyBERT 4L，可切换到 MiniRBT H256；两套模型均可选择自动、16、32、64 token。模型二进制没有重新训练或重新编译，本轮更改集中在集成、切换和验收入口。
 
@@ -16,7 +16,7 @@ python3 ml/verify_artifacts.py
 
 校验应通过十个二进制、两个模型目录及配套元数据。不要使用 GitHub 源码 ZIP 中尚未展开的 LFS 指针文件直接构建。
 
-用 DevEco Studio 打开仓库根目录，配置本机调试签名，Clean/Rebuild native 与 ArkTS 后安装到 Mate 80 Pro Max / HarmonyOS 5.0.0。确认界面版本为 1.1.1。此前的独立 TinyBERT 包名不同，可能与新应用并存。
+用 DevEco Studio 打开仓库根目录，配置本机调试签名，Clean/Rebuild native 与 ArkTS 后安装到 Mate 80 Pro Max / HarmonyOS 5.0.0。确认界面版本为 1.1.2。此前的独立 TinyBERT 包名不同，可能与新应用并存。
 
 1. 保持默认 TinyBERT，输入“录一段视频，别录声音”，分别选16、32、64识别。结果应显示当前模型、实际后端和档位；初次使用会加载并执行参考自检。
 2. 切换 MiniRBT，重复三个档位，再切回 TinyBERT。核对模型名与实际后端，留意异常、残留旧结果和内存增长。
@@ -40,7 +40,7 @@ python3 ml/verify_artifacts.py
 
 每档用同一条能装入该档的参考短指令，预热5次、记录50次，报告 P50/P95。时延包括原生桥接、调度、张量复制和推理，不包括加载、自检、分词和文本渲染。本轮未定义延迟 SLA，时延是测量项，不是性能达标结论。
 
-JSON 包含版本、时间、模型 ID、运行库后端/版本、阈值、档位、模型字节数、清单 SHA-256、参考匹配数、最大误差、时延及失败消息。清单 SHA-256 是构建前校验过的身份；手机只核对模型字节数，没有进行手机端 SHA-256 测量，不能把 manifestSha256 当成设备实测值。
+JSON 包含版本、时间、模型 ID、运行库后端/版本、阈值、档位、模型字节数、清单 SHA-256、参考匹配数、最大误差、时延及失败消息。1.1.2 的 schemaVersion=2 还包含手机实际系统/API版本、逐样本logits、标签变化、阈值余量与失败样本token；详见 [TinyBERT数值调查](tinybert-npu-parity.md)。清单 SHA-256 是构建前校验过的身份；手机只核对模型字节数，没有进行手机端 SHA-256 测量，不能把 manifestSha256 当成设备实测值。
 
 这个入口验证的是转换后输出一致性和基本执行稳定性。应用层禁止 CPU 回退、编译分区 CPUCL=0，均不能代替手机 profiler 对底层执行位置的观察。分词、输入准备、阈值判断和界面仍在 CPU 执行。
 

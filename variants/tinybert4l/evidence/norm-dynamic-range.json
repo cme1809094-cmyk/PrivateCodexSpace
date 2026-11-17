@@ -1,0 +1,1661 @@
+{
+  "scope": "CPU FP32 intermediate ranges; not phone values or a proof of hardware overflow",
+  "graph_sha256": "04c35e74eacca8d109ef08e54dbf8c90ba7377e35e9cb5da4b07b2a132b58271",
+  "length": 64,
+  "fp16_max": 65504.0,
+  "fp16_square_safe_abs": 255.93749236874226,
+  "max_all_token_centered_abs": 354.5597839355469,
+  "max_active_token_centered_abs": 354.5597839355469,
+  "cases": [
+    {
+      "case_id": 1,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.90251541137695,
+          "active_token_absmax": 38.90251541137695
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 343.49700927734375,
+          "active_token_absmax": 343.49700927734375
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.12187385559082,
+          "active_token_absmax": 16.12187385559082
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 185.81935119628906,
+          "active_token_absmax": 185.81935119628906
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.27016258239746,
+          "active_token_absmax": 18.27016258239746
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.671409606933594,
+          "active_token_absmax": 38.671409606933594
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 25.04474449157715,
+          "active_token_absmax": 25.04474449157715
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.795410394668579,
+          "active_token_absmax": 1.795410394668579
+        }
+      ]
+    },
+    {
+      "case_id": 2,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 40.09446716308594,
+          "active_token_absmax": 40.09446716308594
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 328.7635803222656,
+          "active_token_absmax": 328.7635803222656
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.137710571289062,
+          "active_token_absmax": 16.137710571289062
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 182.65786743164062,
+          "active_token_absmax": 182.65786743164062
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.201852798461914,
+          "active_token_absmax": 18.201852798461914
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.526180267333984,
+          "active_token_absmax": 38.526180267333984
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 20.187808990478516,
+          "active_token_absmax": 20.187808990478516
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.7722562551498413,
+          "active_token_absmax": 1.7722562551498413
+        }
+      ]
+    },
+    {
+      "case_id": 3,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.41744613647461,
+          "active_token_absmax": 39.41744613647461
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 345.6695861816406,
+          "active_token_absmax": 345.6695861816406
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.098968505859375,
+          "active_token_absmax": 16.098968505859375
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 186.88916015625,
+          "active_token_absmax": 186.88916015625
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.256610870361328,
+          "active_token_absmax": 18.256610870361328
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.71205139160156,
+          "active_token_absmax": 38.71205139160156
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 26.32196044921875,
+          "active_token_absmax": 26.32196044921875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.914160966873169,
+          "active_token_absmax": 1.914160966873169
+        }
+      ]
+    },
+    {
+      "case_id": 4,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.24306869506836,
+          "active_token_absmax": 39.24306869506836
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 332.1199951171875,
+          "active_token_absmax": 332.1199951171875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.17649269104004,
+          "active_token_absmax": 16.17649269104004
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 182.28271484375,
+          "active_token_absmax": 182.28271484375
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.245515823364258,
+          "active_token_absmax": 18.245515823364258
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.709556579589844,
+          "active_token_absmax": 38.709556579589844
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 22.908336639404297,
+          "active_token_absmax": 22.908336639404297
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.3718421459198,
+          "active_token_absmax": 2.3718421459198
+        }
+      ]
+    },
+    {
+      "case_id": 5,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.03103256225586,
+          "active_token_absmax": 39.03103256225586
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 329.10076904296875,
+          "active_token_absmax": 329.10076904296875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.13789176940918,
+          "active_token_absmax": 16.13789176940918
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 181.2496795654297,
+          "active_token_absmax": 181.2496795654297
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.22498321533203,
+          "active_token_absmax": 18.22498321533203
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.750335693359375,
+          "active_token_absmax": 38.750335693359375
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 21.173725128173828,
+          "active_token_absmax": 21.173725128173828
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.4560942649841309,
+          "active_token_absmax": 1.4560942649841309
+        }
+      ]
+    },
+    {
+      "case_id": 6,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.493751525878906,
+          "active_token_absmax": 39.493751525878906
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 339.2973327636719,
+          "active_token_absmax": 339.2973327636719
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.154550552368164,
+          "active_token_absmax": 16.154550552368164
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 184.30970764160156,
+          "active_token_absmax": 184.30970764160156
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.280561447143555,
+          "active_token_absmax": 18.280561447143555
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.557342529296875,
+          "active_token_absmax": 38.557342529296875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 22.144289016723633,
+          "active_token_absmax": 22.144289016723633
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.7423176765441895,
+          "active_token_absmax": 1.7423176765441895
+        }
+      ]
+    },
+    {
+      "case_id": 7,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.69630813598633,
+          "active_token_absmax": 39.69630813598633
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 337.42559814453125,
+          "active_token_absmax": 337.42559814453125
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.186424255371094,
+          "active_token_absmax": 16.186424255371094
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 181.6391143798828,
+          "active_token_absmax": 181.6391143798828
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.270254135131836,
+          "active_token_absmax": 18.270254135131836
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.78782653808594,
+          "active_token_absmax": 38.78782653808594
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 22.882492065429688,
+          "active_token_absmax": 22.882492065429688
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.5572848320007324,
+          "active_token_absmax": 2.5572848320007324
+        }
+      ]
+    },
+    {
+      "case_id": 8,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.12422180175781,
+          "active_token_absmax": 39.12422180175781
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 339.03875732421875,
+          "active_token_absmax": 339.03875732421875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.1503963470459,
+          "active_token_absmax": 16.1503963470459
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 183.48658752441406,
+          "active_token_absmax": 183.48658752441406
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.260530471801758,
+          "active_token_absmax": 18.260530471801758
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.753292083740234,
+          "active_token_absmax": 38.753292083740234
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 31.3516902923584,
+          "active_token_absmax": 31.3516902923584
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.1072940826416016,
+          "active_token_absmax": 2.1072940826416016
+        }
+      ]
+    },
+    {
+      "case_id": 9,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.50703430175781,
+          "active_token_absmax": 39.50703430175781
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 354.5597839355469,
+          "active_token_absmax": 354.5597839355469
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.134023666381836,
+          "active_token_absmax": 16.134023666381836
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 188.94369506835938,
+          "active_token_absmax": 188.94369506835938
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.291269302368164,
+          "active_token_absmax": 18.291269302368164
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.769866943359375,
+          "active_token_absmax": 38.769866943359375
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 26.97675132751465,
+          "active_token_absmax": 26.97675132751465
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.3866281509399414,
+          "active_token_absmax": 2.3866281509399414
+        }
+      ]
+    },
+    {
+      "case_id": 10,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.389163970947266,
+          "active_token_absmax": 39.389163970947266
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 334.0358581542969,
+          "active_token_absmax": 334.0358581542969
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.178388595581055,
+          "active_token_absmax": 16.178388595581055
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 179.98104858398438,
+          "active_token_absmax": 179.98104858398438
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.229047775268555,
+          "active_token_absmax": 18.229047775268555
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.63718795776367,
+          "active_token_absmax": 38.63718795776367
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 19.131393432617188,
+          "active_token_absmax": 19.131393432617188
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.6633187532424927,
+          "active_token_absmax": 1.6633187532424927
+        }
+      ]
+    },
+    {
+      "case_id": 11,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.470211029052734,
+          "active_token_absmax": 39.470211029052734
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 325.36602783203125,
+          "active_token_absmax": 325.36602783203125
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.169116973876953,
+          "active_token_absmax": 16.169116973876953
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 183.82774353027344,
+          "active_token_absmax": 183.82774353027344
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.272762298583984,
+          "active_token_absmax": 18.272762298583984
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.68204879760742,
+          "active_token_absmax": 38.68204879760742
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 20.33506965637207,
+          "active_token_absmax": 20.33506965637207
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.9541542530059814,
+          "active_token_absmax": 1.9541542530059814
+        }
+      ]
+    },
+    {
+      "case_id": 12,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.51716613769531,
+          "active_token_absmax": 39.51716613769531
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 338.822998046875,
+          "active_token_absmax": 338.822998046875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.20865249633789,
+          "active_token_absmax": 16.20865249633789
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 179.90634155273438,
+          "active_token_absmax": 179.90634155273438
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.23556900024414,
+          "active_token_absmax": 18.23556900024414
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.66804504394531,
+          "active_token_absmax": 38.66804504394531
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.372127532958984,
+          "active_token_absmax": 18.372127532958984
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.5656088590621948,
+          "active_token_absmax": 1.5656088590621948
+        }
+      ]
+    },
+    {
+      "case_id": 13,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.028106689453125,
+          "active_token_absmax": 39.028106689453125
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 344.9366455078125,
+          "active_token_absmax": 344.9366455078125
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.235010147094727,
+          "active_token_absmax": 16.235010147094727
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 176.196044921875,
+          "active_token_absmax": 176.196044921875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.272611618041992,
+          "active_token_absmax": 18.272611618041992
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.055538177490234,
+          "active_token_absmax": 38.055538177490234
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 25.23804473876953,
+          "active_token_absmax": 25.23804473876953
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.008904457092285,
+          "active_token_absmax": 2.008904457092285
+        }
+      ]
+    },
+    {
+      "case_id": 14,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.076969146728516,
+          "active_token_absmax": 39.076969146728516
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 334.8005676269531,
+          "active_token_absmax": 334.8005676269531
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.148334503173828,
+          "active_token_absmax": 16.148334503173828
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 187.90914916992188,
+          "active_token_absmax": 187.90914916992188
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.215740203857422,
+          "active_token_absmax": 18.215740203857422
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 36.84004592895508,
+          "active_token_absmax": 36.84004592895508
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 19.645307540893555,
+          "active_token_absmax": 19.645307540893555
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.038890838623047,
+          "active_token_absmax": 2.038890838623047
+        }
+      ]
+    },
+    {
+      "case_id": 15,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.10982894897461,
+          "active_token_absmax": 39.10982894897461
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 334.2672424316406,
+          "active_token_absmax": 334.2672424316406
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.202619552612305,
+          "active_token_absmax": 16.202619552612305
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 185.38609313964844,
+          "active_token_absmax": 185.38609313964844
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.343814849853516,
+          "active_token_absmax": 18.343814849853516
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.284976959228516,
+          "active_token_absmax": 38.284976959228516
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 20.096891403198242,
+          "active_token_absmax": 20.096891403198242
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.5260322093963623,
+          "active_token_absmax": 2.5260322093963623
+        }
+      ]
+    },
+    {
+      "case_id": 16,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.64321517944336,
+          "active_token_absmax": 38.64321517944336
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 338.7808532714844,
+          "active_token_absmax": 338.7808532714844
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.220510482788086,
+          "active_token_absmax": 16.220510482788086
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 184.6545867919922,
+          "active_token_absmax": 184.6545867919922
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.239585876464844,
+          "active_token_absmax": 18.239585876464844
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.65005874633789,
+          "active_token_absmax": 38.65005874633789
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 22.720678329467773,
+          "active_token_absmax": 22.720678329467773
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.6219961643218994,
+          "active_token_absmax": 2.6219961643218994
+        }
+      ]
+    },
+    {
+      "case_id": 17,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.2114143371582,
+          "active_token_absmax": 39.2114143371582
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 342.6776123046875,
+          "active_token_absmax": 342.6776123046875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.19110107421875,
+          "active_token_absmax": 16.19110107421875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 188.7281036376953,
+          "active_token_absmax": 188.7281036376953
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.288040161132812,
+          "active_token_absmax": 18.288040161132812
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.642372131347656,
+          "active_token_absmax": 38.642372131347656
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 22.153993606567383,
+          "active_token_absmax": 22.153993606567383
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.7394121885299683,
+          "active_token_absmax": 1.7394121885299683
+        }
+      ]
+    },
+    {
+      "case_id": 18,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.33416748046875,
+          "active_token_absmax": 39.33416748046875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 341.93902587890625,
+          "active_token_absmax": 341.93902587890625
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.271865844726562,
+          "active_token_absmax": 16.271865844726562
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 177.80088806152344,
+          "active_token_absmax": 177.80088806152344
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.225772857666016,
+          "active_token_absmax": 18.225772857666016
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.545040130615234,
+          "active_token_absmax": 38.545040130615234
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 26.86493682861328,
+          "active_token_absmax": 26.86493682861328
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 3.10447096824646,
+          "active_token_absmax": 3.10447096824646
+        }
+      ]
+    },
+    {
+      "case_id": 19,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.913822174072266,
+          "active_token_absmax": 39.913822174072266
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 341.2456970214844,
+          "active_token_absmax": 341.2456970214844
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.186616897583008,
+          "active_token_absmax": 16.186616897583008
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 178.46640014648438,
+          "active_token_absmax": 178.46640014648438
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.21910858154297,
+          "active_token_absmax": 18.21910858154297
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.36214065551758,
+          "active_token_absmax": 38.36214065551758
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.263368606567383,
+          "active_token_absmax": 18.263368606567383
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.481698751449585,
+          "active_token_absmax": 1.481698751449585
+        }
+      ]
+    },
+    {
+      "case_id": 20,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.12565994262695,
+          "active_token_absmax": 39.12565994262695
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 326.81231689453125,
+          "active_token_absmax": 326.81231689453125
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.20708656311035,
+          "active_token_absmax": 16.20708656311035
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 175.30227661132812,
+          "active_token_absmax": 175.30227661132812
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.284923553466797,
+          "active_token_absmax": 18.284923553466797
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.256351470947266,
+          "active_token_absmax": 38.256351470947266
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 17.99431800842285,
+          "active_token_absmax": 17.99431800842285
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.7146975994110107,
+          "active_token_absmax": 2.7146975994110107
+        }
+      ]
+    },
+    {
+      "case_id": 21,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.19565200805664,
+          "active_token_absmax": 39.19565200805664
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 333.8269348144531,
+          "active_token_absmax": 333.8269348144531
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.228458404541016,
+          "active_token_absmax": 16.228458404541016
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 173.30752563476562,
+          "active_token_absmax": 173.30752563476562
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.300466537475586,
+          "active_token_absmax": 18.300466537475586
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.418312072753906,
+          "active_token_absmax": 38.418312072753906
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 23.054149627685547,
+          "active_token_absmax": 23.054149627685547
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 3.0941555500030518,
+          "active_token_absmax": 3.0941555500030518
+        }
+      ]
+    },
+    {
+      "case_id": 22,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.06717300415039,
+          "active_token_absmax": 39.06717300415039
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 343.2974853515625,
+          "active_token_absmax": 343.2974853515625
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.229768753051758,
+          "active_token_absmax": 16.229768753051758
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 176.37405395507812,
+          "active_token_absmax": 176.37405395507812
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.250112533569336,
+          "active_token_absmax": 18.250112533569336
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.266536712646484,
+          "active_token_absmax": 38.266536712646484
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 25.484172821044922,
+          "active_token_absmax": 25.484172821044922
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 3.2726454734802246,
+          "active_token_absmax": 3.2726454734802246
+        }
+      ]
+    },
+    {
+      "case_id": 23,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.28435516357422,
+          "active_token_absmax": 39.28435516357422
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 337.25067138671875,
+          "active_token_absmax": 337.25067138671875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.252792358398438,
+          "active_token_absmax": 16.252792358398438
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 171.28143310546875,
+          "active_token_absmax": 171.28143310546875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.312591552734375,
+          "active_token_absmax": 18.312591552734375
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 37.686771392822266,
+          "active_token_absmax": 37.686771392822266
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 21.112079620361328,
+          "active_token_absmax": 21.112079620361328
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.9486558437347412,
+          "active_token_absmax": 1.9486558437347412
+        }
+      ]
+    },
+    {
+      "case_id": 24,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.5020866394043,
+          "active_token_absmax": 39.5020866394043
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 331.85302734375,
+          "active_token_absmax": 331.85302734375
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.231204986572266,
+          "active_token_absmax": 16.231204986572266
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 167.05335998535156,
+          "active_token_absmax": 167.05335998535156
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.188261032104492,
+          "active_token_absmax": 18.188261032104492
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 37.445186614990234,
+          "active_token_absmax": 37.445186614990234
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 20.4141845703125,
+          "active_token_absmax": 20.4141845703125
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.7665703296661377,
+          "active_token_absmax": 2.7665703296661377
+        }
+      ]
+    },
+    {
+      "case_id": 25,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.43253707885742,
+          "active_token_absmax": 39.43253707885742
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 346.58233642578125,
+          "active_token_absmax": 346.58233642578125
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.150869369506836,
+          "active_token_absmax": 16.150869369506836
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 187.8991241455078,
+          "active_token_absmax": 187.8991241455078
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.244915008544922,
+          "active_token_absmax": 18.244915008544922
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.66461944580078,
+          "active_token_absmax": 38.66461944580078
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 24.962116241455078,
+          "active_token_absmax": 24.962116241455078
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.7423007488250732,
+          "active_token_absmax": 1.7423007488250732
+        }
+      ]
+    },
+    {
+      "case_id": 26,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.09751510620117,
+          "active_token_absmax": 39.09751510620117
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 331.9815979003906,
+          "active_token_absmax": 331.9815979003906
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.17716407775879,
+          "active_token_absmax": 16.17716407775879
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 187.82919311523438,
+          "active_token_absmax": 187.82919311523438
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.218021392822266,
+          "active_token_absmax": 18.218021392822266
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.654197692871094,
+          "active_token_absmax": 38.654197692871094
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 27.090543746948242,
+          "active_token_absmax": 27.090543746948242
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.562208414077759,
+          "active_token_absmax": 2.562208414077759
+        }
+      ]
+    },
+    {
+      "case_id": 27,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.239540100097656,
+          "active_token_absmax": 39.239540100097656
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 339.4641418457031,
+          "active_token_absmax": 339.4641418457031
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.180681228637695,
+          "active_token_absmax": 16.180681228637695
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 186.5917510986328,
+          "active_token_absmax": 186.5917510986328
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.26428985595703,
+          "active_token_absmax": 18.26428985595703
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.7313117980957,
+          "active_token_absmax": 38.7313117980957
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 28.38309669494629,
+          "active_token_absmax": 28.38309669494629
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.9333035945892334,
+          "active_token_absmax": 1.9333035945892334
+        }
+      ]
+    },
+    {
+      "case_id": 28,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.506961822509766,
+          "active_token_absmax": 39.506961822509766
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 343.59930419921875,
+          "active_token_absmax": 343.59930419921875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.111286163330078,
+          "active_token_absmax": 16.111286163330078
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 185.69357299804688,
+          "active_token_absmax": 185.69357299804688
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.2957706451416,
+          "active_token_absmax": 18.2957706451416
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.633033752441406,
+          "active_token_absmax": 38.633033752441406
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 30.83875846862793,
+          "active_token_absmax": 30.83875846862793
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.4108866453170776,
+          "active_token_absmax": 1.4108866453170776
+        }
+      ]
+    },
+    {
+      "case_id": 29,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.43547058105469,
+          "active_token_absmax": 39.43547058105469
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 334.1393737792969,
+          "active_token_absmax": 334.1393737792969
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.097749710083008,
+          "active_token_absmax": 16.097749710083008
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 188.704833984375,
+          "active_token_absmax": 188.704833984375
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.295150756835938,
+          "active_token_absmax": 18.295150756835938
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.713985443115234,
+          "active_token_absmax": 38.713985443115234
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 17.31055450439453,
+          "active_token_absmax": 17.31055450439453
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.8436492681503296,
+          "active_token_absmax": 1.8436492681503296
+        }
+      ]
+    },
+    {
+      "case_id": 30,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.944759368896484,
+          "active_token_absmax": 38.944759368896484
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 345.1991271972656,
+          "active_token_absmax": 345.1991271972656
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.11167335510254,
+          "active_token_absmax": 16.11167335510254
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 188.3631591796875,
+          "active_token_absmax": 188.3631591796875
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.281190872192383,
+          "active_token_absmax": 18.281190872192383
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.70018005371094,
+          "active_token_absmax": 38.70018005371094
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 24.124847412109375,
+          "active_token_absmax": 24.124847412109375
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 2.389091730117798,
+          "active_token_absmax": 2.389091730117798
+        }
+      ]
+    },
+    {
+      "case_id": 31,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.8267822265625,
+          "active_token_absmax": 38.8267822265625
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 331.5453186035156,
+          "active_token_absmax": 331.5453186035156
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.14500617980957,
+          "active_token_absmax": 16.14500617980957
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 189.57884216308594,
+          "active_token_absmax": 189.57884216308594
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.254928588867188,
+          "active_token_absmax": 18.254928588867188
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.77825927734375,
+          "active_token_absmax": 38.77825927734375
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.88690757751465,
+          "active_token_absmax": 18.88690757751465
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2837259769439697,
+          "active_token_absmax": 1.2837259769439697
+        }
+      ]
+    },
+    {
+      "case_id": 32,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.66951370239258,
+          "active_token_absmax": 38.66951370239258
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 337.2275695800781,
+          "active_token_absmax": 337.2275695800781
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.134471893310547,
+          "active_token_absmax": 16.134471893310547
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 187.52444458007812,
+          "active_token_absmax": 187.52444458007812
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.272109985351562,
+          "active_token_absmax": 18.272109985351562
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.76164245605469,
+          "active_token_absmax": 38.76164245605469
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 26.72572135925293,
+          "active_token_absmax": 26.72572135925293
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.548431396484375,
+          "active_token_absmax": 1.548431396484375
+        }
+      ]
+    },
+    {
+      "case_id": 33,
+      "stages": [
+        {
+          "name": "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.2646032571792603,
+          "active_token_absmax": 1.2646032571792603
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 39.094322204589844,
+          "active_token_absmax": 39.094322204589844
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 344.1543273925781,
+          "active_token_absmax": 344.1543273925781
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.11452865600586,
+          "active_token_absmax": 16.11452865600586
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 189.89266967773438,
+          "active_token_absmax": 189.89266967773438
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 18.302230834960938,
+          "active_token_absmax": 18.302230834960938
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 38.692054748535156,
+          "active_token_absmax": 38.692054748535156
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 16.552635192871094,
+          "active_token_absmax": 16.552635192871094
+        },
+        {
+          "name": "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0",
+          "all_token_absmax": 1.8498499393463135,
+          "active_token_absmax": 1.8498499393463135
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { systemDateTime } from '@kit.BasicServicesKit';
+import { systemDateTime, deviceInfo } from '@kit.BasicServicesKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { devices, accelerator, load as loadHiAI, predict as predictHiAI, dispose as disposeHiAI, HiAISession } from 'libpermission_hiai.so';
 import { mindSporeLite } from '@kit.MindSporeLiteKit';
@@ -8,7 +8,8 @@ import { SEQUENCE_LENGTH, TokenizedInput, WordPiece } from './WordPiece';
 
 const BUCKETS: number[] = [16, 32, 64];
 const LABEL_COUNT: number = 5;
-const APP_VERSION: string = '1.1.1';
+const APP_VERSION: string = '1.1.2';
+const LABEL_NAMES: string[] = ['camera', 'microphone', 'coarse_location', 'fine_location', 'out_of_scope'];
 
 interface ReferenceCase {
   text: string;
@@ -34,10 +35,37 @@ interface ModelCatalog {
   defaultModel: string;
   profiles: ModelProfile[];
 }
+export class ReferenceComparison {
+  caseId: number = 0;
+  referenceText: string = '';
+  tokenCount: number = 0;
+  referenceLogits: number[] = [];
+  npuLogits: number[] = [];
+  referenceLabels: string[] = [];
+  npuLabels: string[] = [];
+  changedLabels: string[] = [];
+  referenceMargins: number[] = [];
+  npuMargins: number[] = [];
+  labelsMatch: boolean = false;
+  withinLogitLimit: boolean = false;
+  maxLogitError: number = 0;
+  inputIds: number[] = [];
+  attentionMask: number[] = [];
+  error: string = '';
+}
+export class RuntimeSystem {
+  productModel: string = '';
+  osFullName: string = '';
+  sdkApiVersion: number = 0;
+  error: string = '';
+}
 class ReferenceResult {
   checked: number = 0;
   matched: number = 0;
   maxLogitError: number = 0;
+  worstCaseId: number = 0;
+  device: string = '';
+  cases: ReferenceComparison[] = [];
 }
 class TimingResult {
   warmupRuns: number = 5;
@@ -55,18 +83,23 @@ export class BucketAcceptance {
   checked: number = 0;
   matched: number = 0;
   maxLogitError: number = 0;
+  worstCaseId: number = 0;
+  labelMismatchCaseIds: number[] = [];
+  driftCaseIds: number[] = [];
+  cases: ReferenceComparison[] = [];
   timing?: TimingResult;
   passed: boolean = false;
   error: string = '';
 }
 export class AcceptanceReport {
-  schemaVersion: number = 1;
+  schemaVersion: number = 2;
   appVersion: string = APP_VERSION;
   startedAt: string = new Date().toISOString();
   finishedAt: string = '';
   modelId: string = '';
   modelName: string = '';
   runtimeBackend: string = '';
+  runtimeSystem: RuntimeSystem = new RuntimeSystem();
   thresholds: number[] = [];
   maxLogitErrorLimit: number = 0;
   cpuFallbackAllowed: boolean = false;
@@ -258,12 +291,11 @@ export class PermissionModel {
       this.modelId, bucket, file, buffer.byteLength);
     const session: HiAISession = await loadHiAI(buffer);
     try {
-      const report: ReferenceResult = await this.checkReference(session, bucket);
-      this.selfTests.set(bucket, report);
+      const report: ReferenceResult = await this.checkReference(session, bucket, profile.maxLogitError);
       if (report.checked !== asset.referenceCases || report.matched !== report.checked || report.maxLogitError > profile.maxLogitError) {
         throw new Error('NPU 自检 ' + report.matched.toString() + '/' + report.checked.toString() +
           '（应检查 ' + asset.referenceCases.toString() + '），最大 logit 差 ' + report.maxLogitError.toFixed(6) +
-          '，上限 ' + profile.maxLogitError.toString());
+          '，上限 ' + profile.maxLogitError.toString() + '，最差样本 #' + report.worstCaseId.toString());
       }
       this.hiaiSessions.set(bucket, session);
       hilog.info(0xFF00, 'PermissionNPU', '[PNPU][LOAD] model=%{public}s bucket=%{public}d ready device=%{public}s',
@@ -282,36 +314,82 @@ export class PermissionModel {
     }
   }
 
-  private async checkReference(session: HiAISession, bucket: number): Promise<ReferenceResult> {
+  private async checkReference(session: HiAISession, bucket: number, limit: number): Promise<ReferenceResult> {
     const tokenizer: WordPiece | undefined = this.tokenizer;
     if (tokenizer === undefined) {
       throw new Error('模型尚未加载');
     }
     const report: ReferenceResult = new ReferenceResult();
-    for (const item of this.references) {
+    report.device = session.device;
+    // Preserve partial diagnostics if inference fails before the last case.
+    this.selfTests.set(bucket, report);
+    for (let caseIndex: number = 0; caseIndex < this.references.length; caseIndex++) {
+      const item: ReferenceCase = this.references[caseIndex];
       const tokens: TokenizedInput = tokenizer.encode(item.text);
       if (tokens.tooLong || this.tokenCount(tokens) > (bucket === 0 ? 64 : bucket)) {
         continue;
       }
-      const actual: number[] = await predictHiAI(session, tokens.ids, tokens.mask);
-      this.validateLogits(actual);
-      report.checked++;
-      let sameLabels: boolean = true;
-      for (let i: number = 0; i < LABEL_COUNT; i++) {
-        const score: number = 1 / (1 + Math.exp(-actual[i]));
-        const reference: number = 1 / (1 + Math.exp(-item.logits[i]));
-        if ((score >= this.thresholds[i]) !== (reference >= this.thresholds[i])) {
-          sameLabels = false;
+      const detail: ReferenceComparison = new ReferenceComparison();
+      detail.caseId = caseIndex + 1;
+      detail.referenceText = item.text;
+      detail.tokenCount = this.tokenCount(tokens);
+      detail.referenceLogits = item.logits.slice();
+      try {
+        const actual: number[] = await predictHiAI(session, tokens.ids, tokens.mask);
+        this.validateLogits(actual);
+        detail.npuLogits = actual.slice();
+        report.checked++;
+        for (let i: number = 0; i < LABEL_COUNT; i++) {
+          const expected: boolean = 1 / (1 + Math.exp(-item.logits[i])) >= this.thresholds[i];
+          const observed: boolean = 1 / (1 + Math.exp(-actual[i])) >= this.thresholds[i];
+          if (expected) { detail.referenceLabels.push(LABEL_NAMES[i]); }
+          if (observed) { detail.npuLabels.push(LABEL_NAMES[i]); }
+          if (expected !== observed) { detail.changedLabels.push(LABEL_NAMES[i]); }
+          const boundary: number = Math.log(this.thresholds[i] / (1 - this.thresholds[i]));
+          detail.referenceMargins.push(item.logits[i] - boundary);
+          detail.npuMargins.push(actual[i] - boundary);
+          detail.maxLogitError = Math.max(detail.maxLogitError, Math.abs(actual[i] - item.logits[i]));
         }
-        report.maxLogitError = Math.max(report.maxLogitError, Math.abs(actual[i] - item.logits[i]));
+        detail.labelsMatch = detail.changedLabels.length === 0;
+        detail.withinLogitLimit = detail.maxLogitError <= limit;
+        if (detail.labelsMatch) {
+          report.matched++;
+        }
+        if (detail.maxLogitError > report.maxLogitError) {
+          report.maxLogitError = detail.maxLogitError;
+          report.worstCaseId = detail.caseId;
+        }
+        if (!detail.labelsMatch || !detail.withinLogitLimit) {
+          detail.inputIds = Array.from(tokens.ids);
+          detail.attentionMask = Array.from(tokens.mask);
+          if (!detail.labelsMatch) {
+            this.logDifference(bucket, detail);
+          }
+        }
+      } catch (error) {
+        detail.error = this.errorMessage(error as Error | string);
+        detail.inputIds = Array.from(tokens.ids);
+        detail.attentionMask = Array.from(tokens.mask);
+        throw new Error('自检样本 #' + detail.caseId.toString() + '：' + detail.error);
+      } finally {
+        report.cases.push(detail);
       }
-      if (sameLabels) {
-        report.matched++;
-      }
+    }
+    const worst: ReferenceComparison | undefined = report.cases.find((sample: ReferenceComparison): boolean => sample.caseId === report.worstCaseId);
+    if (worst !== undefined && worst.labelsMatch && !worst.withinLogitLimit) {
+      this.logDifference(bucket, worst);
     }
     hilog.info(0xFF00, 'PermissionNPU', '[PNPU][SELFTEST] model=%{public}s bucket=%{public}d matched=%{public}d checked=%{public}d maxError=%{public}s',
       this.modelId, bucket, report.matched, report.checked, report.maxLogitError.toFixed(6));
     return report;
+  }
+
+  private logDifference(bucket: number, detail: ReferenceComparison): void {
+    // Log label changes and at most one additional worst-drift case. Full
+    // per-case details stay in JSON; no user input text is logged.
+    hilog.warn(0xFF00, 'PermissionNPU', '[PNPU][DIFF] model=%{public}s bucket=%{public}d case=%{public}d tokens=%{public}d changed=%{public}s maxError=%{public}s ref=%{public}s npu=%{public}s',
+      this.modelId, bucket, detail.caseId, detail.tokenCount, detail.changedLabels.join(','),
+      detail.maxLogitError.toFixed(6), JSON.stringify(detail.referenceLogits), JSON.stringify(detail.npuLogits));
   }
 
   private errorMessage(error: Error | string): string {
@@ -492,6 +570,7 @@ export class PermissionModel {
       report.modelId = this.modelId;
       report.modelName = this.modelName;
       report.runtimeBackend = this.runtimeBackend;
+      report.runtimeSystem = this.readRuntimeSystem();
       report.thresholds = this.thresholds.slice();
       report.maxLogitErrorLimit = this.profile.maxLogitError;
       await this.releaseSessions();
@@ -528,9 +607,17 @@ export class PermissionModel {
         } finally {
           const checked: ReferenceResult | undefined = this.selfTests.get(bucket);
           if (checked !== undefined) {
+            item.bytesVerified = true;
+            item.device = checked.device;
             item.checked = checked.checked;
             item.matched = checked.matched;
             item.maxLogitError = checked.maxLogitError;
+            item.worstCaseId = checked.worstCaseId;
+            item.cases = checked.cases.slice();
+            item.labelMismatchCaseIds = checked.cases.filter((sample: ReferenceComparison): boolean => sample.error.length === 0 && !sample.labelsMatch)
+              .map((sample: ReferenceComparison): number => sample.caseId);
+            item.driftCaseIds = checked.cases.filter((sample: ReferenceComparison): boolean => sample.error.length === 0 && !sample.withinLogitLimit)
+              .map((sample: ReferenceComparison): number => sample.caseId);
           }
           await this.releaseBucket(bucket);
         }
@@ -545,6 +632,18 @@ export class PermissionModel {
     } finally {
       this.working = false;
     }
+  }
+
+  private readRuntimeSystem(): RuntimeSystem {
+    const result: RuntimeSystem = new RuntimeSystem();
+    try {
+      result.productModel = deviceInfo.productModel;
+      result.osFullName = deviceInfo.osFullName;
+      result.sdkApiVersion = deviceInfo.sdkApiVersion;
+    } catch (error) {
+      result.error = this.errorMessage(error as Error | string);
+    }
+    return result;
   }
 
   private validateLogits(logits: number[]): void {

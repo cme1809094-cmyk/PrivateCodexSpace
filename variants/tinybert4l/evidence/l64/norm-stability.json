@@ -1,0 +1,19 @@
+{
+  "scale": 0.25,
+  "epsilon_scale": 0.0625,
+  "layernorm_count": 9,
+  "centered_outputs": [
+    "/classifier/bert/embeddings/LayerNorm/Sub_output_0",
+    "/classifier/bert/encoder/layer.0/attention/output/LayerNorm/Sub_output_0",
+    "/classifier/bert/encoder/layer.0/output/LayerNorm/Sub_output_0",
+    "/classifier/bert/encoder/layer.1/attention/output/LayerNorm/Sub_output_0",
+    "/classifier/bert/encoder/layer.1/output/LayerNorm/Sub_output_0",
+    "/classifier/bert/encoder/layer.2/attention/output/LayerNorm/Sub_output_0",
+    "/classifier/bert/encoder/layer.2/output/LayerNorm/Sub_output_0",
+    "/classifier/bert/encoder/layer.3/attention/output/LayerNorm/Sub_output_0",
+    "/classifier/bert/encoder/layer.3/output/LayerNorm/Sub_output_0"
+  ],
+  "fp16_square_safe_centered_abs": 1023.749969474969,
+  "formula": "(s*d)/sqrt(mean((s*d)^2)+s^2*eps), d=x-mean(x), s>0",
+  "device_tested": false
+}

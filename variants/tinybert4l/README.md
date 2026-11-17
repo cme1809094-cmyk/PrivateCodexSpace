@@ -13,9 +13,9 @@
 
 | token | OMC 字节数 | 原生 V2 节点 | 编译分区 |
 | --- | ---: | --- | --- |
-| 16 | 24,524,711 | 8 BMM + 4 Softmax | NPUCL=1, CPUCL=0 |
-| 32 | 24,544,692 | 8 BMM + 4 Softmax | NPUCL=1, CPUCL=0 |
-| 64 | 24,584,700 | 8 BMM + 4 Softmax | NPUCL=1, CPUCL=0 |
+| 16 | 24,563,743 | 8 BMM + 4 Softmax | NPUCL=1, CPUCL=0 |
+| 32 | 24,583,752 | 8 BMM + 4 Softmax | NPUCL=1, CPUCL=0 |
+| 64 | 24,623,760 | 8 BMM + 4 Softmax | NPUCL=1, CPUCL=0 |
 
 这些是离线编译和主机对照结果，尚未执行手机上的 OMC。1.1.1 双模型 HAP 已通过真实 HarmonyOS SDK 构建和包内校验；调试签名、Mate 80 Pro Max 的加载、自检、时延及峰值内存仍待验证。TinyBERT OMC 比当前 MiniRBT 的约22.6 MB略大，4层也不能直接推断为更快。25/33与MiniRBT既有报告24/33的差异很小，验证集表现也不同，不能据此认定TinyBERT更优。
 
@@ -44,11 +44,11 @@ python3 ml/materialize_variant.py variants/tinybert4l /absolute/path/to/TinyBERT
 
 1.0.5 的后续日志进入 CANN 模型加载后仍报 `Unknown native exception during NNRT work`，未给出具体失败接口。1.0.6 用 Job 持有的记录保留最后调用和返回状态，并将异常类型、CANN 版本、原生桥接版本放进回退提示。字符串、整数异常保留内容；未知类型不做不安全的异常对象转换。这不等于已解决真机执行问题，仍需新日志确认兼容性检查、Build、张量分配或 RunSync 的实际失败位置。
 
-建议从最新源码重新生成到一个新目录，再配置签名、Clean/Rebuild 并安装1.1.1。已有工程若手工更新，需同步整个 `entry/src/main/cpp/`（含 `native_diagnostics.h`、`tensor_shape.h`、`bridge_error.h`）、`entry/build-profile.json5`、`PermissionModel.ets` 和 AppScope 版本，不能遗漏新头文件或构建后检查脚本。仅替换 `.om` 或只更新 ArkTS 不够。
+建议从最新源码重新生成到一个新目录，再配置签名、Clean/Rebuild 并安装1.1.2。已有工程若手工更新，需同步整个 `entry/src/main/cpp/`（含 `native_diagnostics.h`、`tensor_shape.h`、`bridge_error.h`）、`entry/build-profile.json5`、`PermissionModel.ets` 和 AppScope 版本，不能遗漏新头文件或构建后检查脚本。仅替换 `.om` 或只更新 ArkTS 不够。
 
 已确认此次上报设备为 Mate 80 Pro Max / HarmonyOS 5.0.0。驱动名中的 Kirin9020 字样不等同于已验证的 SoC 型号或模型兼容结论；当前产物仍按 kirin9030 编译。名称检查失败发生在模型加载前，更新后需要观察带实际设备名称的 `OH_NNCompilation_Build`、`OH_NNExecutor_RunSync` 和模型自检结果。
 
-调试时在 HiLog 按 Tag `PermissionNPU` 过滤或搜索 `[PNPU]`，日志级别包含 Info/Warn/Error，依次查看 `CANN Foundation loaded, version=...`、HIAI_F 设备信息、模型兼容性、Build 与自检结果。回退提示应包含 `failed at ...; exception_type=...; CANN=...; bridge=1.1.1`。若出现 `Cannot load CANN Foundation`，应先检查系统能力和运行库加载错误，不能通过改设备字符串解决。native 抛出位置若仍需符号化，应使用与崩溃日志 Build ID 完全一致的未剥离 `libpermission_hiai.so`。
+调试时在 HiLog 按 Tag `PermissionNPU` 过滤或搜索 `[PNPU]`，日志级别包含 Info/Warn/Error，依次查看 `CANN Foundation loaded, version=...`、HIAI_F 设备信息、模型兼容性、Build 与自检结果。回退提示应包含 `failed at ...; exception_type=...; CANN=...; bridge=1.1.2`。若出现 `Cannot load CANN Foundation`，应先检查系统能力和运行库加载错误，不能通过改设备字符串解决。native 抛出位置若仍需符号化，应使用与崩溃日志 Build ID 完全一致的未剥离 `libpermission_hiai.so`。
 
 1.0.7 的原生与 ArkTS 日志统一采用 `PermissionNPU` Tag 和 `[PNPU]` 消息前缀；先看 `[RUNTIME]`、`[DEVICE]`、`[LOAD]`、`[API]`，再保留首条 `[ERROR]` 与 `[FALLBACK]`。`[SELFTEST]` 表示自检，`[CPU]` 表示 CPU 模型状态。详细张量调用为 Debug，普通推理和测速循环不输出逐次成功日志。命令行可用 `hdc hilog -T PermissionNPU`。
 
@@ -82,6 +82,7 @@ python3 ml/train_export.py \
 在初始化 Mobile CANN 9.2.0、Tools 7.0.1.0、Kirin9030 插件及配套 Ascend C 环境的 shell 中，使用含 onnx/numpy/onnxruntime 的 Python：
 
 ```sh
+export NATIVE_LAYERNORM_SCALE=0.25
 bash ml/native_v2/run_frontend.sh "$TINYBERT_PROJECT" "$CANN_INCLUDE" "$MOBILE_DDK" "$BUILD_ROOT" --compile
 python3 ml/native_v2/check_host_permissions.py "$TINYBERT_PROJECT" "$BUILD_ROOT/v2_XXXXXX"
 bash "$TINYBERT_PROJECT/ml/convert.sh" "$MINDSPORE_LITE_ROOT" "$TINYBERT_PROJECT/ml/permission.onnx"
@@ -89,3 +90,5 @@ python3 "$TINYBERT_PROJECT/ml/verify_ms.py" "$MINDSPORE_LITE_ROOT"
 ```
 
 `v2_XXXXXX` 应替换为脚本打印的实际构建目录。`--compile` 会输出各档 mobile.omc、最终模型 JSON、逐节点报告和 native-verification.json。编译结束后按清单将三档 mobile.omc 安装为 rawfile/permission_16.om、permission_32.om、permission_64.om。完整日志及转储见 `evidence/`，汇总见 `native-verification.json`。
+
+1.1.2已收到手机数值自检汇总：16档26/27、32／64档30/33。旧模型结果不计为NPU验收通过；1.1.2三档OMC应用LayerNorm等价缩放候选，训练权重、CPU模型、词表、阈值和验收门槛保持不变，候选尚待手机复测；逐样本诊断及FP16敏感性主机探针见 [数值调查](../../docs/tinybert-npu-parity.md)。

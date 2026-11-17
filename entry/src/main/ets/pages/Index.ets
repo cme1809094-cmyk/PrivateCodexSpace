@@ -186,10 +186,17 @@ struct Index {
     try {
       const report: AcceptanceReport = await this.model.acceptNpu((message: string): void => { this.progress = message; });
       const lines: string[] = [report.modelName + (report.passed ? ' · 三档一致性通过' : ' · 验收未通过')];
+      lines.push(report.runtimeSystem.productModel + ' · 系统 API ' + report.runtimeSystem.sdkApiVersion.toString());
       for (const item of report.buckets) {
         lines.push(item.bucket.toString() + ' token · ' + (item.passed ? '通过' : '失败') +
           ' · 权限一致 ' + item.matched.toString() + '/' + item.checked.toString() +
           ' · logit 差 ' + item.maxLogitError.toFixed(6));
+        if (item.labelMismatchCaseIds.length > 0) {
+          lines.push('权限不同的样本 #' + item.labelMismatchCaseIds.join('、'));
+        }
+        if (item.driftCaseIds.length > 0) {
+          lines.push('数值超限的样本 #' + item.driftCaseIds.join('、') + ' · 最差 #' + item.worstCaseId.toString());
+        }
         if (item.timing !== undefined) {
           lines.push('P50 ' + item.timing.p50Ms.toFixed(2) + ' ms · P95 ' + item.timing.p95Ms.toFixed(2) + ' ms');
         }
@@ -297,7 +304,7 @@ struct Index {
           Text('从中文指令识别相机、麦克风和定位权限')
             .fontSize(15)
             .fontColor(MUTED)
-          Text(this.ready ? this.modelName + ' · HiAI 优先 · 1.1.1' : (this.busy ? '正在加载模型' : '模型未就绪'))
+          Text(this.ready ? this.modelName + ' · HiAI 优先 · 1.1.2' : (this.busy ? '正在加载模型' : '模型未就绪'))
             .fontSize(12)
             .fontWeight(FontWeight.Medium)
             .fontColor(GREEN)

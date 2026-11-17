@@ -1,0 +1,57 @@
+{
+  "scope": "CPU per-node FP16 round-trip sensitivity; not Kirin arithmetic, kernel emulation or a device result",
+  "graph_sha256": "8cb272701aa558ce8f32ea1f504695d3fa8a988a4993a4e61cd683f78ce49aae",
+  "length": 32,
+  "thresholds": [
+    0.55,
+    0.65,
+    0.475,
+    0.6,
+    0.55
+  ],
+  "device_tested": false,
+  "policies": {
+    "baseline": {
+      "checked": 33,
+      "matched": 33,
+      "nonfinite": 0,
+      "max_logit_error": 3.814697265625e-06,
+      "label_mismatch_case_ids": []
+    },
+    "weights": {
+      "checked": 33,
+      "matched": 33,
+      "nonfinite": 0,
+      "max_logit_error": 0.006878018379211426,
+      "label_mismatch_case_ids": []
+    },
+    "conv": {
+      "checked": 33,
+      "matched": 33,
+      "nonfinite": 0,
+      "max_logit_error": 0.007355451583862305,
+      "label_mismatch_case_ids": []
+    },
+    "norm": {
+      "checked": 33,
+      "matched": 33,
+      "nonfinite": 0,
+      "max_logit_error": 0.008819341659545898,
+      "label_mismatch_case_ids": []
+    },
+    "except_norm": {
+      "checked": 33,
+      "matched": 33,
+      "nonfinite": 0,
+      "max_logit_error": 0.013055801391601562,
+      "label_mismatch_case_ids": []
+    },
+    "all": {
+      "checked": 33,
+      "matched": 33,
+      "nonfinite": 0,
+      "max_logit_error": 0.012079238891601562,
+      "label_mismatch_case_ids": []
+    }
+  }
+}

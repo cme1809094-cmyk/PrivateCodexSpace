@@ -1,12 +1,14 @@
 # MiniRBT / TinyBERT 权限意图 · Mate 80 Pro Max
 
-目标设备为搭载麒麟 9030 Pro 的 Mate 80 Pro Max / HarmonyOS 5.0.0。移动 CANN 的编译目标为 `kirin9030`。1.1.1 在同一个应用中支持 MiniRBT-H256 与中文 TinyBERT 4L 切换，每个模型均有自动／16／32／64 token 选择，默认 TinyBERT。切换时同步更换权重、词表、五标签阈值、参考输出和 CPU 回退模型。
+目标设备为搭载麒麟 9030 Pro 的 Mate 80 Pro Max / HarmonyOS 5.0.0。移动 CANN 的编译目标为 `kirin9030`。1.1.2 在同一个应用中支持 MiniRBT-H256 与中文 TinyBERT 4L 切换，每个模型均有自动／16／32／64 token 选择，默认 TinyBERT。切换时同步更换权重、词表、五标签阈值、参考输出和 CPU 回退模型。
 
 本工程的模型二进制使用 Git LFS。完整克隆后执行 `git lfs pull`，再执行 `python3 ml/verify_artifacts.py` 校验十个模型文件、模型目录和配套元数据。工具链配置和离线编译统一在 Codex 环境进行。已在 Codex 云端安装固定版 HarmonyOS 5.0.0.71 / API 12 工具链，1.1.1 完整干净构建和包内校验通过，已生成未签名 HAP；签名与真机执行仍待验证。复现入口见 [云端构建](tools/harmony/README.md)。
 
 直接在 DevEco Studio 打开仓库根目录即可构建双模型应用，不再需要生成独立工程才能测试 TinyBERT。MiniRBT 资源保留在 rawfile 根目录，TinyBERT 位于 `rawfile/models/tinybert4l/`，身份和配套文件校验值见 `model_catalog.json`。仍可通过 `ml/materialize_variant.py` 生成独立包名的 [TinyBERT 工程](variants/tinybert4l/README.md)。
 
 点击「验收 TinyBERT 4L 三档 NPU」逐档检查 27/27、33/33、33/33 个配套参考输出，检查最大绝对 logit 差，并测量预热后 P50/P95；结果可复制为 JSON。验收禁止应用层 CPU 回退。操作、判定标准、已通过的主机检查和待完成的手机检查见 [切换与验收说明](docs/model-switch-acceptance.md)，切换的主机证据见 `ml/model-switch-verification.json`；1.1.1 的实际 SDK 构建证据见 `ml/harmony-build-verification.json`。
+
+TinyBERT手机日志已进入数值自检阶段：16档26/27、32／64档30/33，当前会回退至同模型CPU。1.1.2增加逐样本logit、标签差异和手机实际API版本诊断，并接入三档LayerNorm等价缩放OMC候选；训练权重和验收门槛不变，尚待手机复测。SDK版本区别、主机精度线索与后续验收见 [TinyBERT NPU一致性调查](docs/tinybert-npu-parity.md)。
 
 ## 模型质量与当前准备程度
 
@@ -55,7 +57,7 @@ python3 ml/native_v2/check_host_permissions.py "$PWD" /path/to/native-build/v2_X
 
 ## 安装与测量
 
-1. 用 DevEco Studio 打开此工程，连接 Mate 80 Pro Max，配置调试签名并 Clean/Rebuild native 和 ArkTS。包名为 `com.intentlab.permissiondemohiaperf`，版本是 1.1.1。本仓库提供源码与模型，需要重新构建并签名 HAP。
+1. 用 DevEco Studio 打开此工程，连接 Mate 80 Pro Max，配置调试签名并 Clean/Rebuild native 和 ArkTS。包名为 `com.intentlab.permissiondemohiaperf`，版本是 1.1.2。本仓库提供源码与模型，需要重新构建并签名 HAP。
 2. 输入一条中文操作指令，检查实际 CANN 后端和模型自检。OMC 需要 CANN 的 `HIAI_F` 后端；通用 NNRT 加速器存在并不代表它支持离线 OMC。应用先加载 `libhiai_foundation.so` 并查询版本，再枚举设备和检查模型兼容性。失败时应用显示原因，并退到配套的 MindSpore Lite CPU 模型。
 3. 点击「测量推理时延」。界面里的「旧版 NPU 64 token」指本包内的 9030 全查询对照。各模型使用相同的分词结果，预热 5 次、测量 50 次。p50/p95 含推理接口、张量复制和调度。冷启动、分词和自检位于测速区间之外。
 
@@ -63,7 +65,7 @@ python3 ml/native_v2/check_host_permissions.py "$PWD" /path/to/native-build/v2_X
 
 1.0.5 的后续真机日志已出现 CANN / AI_NPUCL 的模型加载记录，但三档随后都回退为 `Unknown native exception during NNRT work`。这条消息来自桥接层的 `catch (...)`，只说明未匹配 `std::exception`，不能据此确定是 Softmax、芯片目标、权限或某一个 NNRT 接口失败。附件缺少原生 Info 日志，`hiai foundation not support extension config` 与 `hiappevent` 的目录错误也不足以单独证明根因。
 
-1.0.6 修复诊断信息丢失：回退提示直接保留 `Load OMC` / `Predict`、最后调用的 API、返回状态、异常 ABI 类型、CANN 版本和原生桥接版本。字符串和整数异常保留原值；未知异常只读取类型信息，不强制转换异常对象。构造器展开和资源清理不会覆盖原始位置。正常推理不输出逐调用日志。当前版本更新后 Clean/Rebuild，按下文的 `PermissionNPU` 标签过滤；界面的完整回退提示应带 `failed at ...; exception_type=...; CANN=...; bridge=1.1.1`。这是定位增强，尚未确认修复真机 NPU 执行失败。
+1.0.6 修复诊断信息丢失：回退提示直接保留 `Load OMC` / `Predict`、最后调用的 API、返回状态、异常 ABI 类型、CANN 版本和原生桥接版本。字符串和整数异常保留原值；未知异常只读取类型信息，不强制转换异常对象。构造器展开和资源清理不会覆盖原始位置。正常推理不输出逐调用日志。当前版本更新后 Clean/Rebuild，按下文的 `PermissionNPU` 标签过滤；界面的完整回退提示应带 `failed at ...; exception_type=...; CANN=...; bridge=1.1.2`。这是定位增强，尚未确认修复真机 NPU 执行失败。
 
 补充的启动日志显示 `init hiai foundation success` 和内部版本 `109.633.120.010`，同时有 `nnrt_device_service` 获取失败及后端注册失败。[NNRT 的 HDI 注册源码](https://github.com/openharmony/ai_neural_network_runtime/blob/master/frameworks/native/neural_network_runtime/register_hdi_device_v2_0.cpp) 在设备服务不可用时返回空后端，[注册管理器](https://github.com/openharmony/ai_neural_network_runtime/blob/master/frameworks/native/neural_network_core/backend_manager.cpp) 随后输出对应注册错误；这本身不证明独立注册的 CANN HIAI_F 也不可用。需要实际枚举结果和同一次模型请求的失败步骤来确定。内部版本日志也不能代替 `HMS_HiAI_GetVersion` 的桥接层输出。
 

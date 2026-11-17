@@ -37,7 +37,7 @@ def main():
     shutil.copytree(root, destination, ignore=shutil.ignore_patterns(
         ".git", "variants", "evidence", "*.om", "*.omc", "*.ms", "*.onnx", "__pycache__",
         "model-build", "build", "oh_modules", ".hvigor", ".idea", ".cxx", "local.properties",
-        "model-switch-verification.json", "harmony-build-verification.json"))
+        "model-switch-verification.json", "harmony-build-verification.json", "tinybert-npu-parity-report.json"))
     for artifact in manifest["artifacts"]:
         target = destination / artifact["target"]
         target.parent.mkdir(parents=True, exist_ok=True)

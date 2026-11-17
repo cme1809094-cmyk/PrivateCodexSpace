@@ -38,7 +38,13 @@ for length in 16 32 64; do
   # Cast the rank-2 integer mask before reshaping, as in the project's Kirin
   # pipeline. Reshaping the integer mask first creates a CPUCL subgraph.
   "$python_bin" "$ml/mask_cast_first.py" base.onnx mask.onnx
-  "$python_bin" "$here/prepare_attention.py" mask.onnx permission_native.onnx adapted.onnx
+  norm_source=mask.onnx
+  if [[ ${NATIVE_LAYERNORM_SCALE:-1} != 1 ]]; then
+    "$python_bin" "$here/stabilize_layernorm.py" mask.onnx norm.onnx \
+      --scale "$NATIVE_LAYERNORM_SCALE" --report norm-stability.json
+    norm_source=norm.onnx
+  fi
+  "$python_bin" "$here/prepare_attention.py" "$norm_source" permission_native.onnx adapted.onnx
 
   args=(--model=adapted.onnx --framework=5 --platform=kirin9030
         --weight_merge=false '--input_type=input_ids:INT32;attention_mask:INT32'

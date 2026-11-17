@@ -41,18 +41,18 @@
     },
     {
       "path": "entry/src/main/resources/rawfile/models/tinybert4l/permission_16.om",
-      "bytes": 24524711,
-      "sha256": "12751d1b8f44a961fde4d951e493557dc3ec0cfe17aa222386decb249faebbec"
+      "bytes": 24563743,
+      "sha256": "1e1e6caddb8c3538e21f6ff45f94bf1d915cb10505edfcb0821883d7c6a89f5d"
     },
     {
       "path": "entry/src/main/resources/rawfile/models/tinybert4l/permission_32.om",
-      "bytes": 24544692,
-      "sha256": "c1fc6cb367f678f8ec4ed507b0e89833d7bb4afaa79d6ae93b9f6899d9310b3d"
+      "bytes": 24583752,
+      "sha256": "87edc337da738f06bc4494f0edeb66a897f3b90f61358ed03f539ae4c98b4f49"
     },
     {
       "path": "entry/src/main/resources/rawfile/models/tinybert4l/permission_64.om",
-      "bytes": 24584700,
-      "sha256": "1ae220144d27386ab83cd39cba5c2c6c20a01b4900d51cc432d2855e931c01d8"
+      "bytes": 24623760,
+      "sha256": "54f6a39358596821667034977aa8dd3d71256d5cc3d859832fab78029c310531"
     }
   ],
   "models": [

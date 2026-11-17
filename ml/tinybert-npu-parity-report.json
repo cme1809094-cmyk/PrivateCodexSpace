@@ -1,0 +1,199 @@
+{
+  "date": "2026-11-17",
+  "app_version": "1.1.2",
+  "source_base_commit": "00ad0c0f5015e022b0279e199bb429084267dcdf",
+  "branch": "feat/tinybert-4l-kirin9030",
+  "api_research": {
+    "checked": "2026-11-17",
+    "latest_official_confirmed": "26.0.0 Release",
+    "release_date": "2026-08-29",
+    "api18": "HarmonyOS 5.1.0",
+    "build_sdk": "5.0.0.71 / API 12",
+    "target_api": 12,
+    "minimum_api": 12,
+    "project_api_configuration_changed": false,
+    "sources": [
+      "https://developer.huawei.com/consumer/en/doc/harmonyos-releases/overview-2600/",
+      "https://developer.huawei.com/consumer/cn/doc/harmonyos-releases/overview-510/",
+      "https://developer.huawei.com/consumer/en/doc/harmonyos-releases/app-compatibility-influence-factor/"
+    ]
+  },
+  "phone_results": {
+    "origin": "user-provided aggregate logs for previous unscaled OMCs; not direct cloud device measurements",
+    "model_id": "tinybert4l",
+    "buckets": {
+      "16": {
+        "matched": 26,
+        "checked": 27,
+        "max_logit_error": 0.974641
+      },
+      "32": {
+        "matched": 30,
+        "checked": 33,
+        "max_logit_error": 1.038904
+      },
+      "64": {
+        "matched": 30,
+        "checked": 33,
+        "max_logit_error": 1.038904
+      }
+    },
+    "actual_runtime_api_known": false,
+    "device_case_ids_known": false,
+    "old_model_sha256": {
+      "models/permission_16.om": "12751d1b8f44a961fde4d951e493557dc3ec0cfe17aa222386decb249faebbec",
+      "models/permission_32.om": "c1fc6cb367f678f8ec4ed507b0e89833d7bb4afaa79d6ae93b9f6899d9310b3d",
+      "models/permission_64.om": "1ae220144d27386ab83cd39cba5c2c6c20a01b4900d51cc432d2855e931c01d8"
+    }
+  },
+  "finding": {
+    "status": "FP16 square-overflow risk demonstrated on CPU, actual phone kernel root cause not confirmed",
+    "centered_active_token_absmax": 354.5597839355469,
+    "fp16_max": 65504,
+    "square_safe_input_abs": 255.93749236874226,
+    "old_host_fp16_sensitivity": "variants/tinybert4l/evidence/fp16-sensitivity-original-64.json",
+    "range_evidence": "variants/tinybert4l/evidence/norm-dynamic-range.json"
+  },
+  "candidate": {
+    "name": "stable-layernorm-scale-025",
+    "scale": 0.25,
+    "epsilon_scale": 0.0625,
+    "layernorms": 9,
+    "training_weights_changed": false,
+    "cpu_fallback_changed": false,
+    "reference_logits_changed": false,
+    "thresholds_changed": false,
+    "omc_changed": true,
+    "device_verified": false,
+    "native_bindings_per_bucket": {
+      "BatchMatMulV2": 8,
+      "SoftmaxV2": 4
+    },
+    "partitions_per_bucket": {
+      "NPUCL": 1,
+      "CPUCL": 0
+    },
+    "verification": "variants/tinybert4l/native-verification.json",
+    "host_fp32_parity": {
+      "16": {
+        "samples": 27,
+        "matches": 27,
+        "max_logit_error": 3.933906555175781e-06
+      },
+      "32": {
+        "samples": 33,
+        "matches": 33,
+        "max_logit_error": 3.933906555175781e-06
+      },
+      "64": {
+        "samples": 33,
+        "matches": 33,
+        "max_logit_error": 3.933906555175781e-06
+      }
+    },
+    "host_fp16_rounding_parity": {
+      "16": {
+        "checked": 27,
+        "matched": 27,
+        "nonfinite": 0,
+        "max_logit_error": 0.012079238891601562,
+        "label_mismatch_case_ids": []
+      },
+      "32": {
+        "checked": 33,
+        "matched": 33,
+        "nonfinite": 0,
+        "max_logit_error": 0.012079238891601562,
+        "label_mismatch_case_ids": []
+      },
+      "64": {
+        "checked": 33,
+        "matched": 33,
+        "nonfinite": 0,
+        "max_logit_error": 0.011477828025817871,
+        "label_mismatch_case_ids": []
+      }
+    }
+  },
+  "diagnostics": {
+    "schemaVersion": 2,
+    "per_case_logits": true,
+    "per_case_labels_and_margins": true,
+    "failing_input_tokens": true,
+    "runtime_system_api": true,
+    "partial_failure_details": true,
+    "application_cpu_fallback_allowed_in_acceptance": false
+  },
+  "acceptance_gate": {
+    "all_label_sets_equal": true,
+    "max_absolute_logit_error": 0.1,
+    "relaxed": false
+  },
+  "host_router_tests": {
+    "passed": true,
+    "scenarios": 22,
+    "scope": "mock NPU/platform, actual ArkTS controller",
+    "evidence": "tests/evidence/model-switch-1.1.2-host.json"
+  },
+  "full_hap_build": {
+    "passed": true,
+    "sdk": "HarmonyOS 5.0.0.71 / API 12",
+    "errors": 0,
+    "evidence": "tests/evidence/harmony-build-1.1.2.log"
+  },
+  "hap": {
+    "passed": true,
+    "hap": "entry/build/default/outputs/default/entry-default-unsigned.hap",
+    "bytes": 252706110,
+    "sha256": "a754866a41530a1b4fe37063488d7ca3342594d0fb936d0b78ba9f0584220414",
+    "app": {
+      "bundleName": "com.intentlab.permissiondemohiaperf",
+      "vendor": "IntentLab",
+      "versionCode": 1001002,
+      "versionName": "1.1.2",
+      "icon": "$media:app_icon",
+      "label": "$string:app_name"
+    },
+    "compiled_arkts": [
+      "ets/modules.abc"
+    ],
+    "native_bridge": "libs/arm64-v8a/libpermission_hiai.so",
+    "native_architecture": "AArch64",
+    "packaged_model_files": [
+      "resources/rawfile/permission.ms",
+      "resources/rawfile/permission_16.om",
+      "resources/rawfile/permission_32.om",
+      "resources/rawfile/permission_64.om",
+      "resources/rawfile/permission_baseline.om",
+      "resources/rawfile/models/tinybert4l/permission.ms",
+      "resources/rawfile/models/tinybert4l/permission_16.om",
+      "resources/rawfile/models/tinybert4l/permission_32.om",
+      "resources/rawfile/models/tinybert4l/permission_64.om"
+    ],
+    "model_profiles": [
+      "minirbt",
+      "tinybert4l"
+    ],
+    "signed": false,
+    "device_tested": false
+  },
+  "root_cause_confirmed_on_phone": false,
+  "candidate_device_tested": false,
+  "first_unresolved_step": "Retest candidate 1.1.2 on the phone; inspect three-bucket acceptance, DIFF lines, runtime API and full per-case JSON if any bucket fails",
+  "compiled_source_sha256": {
+    "AppScope/app.json5": "173a6cdea604d73eead03cf9d0c9cd5ee77776bc8c8747b73481cb8dc9d2f2ef",
+    "entry/src/main/cpp/bridge_error.h": "27ef45f51c3eb3f92443baa1652b31518c53f02e6d39b26418c58c370280130b",
+    "entry/src/main/cpp/cann_runtime.h": "3b17df25a1251a0bd212c34cd17b024e2e895735300ba857db8b16919c7b0d15",
+    "entry/src/main/cpp/native_diagnostics.h": "78272a66fbacf40b3154599e233389b3fe638030c4240ca12459c15ef1714679",
+    "entry/src/main/cpp/native_log.h": "9fab64c2be1fd1f05a761af2f266a396f3cc60c5b083498a7d34fa5532f84a30",
+    "entry/src/main/cpp/nnrt_device.h": "d65038073fdaf2f7c2684b9f7dac37ca2e07f9b62fdf865870099e4d4fda0b38",
+    "entry/src/main/cpp/permission_hiai.cpp": "61ae14dd394625f7fdadeb7241daa9864418c95195edd7c4d3b1b472332a7cfd",
+    "entry/src/main/cpp/tensor_shape.h": "42acd5e7f41381ccf848501ef1b06d9e385a30541aff964285dd94e04408931a",
+    "entry/src/main/cpp/types/libpermission_hiai/Index.d.ts": "d49aba98ff1246212d2a28dbf7a44b27e48d7c98fdd3446290287b54281c3065",
+    "entry/src/main/ets/entryability/EntryAbility.ets": "cc23562926f1231829509f27e7deef30aedbfa50b7cfda506eb1c3c309d10237",
+    "entry/src/main/ets/model/PermissionModel.ets": "e9dc5989c42c5226e0598bbde9fe9e04611036682c957a47501d99c23dd446bf",
+    "entry/src/main/ets/model/WordPiece.ets": "5c12c32d691a9d2390814d1253d0f883711f78bd47847089734101f586daa751",
+    "entry/src/main/ets/pages/Index.ets": "281311b2e0c870c9dd014e39112d39eac2b75006c8a18ed2ad4daf177288e5db",
+    "entry/src/main/resources/rawfile/model_catalog.json": "49af5a9404d0820011f3693275541ea9301da94961c74c3f12cb68ddced57ff2"
+  }
+}

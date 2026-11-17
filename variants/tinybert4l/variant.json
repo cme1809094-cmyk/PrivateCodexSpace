@@ -20,20 +20,20 @@
     {
       "source": "models/permission_16.om",
       "target": "entry/src/main/resources/rawfile/permission_16.om",
-      "bytes": 24524711,
-      "sha256": "12751d1b8f44a961fde4d951e493557dc3ec0cfe17aa222386decb249faebbec"
+      "bytes": 24563743,
+      "sha256": "1e1e6caddb8c3538e21f6ff45f94bf1d915cb10505edfcb0821883d7c6a89f5d"
     },
     {
       "source": "models/permission_32.om",
       "target": "entry/src/main/resources/rawfile/permission_32.om",
-      "bytes": 24544692,
-      "sha256": "c1fc6cb367f678f8ec4ed507b0e89833d7bb4afaa79d6ae93b9f6899d9310b3d"
+      "bytes": 24583752,
+      "sha256": "87edc337da738f06bc4494f0edeb66a897f3b90f61358ed03f539ae4c98b4f49"
     },
     {
       "source": "models/permission_64.om",
       "target": "entry/src/main/resources/rawfile/permission_64.om",
-      "bytes": 24584700,
-      "sha256": "1ae220144d27386ab83cd39cba5c2c6c20a01b4900d51cc432d2855e931c01d8"
+      "bytes": 24623760,
+      "sha256": "54f6a39358596821667034977aa8dd3d71256d5cc3d859832fab78029c310531"
     },
     {
       "source": "vocab.txt",
@@ -74,8 +74,8 @@
     {
       "source": "native-verification.json",
       "target": "ml/kirin9030-native-v2-verification.json",
-      "bytes": 28952,
-      "sha256": "f12d67e1030d9374bf11a011d3ef9cce1f8180105a74649254252be94f139f7e"
+      "bytes": 30017,
+      "sha256": "0ac149b2748885e2ba251612fa3d4a42ddadfd4676733ebdc120d77456db66c2"
     },
     {
       "source": "LICENSE-TinyBERT.txt",
@@ -89,5 +89,7 @@
       "bytes": 12212,
       "sha256": "bb4fa00182a4a519acd1dbf942c5024e461e00c514d61881126b87688a52a9bd"
     }
-  ]
+  ],
+  "layernorm_scale": 0.25,
+  "model_revision": "stable-layernorm-scale-025"
 }

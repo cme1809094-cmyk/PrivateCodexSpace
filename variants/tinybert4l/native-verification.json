@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-16",
+  "date": "2026-11-17",
   "model": "huawei-noah/TinyBERT_4L_zh",
   "revision": "152bf15d86715b41dd89c1e03cf5664963d9b005",
   "compiler_platform": "kirin9030",
@@ -16,15 +16,15 @@
       "passed": true,
       "device_tested": false,
       "model": "variants/tinybert4l/models/permission_16.om",
-      "bytes": 24524711,
-      "sha256": "12751d1b8f44a961fde4d951e493557dc3ec0cfe17aa222386decb249faebbec",
+      "bytes": 24563743,
+      "sha256": "1e1e6caddb8c3538e21f6ff45f94bf1d915cb10505edfcb0821883d7c6a89f5d",
       "backend_log": "variants/tinybert4l/evidence/l16/backend.log",
       "model_dump": "variants/tinybert4l/evidence/l16/mobile.json",
       "partitions": {
         "NPUCL": 1,
         "CPUCL": 0
       },
-      "compiler_subgraph_memory_bytes": 482304,
+      "compiler_subgraph_memory_bytes": 481280,
       "native_node_counts": {
         "BatchMatMulV2": 8,
         "SoftmaxV2": 4
@@ -32,15 +32,15 @@
       "native_kernels": {
         "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1": {
           "bytes": 63096,
-          "line": 1230
+          "line": 1238
         },
         "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2": {
           "bytes": 7640,
-          "line": 1232
+          "line": 1240
         },
         "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2": {
           "bytes": 59336,
-          "line": 1242
+          "line": 1251
         }
       },
       "legacy_softmax_kernels": [],
@@ -65,8 +65,8 @@
               16
             ]
           ],
-          "backend_tiling_line": 518,
-          "backend_npu_task_line": 1169,
+          "backend_tiling_line": 526,
+          "backend_npu_task_line": 1177,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -86,8 +86,8 @@
               16
             ]
           ],
-          "backend_tiling_line": 537,
-          "backend_npu_task_line": 1171,
+          "backend_tiling_line": 545,
+          "backend_npu_task_line": 1179,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -113,8 +113,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 603,
-          "backend_npu_task_line": 1175,
+          "backend_tiling_line": 611,
+          "backend_npu_task_line": 1183,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -141,8 +141,8 @@
               16
             ]
           ],
-          "backend_tiling_line": 696,
-          "backend_npu_task_line": 1179,
+          "backend_tiling_line": 704,
+          "backend_npu_task_line": 1187,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -162,8 +162,8 @@
               16
             ]
           ],
-          "backend_tiling_line": 714,
-          "backend_npu_task_line": 1181,
+          "backend_tiling_line": 722,
+          "backend_npu_task_line": 1189,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -189,8 +189,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 780,
-          "backend_npu_task_line": 1185,
+          "backend_tiling_line": 788,
+          "backend_npu_task_line": 1193,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -217,8 +217,8 @@
               16
             ]
           ],
-          "backend_tiling_line": 873,
-          "backend_npu_task_line": 1189,
+          "backend_tiling_line": 881,
+          "backend_npu_task_line": 1197,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -238,8 +238,8 @@
               16
             ]
           ],
-          "backend_tiling_line": 891,
-          "backend_npu_task_line": 1191,
+          "backend_tiling_line": 899,
+          "backend_npu_task_line": 1199,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -265,8 +265,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 957,
-          "backend_npu_task_line": 1195,
+          "backend_tiling_line": 965,
+          "backend_npu_task_line": 1203,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -293,8 +293,8 @@
               16
             ]
           ],
-          "backend_tiling_line": 1049,
-          "backend_npu_task_line": 1199,
+          "backend_tiling_line": 1057,
+          "backend_npu_task_line": 1207,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -314,8 +314,8 @@
               16
             ]
           ],
-          "backend_tiling_line": 1067,
-          "backend_npu_task_line": 1201,
+          "backend_tiling_line": 1075,
+          "backend_npu_task_line": 1209,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -341,8 +341,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 1133,
-          "backend_npu_task_line": 1205,
+          "backend_tiling_line": 1141,
+          "backend_npu_task_line": 1213,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -357,15 +357,15 @@
       "passed": true,
       "device_tested": false,
       "model": "variants/tinybert4l/models/permission_32.om",
-      "bytes": 24544692,
-      "sha256": "c1fc6cb367f678f8ec4ed507b0e89833d7bb4afaa79d6ae93b9f6899d9310b3d",
+      "bytes": 24583752,
+      "sha256": "87edc337da738f06bc4494f0edeb66a897f3b90f61358ed03f539ae4c98b4f49",
       "backend_log": "variants/tinybert4l/evidence/l32/backend.log",
       "model_dump": "variants/tinybert4l/evidence/l32/mobile.json",
       "partitions": {
         "NPUCL": 1,
         "CPUCL": 0
       },
-      "compiler_subgraph_memory_bytes": 962048,
+      "compiler_subgraph_memory_bytes": 960512,
       "native_node_counts": {
         "BatchMatMulV2": 8,
         "SoftmaxV2": 4
@@ -373,15 +373,15 @@
       "native_kernels": {
         "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1": {
           "bytes": 63096,
-          "line": 1230
+          "line": 1238
         },
         "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2": {
           "bytes": 7640,
-          "line": 1232
+          "line": 1240
         },
         "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2": {
           "bytes": 59336,
-          "line": 1242
+          "line": 1251
         }
       },
       "legacy_softmax_kernels": [],
@@ -406,8 +406,8 @@
               32
             ]
           ],
-          "backend_tiling_line": 518,
-          "backend_npu_task_line": 1169,
+          "backend_tiling_line": 526,
+          "backend_npu_task_line": 1177,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -427,8 +427,8 @@
               32
             ]
           ],
-          "backend_tiling_line": 537,
-          "backend_npu_task_line": 1171,
+          "backend_tiling_line": 545,
+          "backend_npu_task_line": 1179,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -454,8 +454,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 603,
-          "backend_npu_task_line": 1175,
+          "backend_tiling_line": 611,
+          "backend_npu_task_line": 1183,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -482,8 +482,8 @@
               32
             ]
           ],
-          "backend_tiling_line": 696,
-          "backend_npu_task_line": 1179,
+          "backend_tiling_line": 704,
+          "backend_npu_task_line": 1187,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -503,8 +503,8 @@
               32
             ]
           ],
-          "backend_tiling_line": 714,
-          "backend_npu_task_line": 1181,
+          "backend_tiling_line": 722,
+          "backend_npu_task_line": 1189,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -530,8 +530,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 780,
-          "backend_npu_task_line": 1185,
+          "backend_tiling_line": 788,
+          "backend_npu_task_line": 1193,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -558,8 +558,8 @@
               32
             ]
           ],
-          "backend_tiling_line": 873,
-          "backend_npu_task_line": 1189,
+          "backend_tiling_line": 881,
+          "backend_npu_task_line": 1197,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -579,8 +579,8 @@
               32
             ]
           ],
-          "backend_tiling_line": 891,
-          "backend_npu_task_line": 1191,
+          "backend_tiling_line": 899,
+          "backend_npu_task_line": 1199,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -606,8 +606,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 957,
-          "backend_npu_task_line": 1195,
+          "backend_tiling_line": 965,
+          "backend_npu_task_line": 1203,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -634,8 +634,8 @@
               32
             ]
           ],
-          "backend_tiling_line": 1049,
-          "backend_npu_task_line": 1199,
+          "backend_tiling_line": 1057,
+          "backend_npu_task_line": 1207,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -655,8 +655,8 @@
               32
             ]
           ],
-          "backend_tiling_line": 1067,
-          "backend_npu_task_line": 1201,
+          "backend_tiling_line": 1075,
+          "backend_npu_task_line": 1209,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -682,8 +682,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 1133,
-          "backend_npu_task_line": 1205,
+          "backend_tiling_line": 1141,
+          "backend_npu_task_line": 1213,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -698,15 +698,15 @@
       "passed": true,
       "device_tested": false,
       "model": "variants/tinybert4l/models/permission_64.om",
-      "bytes": 24584700,
-      "sha256": "1ae220144d27386ab83cd39cba5c2c6c20a01b4900d51cc432d2855e931c01d8",
+      "bytes": 24623760,
+      "sha256": "54f6a39358596821667034977aa8dd3d71256d5cc3d859832fab78029c310531",
       "backend_log": "variants/tinybert4l/evidence/l64/backend.log",
       "model_dump": "variants/tinybert4l/evidence/l64/mobile.json",
       "partitions": {
         "NPUCL": 1,
         "CPUCL": 0
       },
-      "compiler_subgraph_memory_bytes": 1921536,
+      "compiler_subgraph_memory_bytes": 1918976,
       "native_node_counts": {
         "BatchMatMulV2": 8,
         "SoftmaxV2": 4
@@ -714,15 +714,15 @@
       "native_kernels": {
         "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1": {
           "bytes": 63096,
-          "line": 1229
+          "line": 1237
         },
         "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2": {
           "bytes": 7640,
-          "line": 1231
+          "line": 1239
         },
         "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_2": {
           "bytes": 59336,
-          "line": 1242
+          "line": 1251
         }
       },
       "legacy_softmax_kernels": [],
@@ -747,8 +747,8 @@
               64
             ]
           ],
-          "backend_tiling_line": 518,
-          "backend_npu_task_line": 1169,
+          "backend_tiling_line": 526,
+          "backend_npu_task_line": 1177,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -768,8 +768,8 @@
               64
             ]
           ],
-          "backend_tiling_line": 537,
-          "backend_npu_task_line": 1171,
+          "backend_tiling_line": 545,
+          "backend_npu_task_line": 1179,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -795,8 +795,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 603,
-          "backend_npu_task_line": 1175,
+          "backend_tiling_line": 611,
+          "backend_npu_task_line": 1183,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -823,8 +823,8 @@
               64
             ]
           ],
-          "backend_tiling_line": 696,
-          "backend_npu_task_line": 1179,
+          "backend_tiling_line": 704,
+          "backend_npu_task_line": 1187,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -844,8 +844,8 @@
               64
             ]
           ],
-          "backend_tiling_line": 714,
-          "backend_npu_task_line": 1181,
+          "backend_tiling_line": 722,
+          "backend_npu_task_line": 1189,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -871,8 +871,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 780,
-          "backend_npu_task_line": 1185,
+          "backend_tiling_line": 788,
+          "backend_npu_task_line": 1193,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -899,8 +899,8 @@
               64
             ]
           ],
-          "backend_tiling_line": 873,
-          "backend_npu_task_line": 1189,
+          "backend_tiling_line": 881,
+          "backend_npu_task_line": 1197,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -920,8 +920,8 @@
               64
             ]
           ],
-          "backend_tiling_line": 891,
-          "backend_npu_task_line": 1191,
+          "backend_tiling_line": 899,
+          "backend_npu_task_line": 1199,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -947,8 +947,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 957,
-          "backend_npu_task_line": 1195,
+          "backend_tiling_line": 965,
+          "backend_npu_task_line": 1203,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -975,8 +975,8 @@
               64
             ]
           ],
-          "backend_tiling_line": 1049,
-          "backend_npu_task_line": 1199,
+          "backend_tiling_line": 1057,
+          "backend_npu_task_line": 1207,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -996,8 +996,8 @@
               64
             ]
           ],
-          "backend_tiling_line": 1067,
-          "backend_npu_task_line": 1201,
+          "backend_tiling_line": 1075,
+          "backend_npu_task_line": 1209,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "SoftmaxV2_d50aa7c67f654684e7eb33e1962150d8_2"
@@ -1023,8 +1023,8 @@
               26
             ]
           ],
-          "backend_tiling_line": 1133,
-          "backend_npu_task_line": 1205,
+          "backend_tiling_line": 1141,
+          "backend_npu_task_line": 1213,
           "block_dim": 1,
           "emitted_kernels_for_type": [
             "BatchMatMulV2_38d52d5e6224d80e67a2829747ff5822_1",
@@ -1073,6 +1073,39 @@
     "Classification head trained on the same bundled synthetic dataset; checkpoint and thresholds selected using validation data.",
     "No manual padding of 26-dimensional attention heads was added; emitted native kernels and NPU task records were verified.",
     "CPU ONNX and Linux MindSpore Lite checks are not execution of the compiled OMC on the phone.",
-    "TinyBERT CPU fallback, vocabulary, thresholds and self-test reference are a single matching variant; no MiniRBT model is substituted in its runtime artifacts."
-  ]
+    "TinyBERT CPU fallback, vocabulary, thresholds and self-test reference are a single matching variant; no MiniRBT model is substituted in its runtime artifacts.",
+    "NPU candidate 1.1.2 rescales centered LayerNorm inputs by 0.25 before both square and normalization, and rescales epsilon by 0.0625; FP32 semantics preserved. Awaiting phone NPU parity verification."
+  ],
+  "layernorm_stabilization": {
+    "scale": 0.25,
+    "epsilon_scale": 0.0625,
+    "layernorms": 9,
+    "source_weights_unchanged": true,
+    "cpu_fallback_unchanged": true,
+    "candidate_device_verified": false,
+    "formula": "(s*d)/sqrt(mean((s*d)^2)+s*s*eps), d=x-mean(x)",
+    "fp16_rounding_parity": {
+      "16": {
+        "checked": 27,
+        "matched": 27,
+        "nonfinite": 0,
+        "max_logit_error": 0.012079238891601562,
+        "label_mismatch_case_ids": []
+      },
+      "32": {
+        "checked": 33,
+        "matched": 33,
+        "nonfinite": 0,
+        "max_logit_error": 0.012079238891601562,
+        "label_mismatch_case_ids": []
+      },
+      "64": {
+        "checked": 33,
+        "matched": 33,
+        "nonfinite": 0,
+        "max_logit_error": 0.011477828025817871,
+        "label_mismatch_case_ids": []
+      }
+    }
+  }
 }
