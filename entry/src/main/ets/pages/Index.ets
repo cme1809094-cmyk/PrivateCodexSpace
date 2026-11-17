@@ -1,7 +1,8 @@
 import { common } from '@kit.AbilityKit';
 import { LengthMetrics } from '@kit.ArkUI';
 import { hilog } from '@kit.PerformanceAnalysisKit';
-import { PermissionModel, InferenceResult } from '../model/PermissionModel';
+import { pasteboard } from '@kit.BasicServicesKit';
+import { PermissionModel, InferenceResult, ModelProfile, AcceptanceReport } from '../model/PermissionModel';
 
 const INK: string = '#142E26';
 const MUTED: string = '#4E665A';
@@ -45,6 +46,14 @@ struct Index {
   @State private backend: string = '';
   @State private benchmarkReport: string = '';
   @State private diagnostic: string = '';
+  @State private profiles: ModelProfile[] = [];
+  @State private modelId: string = '';
+  @State private modelName: string = '';
+  @State private bucket: number = 0;
+  @State private progress: string = '';
+  @State private acceptanceReport: string = '';
+  @State private acceptanceJson: string = '';
+  @State private copyStatus: string = '';
   private readonly model: PermissionModel = new PermissionModel();
 
   aboutToAppear(): void {
@@ -60,6 +69,9 @@ struct Index {
     try {
       const context: common.UIAbilityContext = this.getUIContext().getHostContext() as common.UIAbilityContext;
       await this.model.load(context.resourceManager);
+      this.profiles = this.model.profiles.slice();
+      this.modelId = this.model.modelId;
+      this.modelName = this.model.modelName;
       this.ready = true;
     } catch (error) {
       this.errorMessage = (error as Error).message || '模型加载失败。';
@@ -78,6 +90,38 @@ struct Index {
     this.benchmarkReport = '';
   }
 
+  private async selectModel(id: string): Promise<void> {
+    if (this.busy || id === this.modelId) {
+      return;
+    }
+    this.busy = true;
+    this.progress = '正在切换模型…';
+    this.edit(this.instruction);
+    this.acceptanceReport = '';
+    this.acceptanceJson = '';
+    this.copyStatus = '';
+    try {
+      await this.model.switchModel(id);
+    } catch (error) {
+      this.errorMessage = (error as Error).message || '模型切换失败';
+      hilog.error(0xFF00, 'PermissionNPU', '[PNPU][ERROR] switch: %{public}s', this.errorMessage);
+    } finally {
+      this.ready = this.model.isReady();
+      this.modelId = this.model.modelId;
+      this.modelName = this.model.modelName;
+      this.diagnostic = this.model.diagnostic;
+      this.progress = '';
+      this.busy = false;
+    }
+  }
+
+  private selectBucket(bucket: number): void {
+    if (!this.busy) {
+      this.bucket = bucket;
+      this.edit(this.instruction);
+    }
+  }
+
   private async recognize(): Promise<void> {
     const text: string = this.instruction.trim();
     if (text.length === 0 || this.busy || !this.ready) {
@@ -88,7 +132,7 @@ struct Index {
     this.errorMessage = '';
     this.simulation = '';
     try {
-      const result: InferenceResult = await this.model.predict(text);
+      const result: InferenceResult = await this.model.predict(text, this.bucket);
       const selected: number[] = [];
       for (let i = 0; i < LABELS.length; i++) {
         if (result.scores[i] >= result.thresholds[i]) {
@@ -119,13 +163,59 @@ struct Index {
     this.benchmarkReport = '';
     this.errorMessage = '';
     try {
-      this.benchmarkReport = await this.model.benchmark(this.instruction.trim());
+      this.benchmarkReport = await this.model.benchmark(this.instruction.trim(), this.bucket);
     } catch (error) {
       this.errorMessage = (error as Error).message || '性能测试失败';
       hilog.error(0xFF00, 'PermissionNPU', '[PNPU][ERROR] benchmark: %{public}s', this.errorMessage);
     } finally {
       this.diagnostic = this.model.diagnostic;
       this.busy = false;
+    }
+  }
+
+  private async runAcceptance(): Promise<void> {
+    if (this.busy || !this.ready) {
+      return;
+    }
+    this.busy = true;
+    this.hasResult = false;
+    this.errorMessage = '';
+    this.acceptanceReport = '';
+    this.acceptanceJson = '';
+    this.copyStatus = '';
+    try {
+      const report: AcceptanceReport = await this.model.acceptNpu((message: string): void => { this.progress = message; });
+      const lines: string[] = [report.modelName + (report.passed ? ' · 三档一致性通过' : ' · 验收未通过')];
+      for (const item of report.buckets) {
+        lines.push(item.bucket.toString() + ' token · ' + (item.passed ? '通过' : '失败') +
+          ' · 权限一致 ' + item.matched.toString() + '/' + item.checked.toString() +
+          ' · logit 差 ' + item.maxLogitError.toFixed(6));
+        if (item.timing !== undefined) {
+          lines.push('P50 ' + item.timing.p50Ms.toFixed(2) + ' ms · P95 ' + item.timing.p95Ms.toFixed(2) + ' ms');
+        }
+        if (item.error.length > 0) {
+          lines.push(item.error);
+        }
+      }
+      lines.push('NPU 参考对照，未使用 CPU 回退；不代表真实任务准确率。');
+      this.acceptanceReport = lines.join('\n');
+      this.acceptanceJson = JSON.stringify(report, null, 2);
+    } catch (error) {
+      this.errorMessage = (error as Error).message || '验收失败';
+      hilog.error(0xFF00, 'PermissionNPU', '[PNPU][ERROR] acceptance: %{public}s', this.errorMessage);
+    } finally {
+      this.progress = '';
+      this.diagnostic = this.model.diagnostic;
+      this.busy = false;
+    }
+  }
+
+  private async copyAcceptance(): Promise<void> {
+    try {
+      await pasteboard.getSystemPasteboard().setData(pasteboard.createData(pasteboard.MIMETYPE_TEXT_PLAIN, this.acceptanceJson));
+      this.copyStatus = '验收 JSON 已复制';
+    } catch (error) {
+      this.copyStatus = '复制失败，可长按下方结果复制';
     }
   }
 
@@ -147,6 +237,30 @@ struct Index {
     } else {
       this.simulation = '模拟结果：麦克风访问超出本次指令范围。';
     }
+  }
+
+  @Builder
+  modelChoice(profile: ModelProfile) {
+    Button(profile.name, { type: ButtonType.Capsule })
+      .fontSize(14)
+      .fontColor(this.modelId === profile.id ? WHITE : GREEN)
+      .backgroundColor(this.modelId === profile.id ? GREEN : '#E5EEE1')
+      .height(38)
+      .padding({ left: 14, right: 14 })
+      .enabled(!this.busy)
+      .onClick(() => { this.selectModel(profile.id); })
+  }
+
+  @Builder
+  bucketChoice(title: string, bucket: number) {
+    Button(title, { type: ButtonType.Capsule })
+      .fontSize(13)
+      .fontColor(this.bucket === bucket ? WHITE : GREEN)
+      .backgroundColor(this.bucket === bucket ? GREEN : '#E5EEE1')
+      .height(34)
+      .padding({ left: 13, right: 13 })
+      .enabled(this.ready && !this.busy)
+      .onClick(() => { this.selectBucket(bucket); })
   }
 
   @Builder
@@ -183,7 +297,7 @@ struct Index {
           Text('从中文指令识别相机、麦克风和定位权限')
             .fontSize(15)
             .fontColor(MUTED)
-          Text(this.ready ? 'MiniRBT · HiAI 优先' : (this.busy ? '正在加载模型' : '模型未就绪'))
+          Text(this.ready ? this.modelName + ' · HiAI 优先 · 1.1.0' : (this.busy ? '正在加载模型' : '模型未就绪'))
             .fontSize(12)
             .fontWeight(FontWeight.Medium)
             .fontColor(GREEN)
@@ -194,6 +308,32 @@ struct Index {
         .width('100%')
         .alignItems(HorizontalAlign.Start)
         .padding({ top: 12, bottom: 6 })
+
+        Column({ space: 12 }) {
+          Text('选择模型与长度')
+            .fontSize(16)
+            .fontWeight(FontWeight.Bold)
+            .fontColor(INK)
+          Flex({ wrap: FlexWrap.Wrap, space: { main: LengthMetrics.vp(8), cross: LengthMetrics.vp(8) } }) {
+            ForEach(this.profiles, (profile: ModelProfile) => {
+              this.modelChoice(profile)
+            }, (profile: ModelProfile) => profile.id)
+          }
+          Flex({ wrap: FlexWrap.Wrap, space: { main: LengthMetrics.vp(6), cross: LengthMetrics.vp(6) } }) {
+            this.bucketChoice('自动', 0)
+            this.bucketChoice('16', 16)
+            this.bucketChoice('32', 32)
+            this.bucketChoice('64', 64)
+          }
+          Text('自动选择能容纳指令的最小档位；手动档位不会截断超长指令。NPU 不可用时，识别可回退至当前模型 CPU。')
+            .fontSize(12)
+            .fontColor(MUTED)
+        }
+        .width('100%')
+        .alignItems(HorizontalAlign.Start)
+        .padding(18)
+        .backgroundColor(WHITE)
+        .border({ width: 1, color: LINE, radius: 18 })
 
         Column({ space: 12 }) {
           Text('用户指令')
@@ -249,6 +389,51 @@ struct Index {
             Text(this.errorMessage)
               .fontSize(13)
               .fontColor('#9E3B31')
+          }
+        }
+        .width('100%')
+        .alignItems(HorizontalAlign.Start)
+        .padding(18)
+        .backgroundColor(WHITE)
+        .border({ width: 1, color: LINE, radius: 18 })
+
+        Column({ space: 12 }) {
+          Text('三档 NPU 验收')
+            .fontSize(16)
+            .fontWeight(FontWeight.Bold)
+            .fontColor(INK)
+          Text('检查当前模型的 16／32／64 档参考输出，并测量预热后的推理时延。验收不允许 CPU 回退。')
+            .fontSize(12)
+            .fontColor(MUTED)
+          Button('验收 ' + this.modelName + ' 三档 NPU')
+            .fontSize(14)
+            .fontColor(WHITE)
+            .backgroundColor(GREEN)
+            .width('100%')
+            .enabled(this.ready && !this.busy)
+            .onClick(() => { this.runAcceptance(); })
+          if (this.progress.length > 0) {
+            Text(this.progress)
+              .fontSize(13)
+              .fontColor(GREEN)
+          }
+          if (this.acceptanceReport.length > 0) {
+            Text(this.acceptanceReport)
+              .fontSize(13)
+              .fontColor(INK)
+              .copyOption(CopyOptions.LocalDevice)
+              .width('100%')
+            Button('复制验收 JSON')
+              .fontSize(13)
+              .fontColor(GREEN)
+              .backgroundColor('#E5EEE1')
+              .enabled(!this.busy)
+              .onClick(() => { this.copyAcceptance(); })
+          }
+          if (this.copyStatus.length > 0) {
+            Text(this.copyStatus)
+              .fontSize(12)
+              .fontColor(MUTED)
           }
         }
         .width('100%')

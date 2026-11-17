@@ -1,0 +1,142 @@
+{
+  "date": "2026-11-17",
+  "app_version": "1.1.0",
+  "source_base_commit": "439b5f9cf0abe6ccf5b24ac72dfb6fa966881695",
+  "branch": "feat/tinybert-4l-kirin9030",
+  "bundle_name": "com.intentlab.permissiondemohiaperf",
+  "models": [
+    "minirbt",
+    "tinybert4l"
+  ],
+  "default_model": "tinybert4l",
+  "bucket_selection": [
+    "auto",
+    16,
+    32,
+    64
+  ],
+  "artifact_sha256": {
+    "passed": true,
+    "binaries": 10,
+    "catalog_profiles": 2,
+    "metadata_files": 8,
+    "manifest": "ml/artifact-manifest.json"
+  },
+  "model_switch_host": {
+    "passed": true,
+    "scenarios": 18,
+    "bindings": "NPU and MindSpore Lite mocked; actual ArkTS source, real paired metadata",
+    "tokenizer_vectors": {
+      "minirbt": 33,
+      "tinybert4l": 33
+    },
+    "evidence": "tests/evidence/model-switch-host.json"
+  },
+  "native_callbacks_host": {
+    "passed": true,
+    "scenarios": 75,
+    "command": "python3 tests/run_native_error_test.py --sdk-include SDK_INCLUDE",
+    "scope": "SDK-compatible NNRT/N-API mocks; not phone execution"
+  },
+  "native_cmake_host": {
+    "passed": true,
+    "scope": "public SDK headers, placeholder link libraries, C++ catch-handler verification; not a deployable phone SO"
+  },
+  "typescript_host": {
+    "passed": true,
+    "compiler": "TypeScript 5.4.5 --strict --noEmit",
+    "scope": "PermissionModel and WordPiece only, host API declarations; not ArkTS SDK/UI build"
+  },
+  "startup_host": {
+    "passed": true,
+    "command": "node --experimental-strip-types tests/nnrt_startup_test.mjs"
+  },
+  "tinybert_onnx_cpu": {
+    "passed": true,
+    "buckets": {
+      "16": {
+        "samples": 27,
+        "matches": 27,
+        "max_logit_error": 3.933906555175781e-06
+      },
+      "32": {
+        "samples": 33,
+        "matches": 33,
+        "max_logit_error": 3.933906555175781e-06
+      },
+      "64": {
+        "samples": 33,
+        "matches": 33,
+        "max_logit_error": 3.933906555175781e-06
+      }
+    },
+    "evidence": "tests/evidence/tinybert-onnx-parity.json"
+  },
+  "tinybert_mindspore_cpu": {
+    "passed": true,
+    "requests": 33,
+    "max_absolute_logit_error": 2.4332202e-05,
+    "config": "entry/src/main/resources/rawfile/models/tinybert4l/model_config.json",
+    "evidence": "tests/evidence/tinybert-ms-verify.log"
+  },
+  "tinybert_compiled_native_bindings": {
+    "passed": true,
+    "buckets": [
+      16,
+      32,
+      64
+    ],
+    "nodes_per_bucket": {
+      "BatchMatMulV2": 8,
+      "SoftmaxV2": 4
+    },
+    "partitions": {
+      "NPUCL": 1,
+      "CPUCL": 0
+    },
+    "scope": "rechecked existing compiler logs, final graph and emitted OMC kernel binaries; not device profiling",
+    "evidence": "variants/tinybert4l/native-verification.json"
+  },
+  "standalone_variant": {
+    "passed": true,
+    "model_binaries_verified": 5,
+    "catalog_profiles": 1,
+    "source": "ml/materialize_variant.py"
+  },
+  "phone_acceptance_gate": {
+    "reference_cases": {
+      "16": 27,
+      "32": 33,
+      "64": 33
+    },
+    "require_identical_label_sets": true,
+    "max_absolute_logit_error": 0.1,
+    "tolerance_status": "provisional FP16 engineering threshold; requires phone error review",
+    "application_cpu_fallback_allowed": false,
+    "timing": {
+      "warmup_runs": 5,
+      "measured_runs": 50,
+      "reported": [
+        "P50",
+        "P95"
+      ],
+      "latency_sla_defined": false
+    },
+    "phone_hash_measured": false,
+    "scope": "conversion parity, not task accuracy or sustained performance"
+  },
+  "phone": {
+    "hap_built": false,
+    "signed": false,
+    "device_tested": false,
+    "acceptance_json": null,
+    "first_unresolved_step": "Build/sign/install HarmonyOS 1.1.0 HAP and run real NNRT RunSync/self-tests",
+    "environment_limit": "ohpm, hvigorw and hdc are not installed; no complete HarmonyOS SDK or connected phone"
+  },
+  "task_quality": {
+    "dataset": "99 synthetic train / 31 validation / 33 test",
+    "tinybert_test_exact_matches": 25,
+    "minirbt_test_exact_matches": 24,
+    "production_accuracy_accepted": false
+  }
+}

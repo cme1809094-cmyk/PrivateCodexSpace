@@ -29,10 +29,14 @@ bool failErrorCreation = false;
 bool failStringCreation = false;
 bool failArrayCreation = false;
 bool failResolve = false;
+bool failQueue = false;
 bool pendingErrorCreation = false;
 bool pending = false;
 int rejected = 0, deleted = 0, destroyed = 0, buildCalls = 0;
 int runCalls = 0;
+int executorDestroyed = 0;
+std::thread::id executorDestroyThread;
+std::string resolved;
 std::string thrown;
 std::vector<napi_value> callbackArgs;
 void *queuedData = nullptr;
@@ -79,6 +83,10 @@ void Reset()
     failErrorCreation = failStringCreation = failArrayCreation = failResolve = pendingErrorCreation = pending = false;
     rejected = deleted = destroyed = buildCalls = 0;
     runCalls = 0;
+    executorDestroyed = 0;
+    executorDestroyThread = {};
+    resolved.clear();
+    failQueue = false;
     thrown.clear();
     callbackArgs.clear();
     queuedData = nullptr;
@@ -210,8 +218,8 @@ extern "C" napi_status napi_reject_deferred(napi_env, napi_deferred, napi_value 
     rejectionIsError = reason->isError;
     return napi_ok;
 }
-extern "C" napi_status napi_resolve_deferred(napi_env, napi_deferred, napi_value)
-{ return failResolve ? napi_generic_failure : napi_ok; }
+extern "C" napi_status napi_resolve_deferred(napi_env, napi_deferred, napi_value value)
+{ resolved = value->text; return failResolve ? napi_generic_failure : napi_ok; }
 extern "C" napi_status napi_delete_async_work(napi_env, napi_async_work) { deleted++; return napi_ok; }
 extern "C" napi_status napi_create_object(napi_env, napi_value *out) { *out = Value("object"); return napi_ok; }
 extern "C" napi_status napi_create_array_with_length(napi_env, size_t, napi_value *out)
@@ -231,7 +239,7 @@ extern "C" napi_status napi_create_promise(napi_env, napi_deferred *out, napi_va
 extern "C" napi_status napi_create_async_work(napi_env, napi_value, napi_value, napi_async_execute_callback execute,
     napi_async_complete_callback complete, void *data, napi_async_work *out)
 { queuedExecute = execute; queuedComplete = complete; queuedData = data; *out = &work; return napi_ok; }
-extern "C" napi_status napi_queue_async_work(napi_env, napi_async_work) { return napi_ok; }
+extern "C" napi_status napi_queue_async_work(napi_env, napi_async_work) { return failQueue ? napi_generic_failure : napi_ok; }
 extern "C" napi_status napi_get_typedarray_info(napi_env, napi_value value, napi_typedarray_type *type, size_t *length,
     void **data, napi_value *buffer, size_t *offset)
 {
@@ -289,7 +297,8 @@ extern "C" OH_NN_ReturnCode OH_NNCompilation_Build(OH_NNCompilation *)
 extern "C" void OH_NNCompilation_Destroy(OH_NNCompilation **p) { destroyed++; *p = nullptr; }
 extern "C" OH_NNExecutor *OH_NNExecutor_Construct(OH_NNCompilation *)
 { MaybeThrow("executor"); return reinterpret_cast<OH_NNExecutor *>(&executorToken); }
-extern "C" void OH_NNExecutor_Destroy(OH_NNExecutor **) {}
+extern "C" void OH_NNExecutor_Destroy(OH_NNExecutor **)
+{ executorDestroyed++; executorDestroyThread = std::this_thread::get_id(); }
 extern "C" OH_NN_ReturnCode OH_NNExecutor_GetInputCount(const OH_NNExecutor *, size_t *count)
 { *count = 2; return OH_NN_SUCCESS; }
 extern "C" OH_NN_ReturnCode OH_NNExecutor_GetOutputCount(const OH_NNExecutor *, size_t *count)
@@ -439,5 +448,58 @@ int main()
         assert(!Predict(nullptr, nullptr) && !queuedData && runCalls == 0 && !thrown.empty());
         if (scenario < 10) assert(thrown.find("reportedLength=") != std::string::npos);
     }
-    std::cout << "PASS: 69 native scenarios: prior 44 plus 12 N-API round trips and 13 invalid TypedArray cases\n";
+    // 1. Explicit release detaches the JS handle immediately and destroys on
+    // the worker, then resolves undefined without trying to allocate logits.
+    auto current = PrepareNapiPredict(16, 256, 0);
+    auto wrapper = callbackArgs[0];
+    wrapper->wrapped = &current;
+    callbackArgs = {wrapper};
+    assert(Dispose(nullptr, nullptr) && !current && executorDestroyed == 0);
+    std::thread releaser([&] { queuedExecute(nullptr, queuedData); });
+    const auto releaseThread = releaser.get_id();
+    releaser.join();
+    assert(executorDestroyed == 1 && executorDestroyThread == releaseThread);
+    queuedComplete(nullptr, napi_ok, queuedData);
+    assert(resolved == "undefined" && rejected == 0 && deleted == 1);
+
+    // 2. A disposed handle can be disposed again, without double destruction.
+    assert(Dispose(nullptr, nullptr));
+    queuedExecute(nullptr, queuedData); queuedComplete(nullptr, napi_ok, queuedData);
+    assert(executorDestroyed == 1 && deleted == 2 && rejected == 0);
+
+    // 3. Predict through the disposed wrapper is rejected before queueing.
+    queuedData = nullptr;
+    callbackArgs = {wrapper, TokenView(true, 256, 0), TokenView(false, 256, 0)};
+    assert(!Predict(nullptr, nullptr) && !queuedData && thrown == "Invalid HiAI session");
+
+    // 4. Already queued predictions own the model even if the JS handle is
+    // disposed first. The final Predict completion releases the last owner.
+    current = PrepareNapiPredict(32, 64, 0);
+    wrapper = callbackArgs[0]; wrapper->wrapped = &current;
+    assert(Predict(nullptr, nullptr));
+    auto *predictJob = static_cast<Job *>(queuedData);
+    callbackArgs = {wrapper};
+    assert(Dispose(nullptr, nullptr) && !current);
+    queuedExecute(nullptr, queuedData); queuedComplete(nullptr, napi_ok, queuedData);
+    assert(executorDestroyed == 0);
+    Execute(nullptr, predictJob);
+    assert(predictJob->error[0] == '\0' && predictJob->logits == expectedLogits && runCalls == 1);
+    Complete(nullptr, napi_ok, predictJob);
+    assert(executorDestroyed == 1 && rejected == 0 && deleted == 2);
+
+    // 5. Failed queueing restores the JS session for a later release attempt.
+    current = PrepareNapiPredict(64, 256, 0);
+    wrapper = callbackArgs[0]; wrapper->wrapped = &current; callbackArgs = {wrapper};
+    failQueue = true;
+    assert(!Dispose(nullptr, nullptr) && current && executorDestroyed == 0);
+    assert(thrown == "Cannot queue HiAI work");
+    failQueue = false;
+    assert(Dispose(nullptr, nullptr) && !current);
+    queuedExecute(nullptr, queuedData); queuedComplete(nullptr, napi_ok, queuedData);
+    assert(executorDestroyed == 1);
+
+    // 6. An unwrapped/foreign object never queues disposal work.
+    Reset(); callbackArgs = {Value("foreign object")};
+    assert(!Dispose(nullptr, nullptr) && !queuedData && thrown == "Invalid HiAI session");
+    std::cout << "PASS: 75 native scenarios: prior 69 plus 6 release/lifetime/queue-failure cases\n";
 }

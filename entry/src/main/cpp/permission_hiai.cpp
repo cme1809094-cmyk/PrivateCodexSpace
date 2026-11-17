@@ -257,7 +257,7 @@ private:
     std::atomic_flag inputMetadataLogged_ = ATOMIC_FLAG_INIT;
 };
 
-enum class Operation { Load, Predict };
+enum class Operation { Load, Predict, Release };
 
 struct Job {
     explicit Job(Operation requested) : operation(requested), trace(requested == Operation::Load) {}
@@ -314,10 +314,15 @@ void RejectDeferred(napi_env env, napi_deferred deferred, const char *message, b
 void Execute(napi_env, void *data) noexcept
 {
     auto &job = *static_cast<Job *>(data);
-    const char *operation = job.operation == Operation::Load ? "Load OMC" : "Predict";
+    const char *operation = job.operation == Operation::Load ? "Load OMC" :
+        (job.operation == Operation::Release ? "Release session" : "Predict");
     try {
         if (job.operation == Operation::Load) {
             job.session = std::make_shared<Session>(job.model, job.trace);
+        } else if (job.operation == Operation::Release) {
+            // Release ownership on the worker. In-flight Predict jobs retain
+            // their own shared_ptr until their callbacks finish.
+            job.session.reset();
         } else {
             job.logits = job.session->Predict(job.ids, job.mask, job.trace);
         }
@@ -355,6 +360,8 @@ napi_value JobResult(napi_env env, const Job &job)
             nullptr, nullptr), "Cannot wrap session");
         holder.release();
         CheckJs(napi_set_named_property(env, result, "device", JsString(env, job.session->DeviceName())), "Cannot set device");
+    } else if (job.operation == Operation::Release) {
+        CheckJs(napi_get_undefined(env, &result), "Cannot create release result");
     } else {
         CheckJs(napi_create_array_with_length(env, job.logits.size(), &result), "Cannot allocate logits array");
         for (uint32_t i = 0; i < job.logits.size(); ++i) {
@@ -387,13 +394,15 @@ void Complete(napi_env env, napi_status status, void *data) noexcept
     napi_delete_async_work(env, job->work);
 }
 
-napi_value Queue(napi_env env, std::unique_ptr<Job> job)
+napi_value Queue(napi_env env, std::unique_ptr<Job> job, std::shared_ptr<Session> *detach = nullptr)
 {
     napi_value promise;
     CheckJs(napi_create_promise(env, &job->deferred, &promise), "Cannot allocate HiAI promise");
     CheckJs(napi_create_async_work(env, nullptr, JsString(env, "PermissionHiAI"), Execute, Complete,
         job.get(), &job->work), "Cannot create HiAI work");
+    if (detach) job->session = std::move(*detach);
     if (napi_queue_async_work(env, job->work) != napi_ok) {
+        if (detach) *detach = std::move(job->session);
         napi_delete_async_work(env, job->work);
         throw BridgeError("Cannot queue HiAI work");
     }
@@ -449,7 +458,7 @@ Tokens ReadTokens(napi_env env, napi_value value, const char *argument, bool log
 napi_value Devices(napi_env env, napi_callback_info) noexcept
 {
     try {
-        PermissionLog("native bridge 1.0.9: enumerate backends", "DEVICE");
+        PermissionLog("native bridge 1.1.0: enumerate backends", "DEVICE");
         (void)permission_nnrt::GetCannRuntime();
         auto devices = ListDevices();
         napi_value result;
@@ -554,6 +563,33 @@ napi_value Predict(napi_env env, napi_callback_info info) noexcept
     }
 }
 
+napi_value Dispose(napi_env env, napi_callback_info info) noexcept
+{
+    try {
+        size_t argc = 1;
+        napi_value value = nullptr;
+        CheckJs(napi_get_cb_info(env, info, &argc, &value, nullptr, nullptr), "Cannot read session argument");
+        if (argc != 1) throw BridgeError("Expected a HiAI session");
+        void *data = nullptr;
+        CheckJs(napi_unwrap(env, value, &data), "Invalid HiAI session");
+        if (!data) throw BridgeError("Invalid HiAI session");
+        auto &holder = *static_cast<std::shared_ptr<Session> *>(data);
+        auto job = std::make_unique<Job>(Operation::Release);
+        // Detach immediately before queueing; restore ownership on queue
+        // failure. The JS wrapper remains valid for idempotent disposal.
+        return Queue(env, std::move(job), &holder);
+    } catch (const BridgeError &error) {
+        napi_throw_error(env, nullptr, error.what());
+        return nullptr;
+    } catch (const std::exception &error) {
+        napi_throw_error(env, nullptr, error.what());
+        return nullptr;
+    } catch (...) {
+        napi_throw_error(env, nullptr, "Unknown native exception while releasing session");
+        return nullptr;
+    }
+}
+
 napi_value Init(napi_env env, napi_value exports)
 {
     napi_property_descriptor properties[] = {
@@ -561,6 +597,7 @@ napi_value Init(napi_env env, napi_value exports)
         {"accelerator", nullptr, Accelerator, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"load", nullptr, Load, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"predict", nullptr, Predict, nullptr, nullptr, nullptr, napi_default, nullptr},
+        {"dispose", nullptr, Dispose, nullptr, nullptr, nullptr, napi_default, nullptr},
     };
     if (napi_define_properties(env, exports, sizeof(properties) / sizeof(properties[0]), properties) != napi_ok) {
         return nullptr;

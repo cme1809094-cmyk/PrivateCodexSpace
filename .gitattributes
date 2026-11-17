@@ -6,3 +6,4 @@
 ml/native_v2/evidence/**/*.log -whitespace
 variants/**/evidence/**/*.log -whitespace
 variants/**/THIRD-PARTY-NOTICES.txt -whitespace
+entry/src/main/resources/rawfile/**/THIRD-PARTY-NOTICES.txt -whitespace

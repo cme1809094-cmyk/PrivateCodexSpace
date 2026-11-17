@@ -16,10 +16,11 @@ def main():
     parser.add_argument("lite", type=Path, help="Extracted Linux MindSpore Lite directory")
     parser.add_argument("--vectors", type=Path, default=root / "ml/test_vectors.json")
     parser.add_argument("--model", type=Path, default=root / "entry/src/main/resources/rawfile/permission.ms")
+    parser.add_argument("--config", type=Path, default=root / "entry/src/main/resources/rawfile/model_config.json")
     args = parser.parse_args()
     runtime = args.lite.resolve() / "runtime"
     rows = json.loads(args.vectors.read_text(encoding="utf-8"))
-    model_config = root / "entry/src/main/resources/rawfile/model_config.json"
+    model_config = args.config
     thresholds = np.asarray(json.loads(model_config.read_text(encoding="utf-8"))["thresholds"])
     env = os.environ.copy()
     paths = [str(runtime / "lib"), str(runtime / "third_party/glog")]

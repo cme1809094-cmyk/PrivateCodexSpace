@@ -1,0 +1,107 @@
+{
+  "defaultModel": "tinybert4l",
+  "profiles": [
+    {
+      "id": "minirbt",
+      "name": "MiniRBT H256",
+      "assetPrefix": "",
+      "maxLogitError": 0.1,
+      "assets": [
+        {
+          "bucket": 16,
+          "bytes": 22636729,
+          "sha256": "f0686728f90b84e50c2a72860aad7e92f333f7f74efd3842e6ddb58a459d0f5c",
+          "referenceCases": 27
+        },
+        {
+          "bucket": 32,
+          "bytes": 22653914,
+          "sha256": "201d5a3108d009e23e389b61efe56b14595eca347ac9895eef90a8d8e61c4d96",
+          "referenceCases": 33
+        },
+        {
+          "bucket": 64,
+          "bytes": 22686784,
+          "sha256": "90fa65045ffe0d9f54c2d0be3865dfa499ca001c4ed7df9b3b278a4c070e1603",
+          "referenceCases": 33
+        },
+        {
+          "bucket": 0,
+          "bytes": 22790285,
+          "sha256": "f2aea9736566ea372630ef81af91192ead0e5db3afa4e2c4cbbd8b07c2ddb01b",
+          "referenceCases": 33
+        }
+      ],
+      "metadata": [
+        {
+          "file": "vocab.txt",
+          "bytes": 109540,
+          "sha256": "45bbac6b341c319adc98a532532882e91a9cefc0329aa57bac9ae761c27b291c"
+        },
+        {
+          "file": "model_config.json",
+          "bytes": 50,
+          "sha256": "3eca3f1a4c369e0baa3a300d3a1fb01b3c85ea3c3c6f27c780b0c924bd7e16e2"
+        },
+        {
+          "file": "hiai_reference.json",
+          "bytes": 6943,
+          "sha256": "91574a2c1abe321f40522a01e5e6c5bf3d9099efe7fb9094c1ed1f3251a15414"
+        }
+      ]
+    },
+    {
+      "id": "tinybert4l",
+      "name": "TinyBERT 4L",
+      "assetPrefix": "models/tinybert4l/",
+      "maxLogitError": 0.1,
+      "assets": [
+        {
+          "bucket": 16,
+          "bytes": 24524711,
+          "sha256": "12751d1b8f44a961fde4d951e493557dc3ec0cfe17aa222386decb249faebbec",
+          "referenceCases": 27
+        },
+        {
+          "bucket": 32,
+          "bytes": 24544692,
+          "sha256": "c1fc6cb367f678f8ec4ed507b0e89833d7bb4afaa79d6ae93b9f6899d9310b3d",
+          "referenceCases": 33
+        },
+        {
+          "bucket": 64,
+          "bytes": 24584700,
+          "sha256": "1ae220144d27386ab83cd39cba5c2c6c20a01b4900d51cc432d2855e931c01d8",
+          "referenceCases": 33
+        }
+      ],
+      "metadata": [
+        {
+          "file": "vocab.txt",
+          "bytes": 109534,
+          "sha256": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a"
+        },
+        {
+          "file": "model_config.json",
+          "bytes": 47,
+          "sha256": "f832c0dd99446a369d1215b954d6947878c463fbab112f9078ea622a906aeae5"
+        },
+        {
+          "file": "hiai_reference.json",
+          "bytes": 6944,
+          "sha256": "c8b0a7355061af5ba3125449e7d23a3923a60b3a43930b50162529f2ed95ed71"
+        },
+        {
+          "file": "LICENSE-TinyBERT.txt",
+          "bytes": 11358,
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "file": "THIRD-PARTY-NOTICES.txt",
+          "bytes": 12212,
+          "sha256": "bb4fa00182a4a519acd1dbf942c5024e461e00c514d61881126b87688a52a9bd"
+        }
+      ]
+    }
+  ]
+}

@@ -25,7 +25,8 @@ const native = {
     state.nativeLoads++;
     throw state.loadError;
   },
-  predict: () => { throw new Error('Unexpected inference during startup'); }
+  predict: () => { throw new Error('Unexpected inference during startup'); },
+  dispose: async () => {}
 };
 globalThis.__permissionTest = {
   native,
@@ -45,6 +46,9 @@ globalThis.__permissionTest = {
 const resources = {
   getRawFileContent: async name => new TextEncoder().encode(name === 'vocab.txt'
     ? '[PAD]\n[UNK]\n[CLS]\n[SEP]\n'
+    : name === 'model_catalog.json' ? JSON.stringify({defaultModel: 'minirbt', profiles: [{id: 'minirbt', name: 'MiniRBT', assetPrefix: '', maxLogitError: 0.1,
+        assets: [16,32,64].map(bucket => ({bucket, bytes: 14, sha256: 'a'.repeat(64), referenceCases: 1}))}]})
+    : name === 'hiai_reference.json' ? '[{"text":"测试","logits":[0,0,0,0,0]}]'
     : name === 'model_config.json' ? '{"thresholds":[0.5,0.5,0.5,0.5,0.5]}' : 'mock CPU model')
 };
 
@@ -55,7 +59,7 @@ try {
     .replace(/^import .*from 'libpermission_hiai.so';\r?\n/gm, '')
     .replace("from './WordPiece'", "from './WordPiece.mts'");
   code = 'const {native,util,mindSporeLite,hilog}=globalThis.__permissionTest;\n' +
-    'const {devices,accelerator,load:loadHiAI,predict:predictHiAI}=native;\n' +
+    'const {devices,accelerator,load:loadHiAI,predict:predictHiAI,dispose:disposeHiAI}=native;\n' +
     'const canIUse=()=>true;\n' + code;
   fs.writeFileSync(path.join(temporary, 'PermissionModel.mts'), code);
   const { PermissionModel } = await import(pathToFileURL(path.join(temporary, 'PermissionModel.mts')).href);
@@ -86,7 +90,7 @@ try {
   assert.ok(result.backend.includes('CPU'));
   assert.ok(model.diagnostic.includes(loadError));
   assert.ok(logs.every(({args}) => args[1] === 'PermissionNPU' && args[2].startsWith('[PNPU]')));
-  assert.equal(logs.filter(({args}) => args[2].startsWith('[PNPU][FALLBACK]') && args[3].includes(loadError)).length, 3);
+  assert.equal(logs.filter(({args}) => args[2].startsWith('[PNPU][FALLBACK]') && args[4].includes(loadError)).length, 3);
   console.log('PASS: ArkTS startup selects CANN for OMC and preserves CPU fallback for generic NNRT/missing Foundation/query errors');
 } finally {
   fs.rmSync(temporary, { recursive: true, force: true });

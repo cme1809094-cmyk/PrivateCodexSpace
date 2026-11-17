@@ -1,5 +1,16 @@
 # NNRT device selection regression checks
 
+## Model switching and acceptance (1.1.0)
+
+```sh
+node --experimental-strip-types tests/model_switch_test.mjs
+python3 ml/verify_artifacts.py
+```
+
+The switching suite exercises the actual ArkTS PermissionModel and WordPiece sources with mocked platform bindings. Both real vocabularies are checked against all 33 paired input-id/mask vectors. Eighteen scenarios cover default selection, all model/bucket combinations, session isolation/release, routing, manual overflow, same-model CPU fallback, metadata failure recovery, exclusive operations, and acceptance gates. Acceptance failures include non-finite/short/wrong-label outputs, excessive logit drift despite identical labels, incomplete reference coverage, Build/RunSync errors and missing NPU. Mock timing is only used to test control flow; it is not a phone performance measurement.
+
+The native suite now has 75 scenarios. The six additions call the actual Dispose/Predict exports, checking worker release, idempotence, use-after-dispose rejection, ownership retained by queued inference, restored ownership after queue failure and invalid wrappers. The CMake host DSO still uses placeholder libraries and must never be packaged as a HarmonyOS binary.
+
 These host tests reproduce the reported `NPU_ohos.boot.hardware.Kirin9020_v2_0` backend name. They mock device enumeration and ArkTS platform bindings; they do not execute the compiled OMC or replace an on-phone test.
 
 Compile the C++ test with the real NNRT SDK headers (or the public OpenHarmony NNRT C headers) available under `SDK_INCLUDE/neural_network_runtime/`:

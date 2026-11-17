@@ -1,1 +1,8 @@
-{ "string": [{ "name": "app_name", "value": "权限意图 HiAI 性能版" }] }
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "权限意图 双模型"
+    }
+  ]
+}

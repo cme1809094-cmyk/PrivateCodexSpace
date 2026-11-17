@@ -1,5 +1,5 @@
 {
-  "date_utc": "2026-11-16",
+  "date_utc": "2026-11-17",
   "restored_project_zip_sha256": "3c95eb293e647a6804e18558c731b16e23ce1a54739b125505a4ee6a1455018d",
   "target": "Kirin 9030 Pro / Mobile compiler platform kirin9030",
   "device_tested": false,
@@ -33,6 +33,30 @@
       "path": "ml/permission.onnx",
       "bytes": 41488923,
       "sha256": "4a0d5424550c8329e8355a48a2b79e79815d9dfce3877a391b479ff08a1e5d9e"
+    },
+    {
+      "path": "entry/src/main/resources/rawfile/models/tinybert4l/permission.ms",
+      "bytes": 45240352,
+      "sha256": "d15efcd1f12b87c114d8d1fb5a10d8db36181a83d3a224e79bd7dd355c3a6de1"
+    },
+    {
+      "path": "entry/src/main/resources/rawfile/models/tinybert4l/permission_16.om",
+      "bytes": 24524711,
+      "sha256": "12751d1b8f44a961fde4d951e493557dc3ec0cfe17aa222386decb249faebbec"
+    },
+    {
+      "path": "entry/src/main/resources/rawfile/models/tinybert4l/permission_32.om",
+      "bytes": 24544692,
+      "sha256": "c1fc6cb367f678f8ec4ed507b0e89833d7bb4afaa79d6ae93b9f6899d9310b3d"
+    },
+    {
+      "path": "entry/src/main/resources/rawfile/models/tinybert4l/permission_64.om",
+      "bytes": 24584700,
+      "sha256": "1ae220144d27386ab83cd39cba5c2c6c20a01b4900d51cc432d2855e931c01d8"
     }
+  ],
+  "models": [
+    "minirbt",
+    "tinybert4l"
   ]
 }

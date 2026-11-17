@@ -36,7 +36,8 @@ def main():
             raise ValueError("Artifact target escapes destination")
     shutil.copytree(root, destination, ignore=shutil.ignore_patterns(
         ".git", "variants", "evidence", "*.om", "*.omc", "*.ms", "*.onnx", "__pycache__",
-        "model-build", "build", "oh_modules", ".hvigor", ".idea", ".cxx", "local.properties"))
+        "model-build", "build", "oh_modules", ".hvigor", ".idea", ".cxx", "local.properties",
+        "model-switch-verification.json"))
     for artifact in manifest["artifacts"]:
         target = destination / artifact["target"]
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -66,17 +67,22 @@ def main():
             if item["name"] in {"app_name", "EntryAbility_label", "EntryAbility_desc"}:
                 item["value"] = manifest["display_name"] + " 权限识别"
         path.write_text(json.dumps(strings, ensure_ascii=False, indent=2) + "\n")
-    model_code = destination / "entry/src/main/ets/model/PermissionModel.ets"
-    code = model_code.read_text().replace("for (const bucket of [0, 16, 32, 64])", "for (const bucket of [16, 32, 64])")
-    code = code.replace("'优化版 NPU '", "'" + manifest["display_name"] + " NPU '")
-    model_code.write_text(code)
-    page = destination / "entry/src/main/ets/pages/Index.ets"
-    page.write_text(page.read_text().replace("MiniRBT", manifest["display_name"]))
-    bridge = destination / "entry/src/main/cpp/permission_hiai.cpp"
-    bridge.write_text(bridge.read_text().replace("MiniRBT", manifest["display_name"]))
+    raw = destination / "entry/src/main/resources/rawfile"
+    # The same runtime is driven by a single-profile catalog, without rewriting
+    # ArkTS source strings or retaining unused metadata from the combined app.
+    shutil.rmtree(raw / "models", ignore_errors=True)
+    catalog = json.loads((root / "entry/src/main/resources/rawfile/model_catalog.json").read_text())
+    selected = next(p for p in catalog["profiles"] if p["id"] == manifest["id"])
+    selected["assetPrefix"] = ""
+    for asset in selected["metadata"]:
+        source = variant / asset["file"]
+        if source.is_file():
+            shutil.copy2(source, raw / asset["file"])
+    (raw / "model_catalog.json").write_text(json.dumps(
+        {"defaultModel": manifest["id"], "profiles": [selected]}, ensure_ascii=False, indent=2) + "\n")
     (destination / "README.md").write_text(
         "# " + manifest["display_name"] + " 权限识别 Demo\n\n"
-        "本工程由 ml/materialize_variant.py 生成，包含配套的三档原生 V2 NPU 模型、CPU 回退模型、词表、阈值和自检向量。\n\n"
+        "本工程由 ml/materialize_variant.py 生成，包含配套的三档原生 V2 NPU 模型、CPU 回退模型、词表、阈值和自检向量。1.1.0 支持自动／16／32／64 档位，点击「验收当前模型三档 NPU」后复制验收 JSON。验收逐档检查 27/27、33/33、33/33 参考权限一致性及最大绝对 logit 差 ≤0.1（暂定工程阈值），并记录预热 5 次、测量 50 次的 P50/P95。验收禁止 CPU 回退。\n\n"
         "包名：`" + manifest["bundle_name"] + "`。请在 DevEco Studio 中构建、配置调试签名并安装到 Mate 80 Pro Max。\n\n"
         "OMC 需要 CANN 的 HIAI_F 后端。应用会先动态加载 CANN Foundation 并记录版本，再枚举后端和检查模型兼容性。通用 NNRT 加速器不等于支持 OMC；不可用时会明确记录原因并回退到同模型 CPU。更新应用时需 Clean/Rebuild native 和 ArkTS。\n\n"
         "若回退提示包含 failed at / exception_type，请保留完整内容。1.0.6 起提示包含最后调用、返回状态、异常类型和 CANN 版本。1.0.7 的 HiLog Tag 为 PermissionNPU，消息前缀为 [PNPU]；显示 Info/Warn/Error，保留 [RUNTIME] 到首条 [ERROR] 和 [FALLBACK]。命令行可用 hdc hilog -T PermissionNPU。1.0.8 以 [TENSOR] 记录输入 rank/shape，并支持连续 token 向量的单例维度表示；应用校验错误保留原始消息。1.0.9 修复 N-API 长度返回字节数的兼容性，[INPUT] 每会话记录一次输入长度和范围。真机 RunSync 和自检仍需验证。\n\n"
