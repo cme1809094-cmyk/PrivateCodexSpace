@@ -12,6 +12,7 @@
 - [instruction_review.csv](instruction_review.csv)：逐条指令、平台映射条件的人审表。
 - [validation_report.json](validation_report.json)：数量、去重、引用、标注一致性及待核实映射统计。
 - [ai_review_report.json](ai_review_report.json)：独立子agent的语义/平台交叉复核记录。
+- [扩充语料与测试候选](expansion/README.md)：后续扩写、场景族与候选集合；原300条保留为参考材料。
 
 ## 语义和平台映射
 

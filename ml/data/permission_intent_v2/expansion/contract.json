@@ -1,0 +1,57 @@
+{
+  "schema_version": "0.2.0",
+  "stage": "expanded_candidates_for_human_review",
+  "new_rows": 1200,
+  "legacy_reference_rows": 300,
+  "total_rows": 1500,
+  "family_size": 5,
+  "new_families": 240,
+  "split_targets": {
+    "train_candidate": 750,
+    "validation_candidate": 150,
+    "test_candidate": 300,
+    "reference_only": 300
+  },
+  "authors": {
+    "a_media_files_contacts_calendar": {
+      "groups": ["photos", "files", "contacts", "calendar"],
+      "rows": 300,
+      "families_per_group": 15,
+      "family_splits_per_group": {"train_candidate": 10, "validation_candidate": 2, "test_candidate": 3}
+    },
+    "b_notifications_reminders_bluetooth_wlan": {
+      "groups": ["notifications", "reminders", "bluetooth", "wlan"],
+      "rows": 300,
+      "families_per_group": 15,
+      "family_splits_per_group": {"train_candidate": 10, "validation_candidate": 2, "test_candidate": 3}
+    },
+    "c_nfc_motion_biometric_clipboard": {
+      "groups": ["nfc", "motion", "biometric", "clipboard"],
+      "rows": 300,
+      "families_per_group": 15,
+      "family_splits_per_group": {"train_candidate": 10, "validation_candidate": 2, "test_candidate": 3}
+    },
+    "d_retained_and_edges": {
+      "groups": ["base_camera", "base_microphone", "base_location", "cross_capability", "ambiguity", "negation", "no_device_capability", "out_of_scope"],
+      "rows": 300,
+      "family_splits": {"train_candidate": 30, "validation_candidate": 6, "test_candidate": 24},
+      "retained_capability_families": "6 retained atomic capabilities each have five families: three train, one validation, one test",
+      "other_families": "30 edge/cross families: 12 train and 18 test"
+    }
+  },
+  "additional_required_fields": ["family_id", "family_summary", "split_candidate"],
+  "inherit_row_fields_from": "../contract.json",
+  "semantics": [
+    "Use the existing 32 capability IDs only. Do not change the dictionary, application or model weights.",
+    "Each family is a substantive scenario with five natural paraphrases and unchanged gold meaning. Names/numbers alone do not create new scenario families.",
+    "Keep every paraphrase of a family in the same candidate split. Semantically equivalent families across splits must be merged or rewritten; different family IDs alone are not proof of independence.",
+    "Test candidate scenarios must differ in action/resource/scope/constraint or context pattern from train candidates, not merely wording or entity substitutions.",
+    "The prior 300 rows are reference_only and excluded from all candidate training and tuning. A future merged training corpus needs another leakage review against reserved test families.",
+    "required and forbidden are disjoint; unmentioned is not forbidden. Partial modality/target/duration limitations belong in constraints.",
+    "Ground context in explicit scenario state, distinguish user words from app state, and keep gold answers faithful to both.",
+    "For ambiguous action/scope leave unconfirmed capabilities empty and ask one specific clarification question. A platform restriction does not change a known semantic intent into ambiguity.",
+    "No assumed permission dependency labels: internet and platform prerequisites belong in the dictionary; semantic labels describe the requested actions.",
+    "All rows disclose agent generation. Author semantic review may be reviewed; independent cross_review remains pending until actually completed; human_review remains pending.",
+    "All splits are candidates, not a frozen independent benchmark. No model training or model accuracy measurement is performed by this data expansion."
+  ]
+}
