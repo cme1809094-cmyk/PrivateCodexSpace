@@ -1,0 +1,4656 @@
+{
+  "schema_version": "0.1.0",
+  "stage": "seed_for_review",
+  "language": "zh-CN",
+  "platform_baselines": {
+    "harmonyos": {
+      "api": 12,
+      "distribution": "HarmonyOS 5.0.0.71 SDK",
+      "scope_note": "规则API范围12..12是本字典核验范围，不表示API13停止支持。商业权限可申请性与OpenHarmony参考分开。"
+    },
+    "android": {
+      "api_range": [
+        19,
+        36
+      ],
+      "scope_note": "以设备API与每条conditions中的targetSdk共同判定；未覆盖的旧target/系统组合不可自动套用。API37及以后不在当前核验范围。 所有列出危险权限runtime申请的路线均假设targetSdk>=23；target<=22的旧目标兼容行为不在本seed可执行覆盖。蓝牙、运动、位置等还须满足各规则更高target条件。"
+    }
+  },
+  "groups": [
+    {
+      "id": "photos",
+      "name": "照片与相册",
+      "kind": "new"
+    },
+    {
+      "id": "files",
+      "name": "文件选择与导出",
+      "kind": "new"
+    },
+    {
+      "id": "contacts",
+      "name": "联系人",
+      "kind": "new"
+    },
+    {
+      "id": "calendar",
+      "name": "日历",
+      "kind": "new"
+    },
+    {
+      "id": "notifications",
+      "name": "通知",
+      "kind": "new"
+    },
+    {
+      "id": "reminders",
+      "name": "本地提醒",
+      "kind": "new"
+    },
+    {
+      "id": "bluetooth",
+      "name": "蓝牙",
+      "kind": "new"
+    },
+    {
+      "id": "wlan",
+      "name": "WLAN",
+      "kind": "new"
+    },
+    {
+      "id": "nfc",
+      "name": "NFC标签",
+      "kind": "new"
+    },
+    {
+      "id": "motion",
+      "name": "运动与计步",
+      "kind": "new"
+    },
+    {
+      "id": "biometric",
+      "name": "系统生物认证",
+      "kind": "new"
+    },
+    {
+      "id": "clipboard",
+      "name": "剪贴板",
+      "kind": "new"
+    },
+    {
+      "id": "base_camera",
+      "name": "相机",
+      "kind": "retained"
+    },
+    {
+      "id": "base_microphone",
+      "name": "麦克风",
+      "kind": "retained"
+    },
+    {
+      "id": "base_location",
+      "name": "位置",
+      "kind": "retained"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "media.photo.pick_one",
+      "group": "photos",
+      "name": "系统选图器选择一张照片",
+      "definition": "由用户在系统照片选择界面选一张照片，读取该次选择授权范围内的URI；不枚举相册全库。",
+      "slots": [
+        {
+          "name": "max_count",
+          "type": "integer",
+          "required": true,
+          "description": "固定为1"
+        },
+        {
+          "name": "media_type",
+          "type": "string",
+          "required": true,
+          "description": "image"
+        },
+        {
+          "name": "allow_camera",
+          "type": "boolean",
+          "required": false,
+          "description": "若只选已有照片应关闭选图器拍摄入口"
+        },
+        {
+          "name": "allow_edit",
+          "type": "boolean",
+          "required": false,
+          "description": "若只选择原图应关闭编辑入口"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "从相册选一张头像。",
+          "打开系统选图器，让我挑一张照片。"
+        ],
+        "negative": [
+          "扫描整个相册找重复照片。",
+          "用相机拍一张新照片。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "media.photo.pick_one.harmonyos.picker",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "system_ui:PhotoViewPicker.select",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户在系统图库明确选择后授予该单张URI只读临时访问"
+              ],
+              "conditions": [
+                "MIMEType=IMAGE_TYPE，maxSelectNumber=1。",
+                "只选已有照片可设置isPhotoTakingSupported=false；只读选择可设置isEditSupported=false。",
+                "取消或结果为空时不读取；不扩张到READ_IMAGEVIDEO全库查询。"
+              ],
+              "evidence_source_ids": [
+                "oh.photos.picker",
+                "oh.photos.api",
+                "sdk.photo"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "media.photo.pick_one.android.androidx_picker",
+              "api_min": 19,
+              "api_max": 36,
+              "route": "system_ui:ActivityResultContracts.PickVisualMedia(ImageOnly)",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户选定照片URI的读取授权；默认到应用停止或设备重启，可按需持久化"
+              ],
+              "conditions": [
+                "androidx.activity>=1.7.0；按isPhotoPickerAvailable检测系统可用性。",
+                "系统picker不可用时库回退ACTION_OPEN_DOCUMENT（API19+）；不申请READ_MEDIA_IMAGES或READ_EXTERNAL_STORAGE。",
+                "需要更长期访问时仅对支持的返回URI调用takePersistableUriPermission；不代表相册全库授权。"
+              ],
+              "evidence_source_ids": [
+                "android.photo_picker"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "media.photo.read_library",
+      "group": "photos",
+      "name": "读取照片库",
+      "definition": "直接查询可访问照片库并批量读取照片；与系统选图器的单张授权分开。",
+      "slots": [
+        {
+          "name": "selection",
+          "type": "string",
+          "required": false,
+          "description": "查询条件/日期/相册"
+        },
+        {
+          "name": "access_scope",
+          "type": "string",
+          "required": false,
+          "description": "全库或系统授予的部分照片范围必须明确"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "扫描相册里的照片，找出重复图片。",
+          "把相册中的所有截图按日期列出来。"
+        ],
+        "negative": [
+          "让我只选一张照片。",
+          "把这张新图片存进相册。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "media.photo.read_library.harmonyos.library_candidate",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "candidate_only:PhotoAccessHelper.getAssets",
+              "availability": "needs_verification",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [
+                "commercial_harmonyos_entitlement_and_acl_verification_required"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "商业HarmonyOS/API12普通第三方开放级别未确认；本路线禁止直接转成运行时申请清单。",
+                "SDK接口明确需要READ_IMAGEVIDEO；OpenHarmony权限表将其列为system_basic、user_grant、ACL=true。",
+                "未核实商业权限/签名/ACL前，不承诺普通应用可获得全库访问；可降级为用户选图，但语义范围会变化。"
+              ],
+              "evidence_source_ids": [
+                "oh.photos.api",
+                "oh.permissions.restricted",
+                "sdk.photo"
+              ],
+              "verification_status": "openharmony_reference_only",
+              "candidate_permissions": [
+                "ohos.permission.READ_IMAGEVIDEO"
+              ],
+              "executable": false,
+              "availability_notes": "manifest/runtime为空表示未形成已核实的可执行申请方案，不表示此操作免权限。"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "media.photo.read_library.android.legacy_storage",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:MediaStore.query",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.READ_EXTERNAL_STORAGE"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "仅覆盖传统共享存储照片；不包括其他应用私有目录。"
+              ],
+              "evidence_source_ids": [
+                "android.media"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "media.photo.read_library.android.runtime_storage",
+              "api_min": 23,
+              "api_max": 32,
+              "route": "direct_api:MediaStore.query",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.READ_EXTERNAL_STORAGE"
+              ],
+              "runtime_permissions": [
+                "android.permission.READ_EXTERNAL_STORAGE"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "Android13设备上target<=32的兼容权限语义需另行评估；此规则设备API限定到32。"
+              ],
+              "evidence_source_ids": [
+                "android.media",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "media.photo.read_library.android.images_permission",
+              "api_min": 33,
+              "api_max": 33,
+              "route": "direct_api:MediaStore.query",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.READ_MEDIA_IMAGES"
+              ],
+              "runtime_permissions": [
+                "android.permission.READ_MEDIA_IMAGES"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "targetSdk>=33；若target<=32，采用该系统的旧目标兼容路线，不混用本规则。"
+              ],
+              "evidence_source_ids": [
+                "android.media"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "media.photo.read_library.android.partial_or_full",
+              "api_min": 34,
+              "api_max": 36,
+              "route": "direct_api:MediaStore.query_with_selected_photos_handling",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.READ_MEDIA_IMAGES",
+                "android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
+              ],
+              "runtime_permissions": [
+                "android.permission.READ_MEDIA_IMAGES",
+                "android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
+              ],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户可能只允许选定照片；须根据实际授权限制查询与重选"
+              ],
+              "conditions": [
+                "按现代target>=34实现；旧target兼容模式单独测试。",
+                "全库任务仅在实际取得READ_MEDIA_IMAGES完整授权时成立；仅选定照片授权不能冒充完整照片库。",
+                "不得持久缓存权限结果，应用恢复时复查。"
+              ],
+              "evidence_source_ids": [
+                "android.partial_photos",
+                "android.media"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "media.photo.add",
+      "group": "photos",
+      "name": "保存新照片到相册",
+      "definition": "将应用持有的新图片添加到公共相册；不包含编辑或删除既有照片。",
+      "slots": [
+        {
+          "name": "source_uri",
+          "type": "string",
+          "required": false,
+          "description": "应用有权读取的源图片"
+        },
+        {
+          "name": "display_name",
+          "type": "string",
+          "required": false,
+          "description": "保存名称"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "把生成的海报保存到相册。",
+          "将这张处理好的图片另存为相册新照片。"
+        ],
+        "negative": [
+          "删除相册中那张旧照片。",
+          "读取我相册里的全部照片。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "media.photo.add.harmonyos.save_button",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "security_component:SaveButton_then_createImageAssetRequest_applyChanges",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户点击符合规范的SaveButton后授予创建本次媒体资源的授权"
+              ],
+              "conditions": [
+                "检查SaveButtonOnClickResult.SUCCESS再创建资源。",
+                "不申请WRITE_IMAGEVIDEO；不因此取得既有照片修改权限。"
+              ],
+              "evidence_source_ids": [
+                "oh.photos.savebutton",
+                "oh.photos.api",
+                "sdk.photo"
+              ],
+              "verification_status": "sdk_verified"
+            },
+            {
+              "rule_id": "media.photo.add.harmonyos.creation_dialog",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "system_ui:PhotoAccessHelper.showAssetsCreationDialog",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户确认保存后对新建的URI授予写入权限；该新建URI授权永久生效"
+              ],
+              "conditions": [
+                "API12接口；用户拒绝返回空URI列表。",
+                "只可向返回的新建URI写入，不可扩大到其他相册资源。"
+              ],
+              "evidence_source_ids": [
+                "oh.photos.api",
+                "sdk.photo"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "media.photo.add.android.legacy_write",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:MediaStore_insert_or_legacy_shared_storage",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.WRITE_EXTERNAL_STORAGE"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "旧共享存储模型。"
+              ],
+              "evidence_source_ids": [
+                "android.media"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "media.photo.add.android.runtime_write",
+              "api_min": 23,
+              "api_max": 28,
+              "route": "direct_api:MediaStore_insert_or_legacy_shared_storage",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.WRITE_EXTERNAL_STORAGE"
+              ],
+              "runtime_permissions": [
+                "android.permission.WRITE_EXTERNAL_STORAGE"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "仅旧版本新增媒体写入；不携带读取整个相册的意图。"
+              ],
+              "evidence_source_ids": [
+                "android.media",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "media.photo.add.android.own_new_media",
+              "api_min": 29,
+              "api_max": 36,
+              "route": "direct_api:MediaStore.Images.insert_then_write",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "采用scoped storage；写入本应用新建媒体不需READ_MEDIA_IMAGES/存储危险权限。",
+                "修改其他应用已存在媒体需另外用户同意，不属于本条。"
+              ],
+              "evidence_source_ids": [
+                "android.media"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "files.pick_one",
+      "group": "files",
+      "name": "选择并读取一个文件",
+      "definition": "通过系统文件选择器，由用户选定一个文件并读取返回URI。",
+      "slots": [
+        {
+          "name": "mime_types",
+          "type": "array",
+          "required": false,
+          "description": "允许的文件MIME类型"
+        },
+        {
+          "name": "max_count",
+          "type": "integer",
+          "required": false,
+          "description": "固定为1"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "让我选一个PDF并打开。",
+          "从文件管理器选一份表格导入。"
+        ],
+        "negative": [
+          "读取下载目录的所有文件。",
+          "把报告另存到我选择的位置。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "files.pick_one.harmonyos.document_picker",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "system_ui:DocumentViewPicker.select",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户选定单文件URI的读取授权"
+              ],
+              "conditions": [
+                "maxSelectNumber=1；按任务设置文件类型过滤。",
+                "只使用返回URI，不枚举未选择目录；取消不读取。"
+              ],
+              "evidence_source_ids": [
+                "oh.files",
+                "sdk.picker"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "files.pick_one.android.saf_open",
+              "api_min": 19,
+              "api_max": 36,
+              "route": "system_ui:ACTION_OPEN_DOCUMENT",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户选定文档URI的读取授权；按返回flags决定可否持久化"
+              ],
+              "conditions": [
+                "CATEGORY_OPENABLE及MIME类型；不请求全盘存储权限。",
+                "若提供程序支持且业务需要，takePersistableUriPermission持久化该URI访问。"
+              ],
+              "evidence_source_ids": [
+                "android.files"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "files.save_user_selected",
+      "group": "files",
+      "name": "保存文件到用户选择的位置",
+      "definition": "用户在系统保存界面选择文件名/位置后，写入本次返回文件URI。",
+      "slots": [
+        {
+          "name": "source_uri",
+          "type": "string",
+          "required": false,
+          "description": "要导出的应用可读文件"
+        },
+        {
+          "name": "display_name",
+          "type": "string",
+          "required": false,
+          "description": "建议文件名"
+        },
+        {
+          "name": "mime_type",
+          "type": "string",
+          "required": false,
+          "description": "导出文件MIME类型"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "把报告另存到我选的位置。",
+          "导出PDF，保存路径让我自己挑。"
+        ],
+        "negative": [
+          "读取我的所有文档。",
+          "在后台遍历Download文件夹。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "files.save_user_selected.harmonyos.document_save",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "system_ui:DocumentViewPicker.save_then_fileIo_write",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户保存选择产生的目标文件URI写入授权"
+              ],
+              "conditions": [
+                "仅向本次返回URI写入；不将保存文件等同选择目录后递归访问。",
+                "普通手机不使用仅2in1可申请的公共目录读写权限。"
+              ],
+              "evidence_source_ids": [
+                "oh.files",
+                "sdk.picker"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "files.save_user_selected.android.saf_create",
+              "api_min": 19,
+              "api_max": 36,
+              "route": "system_ui:ACTION_CREATE_DOCUMENT",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户确认新建文档URI的写入授权"
+              ],
+              "conditions": [
+                "CATEGORY_OPENABLE，设置MIME类型与建议文件名；不申请MANAGE_EXTERNAL_STORAGE。",
+                "创建文件与ACTION_OPEN_DOCUMENT_TREE整目录授权不同。"
+              ],
+              "evidence_source_ids": [
+                "android.files"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "contacts.pick_one",
+      "group": "contacts",
+      "name": "系统选择一位联系人",
+      "definition": "用户在系统联系人界面选择一个联系人或某个联系人字段，仅返回被选择的数据。",
+      "slots": [
+        {
+          "name": "return_fields",
+          "type": "array",
+          "required": false,
+          "description": "如姓名、电话、邮箱；只读取被用户选择授权的字段"
+        },
+        {
+          "name": "max_count",
+          "type": "integer",
+          "required": false,
+          "description": "固定为1"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "让我从通讯录选一个收件人。",
+          "打开联系人选择器，我选一个电话号码。"
+        ],
+        "negative": [
+          "扫描整本通讯录。",
+          "修改张三的电话号码。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "contacts.pick_one.harmonyos.contact_picker",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "system_ui:contact.selectContacts({isMultiSelect:false})",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户在系统联系人选择器中选定联系人的数据返回授权"
+              ],
+              "conditions": [
+                "使用API10+ selectContacts而非API10废弃的selectContact。",
+                "当前签名无READ_CONTACTS要求；不得因此枚举其余联系人。",
+                "需要SystemCapability.Applications.Contacts；用户取消返回空结果。"
+              ],
+              "evidence_source_ids": [
+                "sdk.contact",
+                "oh.contacts"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "contacts.pick_one.android.contact_picker",
+              "api_min": 19,
+              "api_max": 36,
+              "route": "system_ui:ACTION_PICK_contact_or_specific_field",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "系统返回所选联系人/所选字段URI的临时读取授权"
+              ],
+              "conditions": [
+                "仅姓名/基本项选Contacts.CONTENT_TYPE；电话或邮箱优先相应Phone/Email.CONTENT_TYPE。",
+                "只读取返回URI允许的数据；不得借临时授权扫描整库或假定所有关联明细均可读取。",
+                "明确需要字段型选择；不直接申请READ_CONTACTS。"
+              ],
+              "evidence_source_ids": [
+                "android.intents"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "contacts.read",
+      "group": "contacts",
+      "name": "直接读取通讯录",
+      "definition": "直接查询已有联系人记录或批量搜索通讯录；不含写操作。",
+      "slots": [
+        {
+          "name": "query",
+          "type": "string",
+          "required": false,
+          "description": "联系人搜索条件"
+        },
+        {
+          "name": "fields",
+          "type": "array",
+          "required": false,
+          "description": "需要返回的字段"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "读取张三的号码，但不要修改联系人。",
+          "列出通讯录里姓王的联系人。"
+        ],
+        "negative": [
+          "我在系统界面选一个联系人。",
+          "把张三的新号码存入通讯录。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "contacts.read.harmonyos.provider_candidate",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "candidate_only:contact.queryContacts_or_queryContact",
+              "availability": "needs_verification",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [
+                "commercial_harmonyos_entitlement_and_acl_verification_required"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "商业HarmonyOS/API12普通第三方开放级别未确认；本路线禁止直接转成运行时申请清单。",
+                "OpenHarmony分类为system_basic/user_grant/ACL=true；普通商业HarmonyOS申请条件未确认。",
+                "只读不加入WRITE_CONTACTS；若改用系统选人，应说明不能自动完成整库搜索。"
+              ],
+              "evidence_source_ids": [
+                "sdk.contact",
+                "oh.contacts",
+                "oh.permissions.restricted"
+              ],
+              "verification_status": "openharmony_reference_only",
+              "candidate_permissions": [
+                "ohos.permission.READ_CONTACTS"
+              ],
+              "executable": false,
+              "availability_notes": "manifest/runtime为空表示未形成已核实的可执行申请方案，不表示此操作免权限。"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "contacts.read.android.legacy_provider",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:ContactsContract_query",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.READ_CONTACTS"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "读取范围需按query/fields缩小。"
+              ],
+              "evidence_source_ids": [
+                "android.contacts"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "contacts.read.android.provider_runtime",
+              "api_min": 23,
+              "api_max": 36,
+              "route": "direct_api:ContactsContract_query",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.READ_CONTACTS"
+              ],
+              "runtime_permissions": [
+                "android.permission.READ_CONTACTS"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "只读不需WRITE_CONTACTS；授权被拒绝时不查询。"
+              ],
+              "evidence_source_ids": [
+                "android.contacts",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "contacts.write",
+      "group": "contacts",
+      "name": "创建或修改联系人",
+      "definition": "添加、修改或删除联系人；具体操作与目标必须保存在槽位中。",
+      "slots": [
+        {
+          "name": "operation",
+          "type": "string",
+          "required": true,
+          "description": "create/update/delete"
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "required": false,
+          "description": "联系人标识或姓名"
+        },
+        {
+          "name": "fields",
+          "type": "object",
+          "required": false,
+          "description": "需要写入的字段"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "把这个号码新建为李老师的联系人。",
+          "将张三的号码更新为新号码。"
+        ],
+        "negative": [
+          "只显示张三的号码，不做更改。",
+          "让我选择一个已有联系人。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "contacts.write.harmonyos.create_delete_candidate",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "candidate_only:contact.addContact_or_deleteContact",
+              "availability": "needs_verification",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [
+                "commercial_harmonyos_entitlement_and_acl_verification_required"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "商业HarmonyOS/API12普通第三方开放级别未确认；本路线禁止直接转成运行时申请清单。",
+                "仅创建/按已知key删除的候选路径；查找目标可能还需要读取权限。",
+                "未确认商业ACL/权限签名申请资格前，不形成直接申请方案。"
+              ],
+              "evidence_source_ids": [
+                "sdk.contact",
+                "oh.contacts",
+                "oh.permissions.restricted"
+              ],
+              "verification_status": "openharmony_reference_only",
+              "candidate_permissions": [
+                "ohos.permission.WRITE_CONTACTS"
+              ],
+              "executable": false,
+              "availability_notes": "manifest/runtime为空表示未形成已核实的可执行申请方案，不表示此操作免权限。"
+            },
+            {
+              "rule_id": "contacts.write.harmonyos.update_conflict",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "candidate_only:contact.updateContact_permission_conflict",
+              "availability": "needs_verification",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [
+                "commercial_harmonyos_entitlement_and_acl_verification_required"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "商业HarmonyOS/API12普通第三方开放级别未确认；本路线禁止直接转成运行时申请清单。",
+                "OpenHarmony文档updateContact标READ+WRITE，本地SDK更新签名只标WRITE；必须验证目标SDK/设备要求。",
+                "不得断言所有写操作都无需读取；不得因用户禁读整库而直接执行依赖整库查询的更新。"
+              ],
+              "evidence_source_ids": [
+                "sdk.contact",
+                "oh.contacts",
+                "oh.permissions.restricted"
+              ],
+              "verification_status": "openharmony_reference_only",
+              "candidate_permissions": [
+                "ohos.permission.WRITE_CONTACTS",
+                "ohos.permission.READ_CONTACTS"
+              ],
+              "executable": false,
+              "availability_notes": "manifest/runtime为空表示未形成已核实的可执行申请方案，不表示此操作免权限。"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "contacts.write.android.system_edit_ui",
+              "api_min": 19,
+              "api_max": 36,
+              "route": "system_ui:ACTION_INSERT_or_ACTION_EDIT_contact",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户在系统联系人编辑界面确认本次写入"
+              ],
+              "conditions": [
+                "应用不直接提交Provider写操作；取消不写。",
+                "编辑已有记录需合法目标URI；不以此获取整库读取。"
+              ],
+              "evidence_source_ids": [
+                "android.intents"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "contacts.write.android.legacy_provider",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:ContactsContract_applyBatch",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.WRITE_CONTACTS"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "需要先查询目标时另需READ_CONTACTS；仅创建且不查询时不自动加入读取。"
+              ],
+              "evidence_source_ids": [
+                "android.permissions",
+                "android.contacts"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "contacts.write.android.provider_runtime",
+              "api_min": 23,
+              "api_max": 36,
+              "route": "direct_api:ContactsContract_applyBatch",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.WRITE_CONTACTS"
+              ],
+              "runtime_permissions": [
+                "android.permission.WRITE_CONTACTS"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "需要先查询已有联系人时条件依赖contacts.read及READ_CONTACTS。"
+              ],
+              "evidence_source_ids": [
+                "android.permissions",
+                "android.runtime",
+                "android.contacts"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calendar.read",
+      "group": "calendar",
+      "name": "读取可访问日历日程",
+      "definition": "读取目标日历在指定时间范围内的日程，不包含写入；可见日历范围受平台限制。",
+      "slots": [
+        {
+          "name": "time_range",
+          "type": "object",
+          "required": false,
+          "description": "开始/结束时间与时区"
+        },
+        {
+          "name": "calendar_scope",
+          "type": "string",
+          "required": false,
+          "description": "默认日历或本应用创建日历，其他范围需核实"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "查看我明天下午的日程。",
+          "列出本周可访问日历中的会议。"
+        ],
+        "negative": [
+          "添加周五下午三点的会议。",
+          "设置十分钟后的本地提醒。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "calendar.read.harmonyos.calendar_visible",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:CalendarManager.getCalendar_or_getAllCalendars_then_getEvents",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.READ_CALENDAR"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.READ_CALENDAR"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "SystemCapability.Applications.CalendarData。",
+                "getAllCalendars仅当前应用创建的Calendar与默认Calendar；不等于读取设备所有日历。",
+                "用户授权前不查询，按时间范围/字段过滤。"
+              ],
+              "evidence_source_ids": [
+                "sdk.calendar",
+                "oh.calendar",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            },
+            {
+              "rule_id": "calendar.read.harmonyos.whole_calendar_candidate",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "candidate_only:whole_calendar_visibility",
+              "availability": "needs_verification",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [
+                "commercial_harmonyos_entitlement_and_acl_verification_required"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "商业HarmonyOS/API12普通第三方开放级别未确认；本路线禁止直接转成运行时申请清单。",
+                "若业务确实要求跨所有账户/应用日历，商业权限及实际可见范围需另行确认。"
+              ],
+              "evidence_source_ids": [
+                "oh.permissions.restricted",
+                "oh.calendar"
+              ],
+              "verification_status": "openharmony_reference_only",
+              "candidate_permissions": [
+                "ohos.permission.READ_WHOLE_CALENDAR"
+              ],
+              "executable": false,
+              "availability_notes": "manifest/runtime为空表示未形成已核实的可执行申请方案，不表示此操作免权限。"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "calendar.read.android.legacy_provider",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:CalendarContract.Instances_query",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.READ_CALENDAR"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "按账户、日历与时间范围限制查询。"
+              ],
+              "evidence_source_ids": [
+                "android.calendar"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "calendar.read.android.provider_runtime",
+              "api_min": 23,
+              "api_max": 36,
+              "route": "direct_api:CalendarContract.Instances_query",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.READ_CALENDAR"
+              ],
+              "runtime_permissions": [
+                "android.permission.READ_CALENDAR"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "只读不需WRITE_CALENDAR。"
+              ],
+              "evidence_source_ids": [
+                "android.calendar",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "calendar.write",
+      "group": "calendar",
+      "name": "创建或修改日历日程",
+      "definition": "在可访问目标日历中创建、修改或删除日程；不把所有定时提醒都当成日历写入。",
+      "slots": [
+        {
+          "name": "operation",
+          "type": "string",
+          "required": true,
+          "description": "create/update/delete"
+        },
+        {
+          "name": "event",
+          "type": "object",
+          "required": false,
+          "description": "标题、起止时间、时区与参与者等"
+        },
+        {
+          "name": "calendar_scope",
+          "type": "string",
+          "required": false,
+          "description": "可见目标日历"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "把周五下午三点会议加入日历。",
+          "将明天的会议改到四点。"
+        ],
+        "negative": [
+          "只查看明天日程。",
+          "十分钟后响铃提醒我，不写日历。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "calendar.write.harmonyos.system_create_ui",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "system_ui:CalendarManager.editEvent",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户在系统日程创建页面确认本次新建日程"
+              ],
+              "conditions": [
+                "仅新建日程，不是静默后台写入。",
+                "通过此接口创建的日程三方应用无法查询和修改，只能由系统日历查询/修改。",
+                "不能将方法名editEvent理解成第三方可编辑所有已有日程。"
+              ],
+              "evidence_source_ids": [
+                "sdk.calendar",
+                "oh.calendar"
+              ],
+              "verification_status": "sdk_verified"
+            },
+            {
+              "rule_id": "calendar.write.harmonyos.own_calendar_create",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:CalendarManager.createCalendar_then_Calendar.addEvent",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.WRITE_CALENDAR"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.WRITE_CALENDAR"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "仅本应用创建/有权写入的日历；WRITE_CALENDAR不等于所有账户全库写权限。",
+                "若用getCalendar读取默认/已有Calendar，需另满足READ_CALENDAR；本规则不是一概同时要求读写。"
+              ],
+              "evidence_source_ids": [
+                "sdk.calendar",
+                "oh.calendar",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            },
+            {
+              "rule_id": "calendar.write.harmonyos.existing_calendar",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:CalendarManager.getCalendar_then_event_mutation",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.READ_CALENDAR",
+                "ohos.permission.WRITE_CALENDAR"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.READ_CALENDAR",
+                "ohos.permission.WRITE_CALENDAR"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "此路线先读取已有Calendar实例，因而含READ_CALENDAR。",
+                "仅可见/可写日历范围；修改/删除目标应已明确。"
+              ],
+              "evidence_source_ids": [
+                "sdk.calendar",
+                "oh.calendar",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "calendar.write.android.insert_ui",
+              "api_min": 19,
+              "api_max": 36,
+              "route": "system_ui:ACTION_INSERT_Events.CONTENT_URI",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户在系统日历界面确认新建日程"
+              ],
+              "conditions": [
+                "仅新建系统UI路径不要求应用直接Provider写权限；取消不创建。"
+              ],
+              "evidence_source_ids": [
+                "android.calendar",
+                "android.intents"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "calendar.write.android.legacy_provider",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:CalendarContract_events_mutation",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.WRITE_CALENDAR"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "若需查询目标日程/日历，条件依赖calendar.read。"
+              ],
+              "evidence_source_ids": [
+                "android.calendar"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "calendar.write.android.provider_runtime",
+              "api_min": 23,
+              "api_max": 36,
+              "route": "direct_api:CalendarContract_events_mutation",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.WRITE_CALENDAR"
+              ],
+              "runtime_permissions": [
+                "android.permission.WRITE_CALENDAR"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "查询已有目标所需READ_CALENDAR按路线单独添加，不把所有新建都当读取。"
+              ],
+              "evidence_source_ids": [
+                "android.calendar",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "notifications.publish",
+      "group": "notifications",
+      "name": "发布本应用通知",
+      "definition": "向系统通知中心发布本应用自己的通知，不包括读取或管理其他应用通知。",
+      "slots": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "description": "通知标题"
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "required": false,
+          "description": "通知内容"
+        },
+        {
+          "name": "channel",
+          "type": "string",
+          "required": false,
+          "description": "通知渠道/类型"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "给我发一条应用通知。",
+          "下载完成时在通知栏提示。"
+        ],
+        "negative": [
+          "读取其他应用的通知消息。",
+          "打开这个应用的通知设置。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "notifications.publish.harmonyos.own_notification",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "system_ui_authorization_then_direct_api:requestEnableNotification(context)_publish",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [
+                "用户可撤销的本应用通知开关；requestEnableNotification(context)系统授权界面"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "不请求NOTIFICATION_CONTROLLER。",
+                "先检查通知是否允许；拒绝时不反复强制弹出。"
+              ],
+              "evidence_source_ids": [
+                "sdk.notification",
+                "oh.notifications"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "notifications.publish.android.pre_channel",
+              "api_min": 19,
+              "api_max": 25,
+              "route": "direct_api:NotificationManager.notify",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "用户可在系统设置禁用本应用通知。"
+              ],
+              "evidence_source_ids": [
+                "android.notifications"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "notifications.publish.android.channels",
+              "api_min": 26,
+              "api_max": 32,
+              "route": "direct_api:NotificationChannel_then_notify",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [
+                "用户可管理的应用/渠道通知开关"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "API26+创建通知渠道；没有POST_NOTIFICATIONS运行时权限。"
+              ],
+              "evidence_source_ids": [
+                "android.notifications"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "notifications.publish.android.post_notifications",
+              "api_min": 33,
+              "api_max": 36,
+              "route": "runtime_permission_then_NotificationManager.notify",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.POST_NOTIFICATIONS"
+              ],
+              "runtime_permissions": [
+                "android.permission.POST_NOTIFICATIONS"
+              ],
+              "special_access": [
+                "应用/渠道通知开关"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "普通非豁免通知；target>=33可自行选择申请时机。",
+                "target<=32时系统控制首次提示时机，需按官方兼容流程处理。"
+              ],
+              "evidence_source_ids": [
+                "android.notifications",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "notifications.open_settings",
+      "group": "notifications",
+      "name": "打开本应用通知设置",
+      "definition": "展示本应用的系统通知设置入口，最终开关由用户操作；不直接改变其他应用设置。",
+      "slots": [
+        {
+          "name": "target_app",
+          "type": "string",
+          "required": true,
+          "description": "当前应用"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "打开这个应用的通知设置。",
+          "带我去关闭本应用通知的页面。"
+        ],
+        "negative": [
+          "直接替我静默关闭别人的通知。",
+          "现在发布一条通知。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "notifications.open_settings.harmonyos.settings_entry_unverified",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "system_ui:manual_notification_settings_or_verified_platform_entry",
+              "availability": "needs_verification",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [
+                "由用户在系统设置中管理本应用通知"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "本地API12 notificationManager未发现专门openNotificationSettings公开接口。",
+                "不得杜撰Want action/内部设置组件；可明确指导用户手动进入设置，自动跳转需单独验证。",
+                "requestEnableNotification属于请求通知允许，不等同打开设置页面。"
+              ],
+              "evidence_source_ids": [
+                "sdk.notification",
+                "oh.notifications"
+              ],
+              "verification_status": "needs_verification",
+              "executable": false
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "notifications.open_settings.android.app_details",
+              "api_min": 19,
+              "api_max": 25,
+              "route": "system_ui:Settings.ACTION_APPLICATION_DETAILS_SETTINGS",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [
+                "用户在应用详情内自行管理通知"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "传入当前包名package: URI；是应用详情回退，非专用通知页。"
+              ],
+              "evidence_source_ids": [
+                "android.settings"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "notifications.open_settings.android.notification_settings",
+              "api_min": 26,
+              "api_max": 36,
+              "route": "system_ui:Settings.ACTION_APP_NOTIFICATION_SETTINGS",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [
+                "用户在应用通知设置页自行更改开关"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "EXTRA_APP_PACKAGE为当前包名，先确认存在可处理该Intent的Activity。"
+              ],
+              "evidence_source_ids": [
+                "android.settings"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "reminders.schedule_local",
+      "group": "reminders",
+      "name": "安排本地提醒",
+      "definition": "在本机为未来时间安排提醒，可接受系统调度延迟；不默认写日历或发送短信。",
+      "slots": [
+        {
+          "name": "trigger",
+          "type": "object",
+          "required": true,
+          "description": "时间/相对时长/时区"
+        },
+        {
+          "name": "recurrence",
+          "type": "string",
+          "required": false,
+          "description": "不重复或周期"
+        },
+        {
+          "name": "delivery",
+          "type": "string",
+          "required": false,
+          "description": "本地通知/声音"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "十分钟后提醒我关火。",
+          "每天八点在手机上提醒喝水。"
+        ],
+        "negative": [
+          "给对方发一条短信提醒。",
+          "必须在指定秒数精确触发闹钟。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "reminders.schedule_local.harmonyos.reminder_agent",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:reminderAgentManager.publishReminder",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.PUBLISH_AGENT_REMINDER"
+              ],
+              "runtime_permissions": [],
+              "special_access": [
+                "先获得用户本应用通知允许；requestEnableNotification(context)"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "PUBLISH_AGENT_REMINDER为system_grant，不作为runtime权限申请。",
+                "根据倒计时/日历/闹钟类型填ReminderRequest，系统代理承载后续提醒。",
+                "不因提醒任务自动增加联系人、短信、日历或定位能力。"
+              ],
+              "evidence_source_ids": [
+                "sdk.reminder",
+                "oh.reminders",
+                "oh.permissions.public",
+                "sdk.notification"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "reminders.schedule_local.android.inexact_alarm",
+              "api_min": 19,
+              "api_max": 36,
+              "route": "direct_api:AlarmManager_inexact_alarm_then_local_notification",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "允许系统省电调度造成延迟；重复提醒一般用非精确调度。",
+                "此路线不需要精确闹钟特殊访问。",
+                "若通过通知展示，条件依赖notifications.publish（API33+ POST_NOTIFICATIONS）。",
+                "需跨重启重建时另评估RECEIVE_BOOT_COMPLETED等普通manifest依赖，不自动加入训练标签。"
+              ],
+              "evidence_source_ids": [
+                "android.alarms",
+                "android.notifications"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "reminders.schedule_exact",
+      "group": "reminders",
+      "name": "安排要求准时触发的提醒",
+      "definition": "用户明确要求精确时刻的本地闹钟/提醒；是否能保证精度需按平台和执行条件核实。",
+      "slots": [
+        {
+          "name": "trigger",
+          "type": "object",
+          "required": true,
+          "description": "绝对时间/时区"
+        },
+        {
+          "name": "precision_requirement",
+          "type": "string",
+          "required": true,
+          "description": "允许误差及唤醒要求"
+        },
+        {
+          "name": "recurrence",
+          "type": "string",
+          "required": false,
+          "description": "重复精确调度需逐次安排"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "明早七点整准时响闹钟。",
+          "在指定时刻精确触发提醒，不能按大致时间。"
+        ],
+        "negative": [
+          "找个合适时间提醒一下。",
+          "把会议时间写进日历即可。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "reminders.schedule_exact.harmonyos.exact_guarantee_unverified",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "candidate_only:ReminderRequestAlarm_or_Calendar_timing_contract",
+              "availability": "needs_verification",
+              "runtime_permissions": [],
+              "special_access": [
+                "本应用通知允许"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "SDK存在代理闹钟/日历提醒模型，但未确认商业HarmonyOS API12对任意精确度/唤醒延迟的承诺。",
+                "不可虚构SCHEDULE_EXACT_ALARM式HarmonyOS运行时权限。",
+                "精度要求不满足时需说明限制或澄清，不默默降级。",
+                "PUBLISH_AGENT_REMINDER只记录已知代理提醒候选前提，未证明精确触发承诺；不得从candidate_permissions自动生成申请。"
+              ],
+              "evidence_source_ids": [
+                "sdk.reminder",
+                "oh.reminders",
+                "oh.permissions.public"
+              ],
+              "verification_status": "needs_verification",
+              "executable": false,
+              "candidate_permissions": [
+                "ohos.permission.PUBLISH_AGENT_REMINDER"
+              ],
+              "manifest_permissions": []
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "reminders.schedule_exact.android.legacy_exact",
+              "api_min": 19,
+              "api_max": 30,
+              "route": "direct_api:AlarmManager.setExact_or_setExactAndAllowWhileIdle",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "根据API与唤醒要求选择方法；setExactAndAllowWhileIdle为API23+。",
+                "通知展示另依赖notifications.publish；不保证设备关机也可触发。"
+              ],
+              "evidence_source_ids": [
+                "android.alarms"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "reminders.schedule_exact.android.special_access",
+              "api_min": 31,
+              "api_max": 36,
+              "route": "special_access_then_AlarmManager_exact_PendingIntent",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.SCHEDULE_EXACT_ALARM"
+              ],
+              "runtime_permissions": [],
+              "special_access": [
+                "Alarms & reminders特殊访问；ACTION_REQUEST_SCHEDULE_EXACT_ALARM；先canScheduleExactAlarms检查"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "targetSdk>=31使用PendingIntent精确闹钟的常规路线；不属于普通runtime requestPermissions。",
+                "该访问可撤销，新安装应用可能默认未授予；拒绝后不能继续调用受保护精确接口。",
+                "OnAlarmListener等存在特定豁免，但不能据此承诺长期后台提醒；本规则不采用该豁免。",
+                "target<=30的兼容行为须单独验证；不要套用本规则所有条件。"
+              ],
+              "evidence_source_ids": [
+                "android.alarms"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "reminders.schedule_exact.android.eligible_use_exact",
+              "api_min": 33,
+              "api_max": 36,
+              "route": "policy_limited:USE_EXACT_ALARM_then_AlarmManager_exact",
+              "availability": "restricted",
+              "manifest_permissions": [
+                "android.permission.USE_EXACT_ALARM"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "targetSdk>=33且核心用途符合官方/分发政策限定的闹钟、计时器、日历等要求。",
+                "与SCHEDULE_EXACT_ALARM是可选替代路线，不要求二者同时具备。",
+                "普通提醒应用不能为省去用户操作而任意选择该权限。"
+              ],
+              "evidence_source_ids": [
+                "android.alarms"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "bluetooth.scan",
+      "group": "bluetooth",
+      "name": "发现附近蓝牙设备",
+      "definition": "扫描附近蓝牙设备/广播以显示可连接设备；不默认连接或采集位置。",
+      "slots": [
+        {
+          "name": "transport",
+          "type": "string",
+          "required": false,
+          "description": "BLE/classic"
+        },
+        {
+          "name": "derive_location",
+          "type": "boolean",
+          "required": false,
+          "description": "是否使用扫描结果推导位置，必须明确"
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "description": "扫描窗口"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "搜索附近的蓝牙耳机。",
+          "扫描周边BLE传感器。"
+        ],
+        "negative": [
+          "连接我已经选好的蓝牙设备。",
+          "查附近的WLAN热点。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "bluetooth.scan.harmonyos.ble_scan",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:bluetooth.ble.startBLEScan",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.ACCESS_BLUETOOTH"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.ACCESS_BLUETOOTH"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "对应BLE扫描路线；经典蓝牙发现需匹配connection模块方法。",
+                "需要蓝牙硬件、开关与SystemCapability.Communication.Bluetooth.Core。",
+                "结束或离开业务时停止扫描，不默认授权持续后台扫描。"
+              ],
+              "evidence_source_ids": [
+                "sdk.ble",
+                "sdk.bluetooth_connection",
+                "oh.bluetooth",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "bluetooth.scan.android.old_scan",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:BluetoothAdapter_or_BluetoothLeScanner",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.BLUETOOTH",
+                "android.permission.BLUETOOTH_ADMIN"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "BLE扫描API21+，API19/20需旧LE接口；经典扫描按相应接口。"
+              ],
+              "evidence_source_ids": [
+                "android.bluetooth"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "bluetooth.scan.android.location_legacy",
+              "api_min": 23,
+              "api_max": 28,
+              "route": "direct_api:legacy_Bluetooth_scan",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.BLUETOOTH",
+                "android.permission.BLUETOOTH_ADMIN",
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "面向旧平台扫描定位模型；可按设备/target改用FINE，不能默认要求后台定位。"
+              ],
+              "evidence_source_ids": [
+                "android.bluetooth",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "bluetooth.scan.android.location_legacy_fine",
+              "api_min": 29,
+              "api_max": 30,
+              "route": "direct_api:legacy_Bluetooth_scan",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.BLUETOOTH",
+                "android.permission.BLUETOOTH_ADMIN",
+                "android.permission.ACCESS_FINE_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_FINE_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "target>=29采用精确定位；后台扫描可能另涉BACKGROUND_LOCATION，当前路线只前台。"
+              ],
+              "evidence_source_ids": [
+                "android.bluetooth"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "bluetooth.scan.android.nearby_scan",
+              "api_min": 31,
+              "api_max": 36,
+              "route": "direct_api:BluetoothLeScanner_or_discovery_target31plus",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.BLUETOOTH_SCAN"
+              ],
+              "runtime_permissions": [
+                "android.permission.BLUETOOTH_SCAN"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "targetSdk>=31；不推导物理位置时可声明neverForLocation，但会过滤部分BLE信标。",
+                "若确实利用扫描推导位置，需要相应ACCESS_FINE_LOCATION；不能用neverForLocation规避。",
+                "读取设备属性/连接另依赖BLUETOOTH_CONNECT；旧target兼容路线需另评估。"
+              ],
+              "evidence_source_ids": [
+                "android.bluetooth"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "bluetooth.connect",
+      "group": "bluetooth",
+      "name": "连接或配对蓝牙设备",
+      "definition": "连接用户明确选定/已配对的蓝牙设备，按设备协议通信；扫描是独立条件依赖。",
+      "slots": [
+        {
+          "name": "device_id",
+          "type": "string",
+          "required": false,
+          "description": "目标设备标识"
+        },
+        {
+          "name": "transport",
+          "type": "string",
+          "required": false,
+          "description": "BLE/classic"
+        },
+        {
+          "name": "profile",
+          "type": "string",
+          "required": false,
+          "description": "目标协议与服务"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "连接我选中的蓝牙耳机。",
+          "连接已知地址的BLE温度计。"
+        ],
+        "negative": [
+          "只搜索设备，暂时不连接。",
+          "把手机接到办公室WLAN。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "bluetooth.connect.harmonyos.connect",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:GattClientDevice_connect_or_connection_pairDevice",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.ACCESS_BLUETOOTH"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.ACCESS_BLUETOOTH"
+              ],
+              "special_access": [
+                "配对可能出现由用户确认的系统配对界面"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "已知目标可直接连接；若需先发现，另涉及bluetooth.scan。",
+                "配对与连接成功不代表有权限读取任意其他设备数据。"
+              ],
+              "evidence_source_ids": [
+                "sdk.ble",
+                "sdk.bluetooth_connection",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "bluetooth.connect.android.legacy_connect",
+              "api_min": 19,
+              "api_max": 30,
+              "route": "direct_api:BluetoothGatt_or_BluetoothSocket",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.BLUETOOTH"
+              ],
+              "runtime_permissions": [],
+              "special_access": [
+                "需要时由系统配对界面确认"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "不需要扫描时不自动附加扫描定位权限；如调用配对管理API需按其具体权限。"
+              ],
+              "evidence_source_ids": [
+                "android.bluetooth"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "bluetooth.connect.android.nearby_connect",
+              "api_min": 31,
+              "api_max": 36,
+              "route": "direct_api:BluetoothGatt_or_BluetoothSocket_target31plus",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.BLUETOOTH_CONNECT"
+              ],
+              "runtime_permissions": [
+                "android.permission.BLUETOOTH_CONNECT"
+              ],
+              "special_access": [
+                "需要时系统配对确认"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "targetSdk>=31；目标已知不等于需要BLUETOOTH_SCAN。",
+                "旧target兼容行为另评估。"
+              ],
+              "evidence_source_ids": [
+                "android.bluetooth"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "wlan.scan",
+      "group": "wlan",
+      "name": "查看或扫描附近WLAN",
+      "definition": "列出附近热点；必须区分读取系统已有扫描结果与发起主动扫描。",
+      "slots": [
+        {
+          "name": "fresh_scan",
+          "type": "boolean",
+          "required": true,
+          "description": "是否必须主动触发新扫描"
+        },
+        {
+          "name": "derive_location",
+          "type": "boolean",
+          "required": false,
+          "description": "是否基于结果推导位置"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "看看附近有哪些Wi-Fi热点。",
+          "主动刷新周边WLAN列表。"
+        ],
+        "negative": [
+          "连接我指定的办公室Wi-Fi。",
+          "读取位置查询附近天气。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "wlan.scan.harmonyos.cached_results",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:wifiManager.getScanInfoList",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.GET_WIFI_INFO"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "仅取得系统已有结果，不保证主动刷新/即时扫描。",
+                "未获得仅系统可申请GET_WIFI_PEERS_MAC时BSSID为随机地址；不要求它以显示普通列表。",
+                "需要WiFi.STA系统能力与WLAN开关。"
+              ],
+              "evidence_source_ids": [
+                "sdk.wifi",
+                "oh.wlan",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            },
+            {
+              "rule_id": "wlan.scan.harmonyos.active_scan_restricted",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "candidate_only:active_WLAN_scan",
+              "availability": "needs_verification",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "旧scan()从API10废弃，文档指向仅系统应用开放的替代；不将旧SET_WIFI_INFO+精确定位当作普通应用通用方案。",
+                "若用户要求主动扫描且普通应用缺少公开路线，应报告平台限制；缓存读取不能冒充主动扫描。"
+              ],
+              "evidence_source_ids": [
+                "sdk.wifi",
+                "oh.wlan"
+              ],
+              "verification_status": "needs_verification",
+              "executable": false
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "wlan.scan.android.scan_pre23",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:WifiManager.startScan_and_getScanResults",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.CHANGE_WIFI_STATE",
+                "android.permission.ACCESS_WIFI_STATE"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "旧平台普通WiFi状态/修改manifest权限；不存在API23危险权限runtime流程。",
+                "此路线执行startScan及getScanResults，仍受设备服务可用性限制。"
+              ],
+              "evidence_source_ids": [
+                "android.wifi_scan"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "wlan.scan.android.scan_old",
+              "api_min": 23,
+              "api_max": 28,
+              "route": "direct_api:WifiManager.startScan_and_getScanResults",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.CHANGE_WIFI_STATE",
+                "android.permission.ACCESS_WIFI_STATE",
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "具体方法权限不同：startScan需CHANGE_WIFI_STATE，读结果需ACCESS_WIFI_STATE；此路线二者均调用。",
+                "系统定位开关需开启，存在系统扫描频率限制。"
+              ],
+              "evidence_source_ids": [
+                "android.wifi_scan"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "wlan.scan.android.scan_fine",
+              "api_min": 29,
+              "api_max": 36,
+              "route": "direct_api:WifiManager.startScan_and_getScanResults",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.CHANGE_WIFI_STATE",
+                "android.permission.ACCESS_WIFI_STATE",
+                "android.permission.ACCESS_FINE_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_FINE_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "targetSdk>=29需精确定位；target<=28兼容行为按文档单独核实。",
+                "系统定位开关需开启；扫描会节流，不能保证每次刷新都是新扫描。",
+                "API33+ NEARBY_WIFI_DEVICES不能替代startScan/getScanResults的FINE_LOCATION要求。"
+              ],
+              "evidence_source_ids": [
+                "android.wifi_scan",
+                "android.wifi_permissions"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "wlan.connect",
+      "group": "wlan",
+      "name": "请求连接WLAN",
+      "definition": "请求连接用户指定的WLAN/配置；需说明系统确认、保存配置与实际连接的差异。",
+      "slots": [
+        {
+          "name": "ssid",
+          "type": "string",
+          "required": false,
+          "description": "目标网络名称"
+        },
+        {
+          "name": "credentials",
+          "type": "object",
+          "required": false,
+          "description": "安全类型/口令；样例不填真实秘密"
+        },
+        {
+          "name": "internet_required",
+          "type": "boolean",
+          "required": false,
+          "description": "是否需要互联网，影响Android路由选择"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "连接到我指定的办公室Wi-Fi。",
+          "把这个无线网络加入手机，让我确认连接。"
+        ],
+        "negative": [
+          "只列出附近热点。",
+          "偷偷打开WLAN并强制切换网络。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "wlan.connect.harmonyos.candidate_network",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:wifiManager.addCandidateConfig_then_connectToCandidateConfig",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.SET_WIFI_INFO"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "只能连接本应用添加的候选配置；不能直接改写任意系统保存网络。",
+                "需要WLAN已开启与WiFi.STA能力；商业设备用户确认行为需实机验证。",
+                "不以连接需求自动获取精确位置/全量热点MAC。"
+              ],
+              "evidence_source_ids": [
+                "sdk.wifi",
+                "oh.wlan",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "wlan.connect.android.saved_network_ui",
+              "api_min": 30,
+              "api_max": 36,
+              "route": "system_ui:Settings.ACTION_WIFI_ADD_NETWORKS",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户在系统界面确认保存所给网络配置"
+              ],
+              "conditions": [
+                "API30+保存配置路线；最终是否立即连接由系统/用户决定，不保证调用即连接。",
+                "不需要把全库扫描或定位作为此系统UI入口的必然依赖。"
+              ],
+              "evidence_source_ids": [
+                "android.wifi_saved"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "wlan.connect.android.specifier_local",
+              "api_min": 29,
+              "api_max": 32,
+              "route": "system_ui:WifiNetworkSpecifier_requestNetwork_local_device",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.CHANGE_NETWORK_STATE",
+                "android.permission.CHANGE_WIFI_STATE",
+                "android.permission.ACCESS_FINE_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_FINE_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户在系统对话框确认本次网络请求"
+              ],
+              "conditions": [
+                "仅连接附近设备的本地网络；该API不提供互联网连接。",
+                "需要互联网的普通WiFi接入可使用系统设置/保存网络路线，不能混用承诺。",
+                "requestNetwork需CHANGE_NETWORK_STATE普通manifest权限；释放时unregisterNetworkCallback。"
+              ],
+              "evidence_source_ids": [
+                "android.wifi_bootstrap",
+                "android.wifi_permissions",
+                "android.connectivity_request"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "wlan.connect.android.specifier_nearby",
+              "api_min": 33,
+              "api_max": 36,
+              "route": "system_ui:WifiNetworkSpecifier_requestNetwork_local_device_target33plus",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.CHANGE_NETWORK_STATE",
+                "android.permission.CHANGE_WIFI_STATE",
+                "android.permission.NEARBY_WIFI_DEVICES"
+              ],
+              "runtime_permissions": [
+                "android.permission.NEARBY_WIFI_DEVICES"
+              ],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户确认本次局域网络连接请求"
+              ],
+              "conditions": [
+                "targetSdk>=33且不推导位置，可对NEARBY_WIFI_DEVICES声明neverForLocation。",
+                "依旧只为附近设备本地连接；若另调用扫描则扫描仍需FINE_LOCATION。",
+                "旧target需对应定位兼容路线。",
+                "requestNetwork需CHANGE_NETWORK_STATE普通manifest权限；释放时unregisterNetworkCallback。"
+              ],
+              "evidence_source_ids": [
+                "android.wifi_bootstrap",
+                "android.wifi_permissions",
+                "android.connectivity_request"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nfc.read_tag",
+      "group": "nfc",
+      "name": "读取NFC标签",
+      "definition": "手机贴近支持的标签，读取NDEF等应用可访问内容；不等同门禁/支付安全卡数据访问。",
+      "slots": [
+        {
+          "name": "format",
+          "type": "string",
+          "required": false,
+          "description": "NDEF或受支持格式"
+        },
+        {
+          "name": "payload",
+          "type": "string",
+          "required": false,
+          "description": "写入内容，仅写入时必需"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "读取这个NFC标签里的网址。",
+          "扫一下桌上的NFC标签内容。"
+        ],
+        "negative": [
+          "把网址写进这张标签。",
+          "复制门禁卡的密钥。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "nfc.read_tag.harmonyos.foreground_ndef",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:NFC_foreground_dispatch_then_Ndef.readNdef",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.NFC_TAG"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "需要支持NFC硬件、已开启NFC、用户贴近标签与前台分发。",
+                "NFC_TAG为system_grant，不是runtime请求。",
+                "只读取标签开放内容；不扩展为门禁/支付卡凭证访问。"
+              ],
+              "evidence_source_ids": [
+                "sdk.nfc",
+                "sdk.ndef",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "nfc.read_tag.android.foreground_ndef",
+              "api_min": 19,
+              "api_max": 36,
+              "route": "direct_api:NFC_readerMode_or_foregroundDispatch_then_Ndef.getNdefMessage",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.NFC"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "需要NFC硬件与开关；NFC是normal manifest权限，无普通runtime弹窗。",
+                "用户贴卡/前台发现构成物理交互，不能称为整机NFC数据访问授权。"
+              ],
+              "evidence_source_ids": [
+                "android.nfc",
+                "android.ndef"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "nfc.write_tag",
+      "group": "nfc",
+      "name": "写入NFC标签",
+      "definition": "向用户指定的兼容可写NFC标签写入NDEF等内容；不包含破解受保护卡。",
+      "slots": [
+        {
+          "name": "format",
+          "type": "string",
+          "required": false,
+          "description": "NDEF或受支持格式"
+        },
+        {
+          "name": "payload",
+          "type": "string",
+          "required": true,
+          "description": "写入内容，仅写入时必需"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "把这个网址写入空白NFC标签。",
+          "在可写标签中保存这段文字。"
+        ],
+        "negative": [
+          "只读取标签，不修改。",
+          "克隆支付卡。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "nfc.write_tag.harmonyos.foreground_ndef",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:NFC_foreground_dispatch_then_Ndef.writeNdef",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.NFC_TAG"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "需要支持NFC硬件、已开启NFC、用户贴近标签与前台分发。",
+                "NFC_TAG为system_grant，不是runtime请求。",
+                "检查标签可写、格式与容量；不得默认格式化/锁定标签。"
+              ],
+              "evidence_source_ids": [
+                "sdk.nfc",
+                "sdk.ndef",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "nfc.write_tag.android.foreground_ndef",
+              "api_min": 19,
+              "api_max": 36,
+              "route": "direct_api:NFC_readerMode_or_foregroundDispatch_then_Ndef.writeNdefMessage",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.NFC"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "需要NFC硬件与开关；NFC是normal manifest权限，无普通runtime弹窗。",
+                "用户贴卡/前台发现构成物理交互，不能称为整机NFC数据访问授权。",
+                "检查isWritable、容量、兼容NDEF格式；不默认makeReadOnly。"
+              ],
+              "evidence_source_ids": [
+                "android.nfc",
+                "android.ndef"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "motion.read_steps",
+      "group": "motion",
+      "name": "读取步数传感器",
+      "definition": "读取设备计步器/步行检测数据；不是默认访问整个健康账户历史。",
+      "slots": [
+        {
+          "name": "time_range",
+          "type": "string",
+          "required": false,
+          "description": "传感器当前累计/应用自行记录范围"
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "required": false,
+          "description": "手机计步传感器；历史健康平台另核实"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "查看手机这次启动后记录的步数。",
+          "显示本次步行计步数据。"
+        ],
+        "negative": [
+          "识别我是在开车还是骑车。",
+          "读取医院病历或全天心率。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "motion.read_steps.harmonyos.pedometer",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:sensor.on(SensorId.PEDOMETER)",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.ACTIVITY_MOTION"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.ACTIVITY_MOTION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "SystemCapability.Sensors.Sensor且存在计步传感器。",
+                "数据起点/重置行为按传感器定义；不能把当前累计值直接承诺为跨应用全天历史步数。"
+              ],
+              "evidence_source_ids": [
+                "sdk.sensor",
+                "oh.steps",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "motion.read_steps.android.pedometer_old",
+              "api_min": 19,
+              "api_max": 28,
+              "route": "direct_api:Sensor.TYPE_STEP_COUNTER_or_STEP_DETECTOR",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "硬件可选；TYPE_STEP_COUNTER为重启后传感器激活时累计，日统计需应用记录基线。"
+              ],
+              "evidence_source_ids": [
+                "android.steps"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "motion.read_steps.android.pedometer_runtime",
+              "api_min": 29,
+              "api_max": 36,
+              "route": "direct_api:Sensor.TYPE_STEP_COUNTER_or_STEP_DETECTOR",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACTIVITY_RECOGNITION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACTIVITY_RECOGNITION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "现代target>=29路线；硬件可选，历史健康数据需要独立接口/授权。"
+              ],
+              "evidence_source_ids": [
+                "android.steps",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "motion.recognize_activity",
+      "group": "motion",
+      "name": "识别运动状态",
+      "definition": "识别步行、跑步、骑行、乘车、静止等用户活动类别；各平台支持集合可能不同。",
+      "slots": [
+        {
+          "name": "activity_types",
+          "type": "array",
+          "required": true,
+          "description": "需要识别的状态集合"
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "required": false,
+          "description": "单次/持续/状态转变"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "判断我是在走路还是骑车。",
+          "识别当前是否处于乘车状态。"
+        ],
+        "negative": [
+          "仅显示步数。",
+          "访问我的精确定位轨迹。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "motion.recognize_activity.harmonyos.stationary_subset",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:stationary.once_or_on",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "已核实SDK只支持still/relativeStill设备状态。",
+                "仅当所需分类确实属于该子集才可用；设备静止不必然等同用户静止。",
+                "不据ACTIVITY_MOTION权限名称推定存在步行/骑行分类接口。"
+              ],
+              "evidence_source_ids": [
+                "sdk.stationary"
+              ],
+              "verification_status": "sdk_verified",
+              "supported_activity_types": [
+                "device_still",
+                "device_relative_still"
+              ]
+            },
+            {
+              "rule_id": "motion.recognize_activity.harmonyos.locomotion_unverified",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "unverified:walking_running_cycling_vehicle_recognition",
+              "availability": "needs_verification",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "未在本地API12公开SDK发现与Google ActivityRecognitionClient等价的完整活动分类接口。",
+                "不得只申请ACTIVITY_MOTION就承诺实现完整分类；需要官方商业接口/设备证据。"
+              ],
+              "evidence_source_ids": [
+                "sdk.stationary",
+                "sdk.sensor",
+                "oh.permissions.public"
+              ],
+              "verification_status": "needs_verification",
+              "executable": false
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "motion.recognize_activity.android.gms_legacy",
+              "api_min": 19,
+              "api_max": 28,
+              "route": "gms_api:ActivityRecognitionClient",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "com.google.android.gms.permission.ACTIVITY_RECOGNITION"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "依赖可用Google Play services及相应客户端库，并非所有Android手机可用。",
+                "按官方支持活动类型返回概率/转变；不等同读取精确位置。"
+              ],
+              "evidence_source_ids": [
+                "android.activity",
+                "android.activity_guide"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "motion.recognize_activity.android.gms_runtime",
+              "api_min": 29,
+              "api_max": 36,
+              "route": "gms_api:ActivityRecognitionClient",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACTIVITY_RECOGNITION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACTIVITY_RECOGNITION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "依赖Google Play services；不默认增加ACCESS_FINE_LOCATION。",
+                "持续/后台交付需要另评估进程生命周期和系统限制。"
+              ],
+              "evidence_source_ids": [
+                "android.activity",
+                "android.activity_guide",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "biometric.authenticate",
+      "group": "biometric",
+      "name": "系统生物认证",
+      "definition": "通过系统认证界面验证当前用户，返回成功/失败等结果；不取得原始人脸或指纹模板。",
+      "slots": [
+        {
+          "name": "modalities",
+          "type": "array",
+          "required": false,
+          "description": "允许的指纹/人脸等方式"
+        },
+        {
+          "name": "allow_device_credential",
+          "type": "boolean",
+          "required": false,
+          "description": "是否允许设备密码替代"
+        },
+        {
+          "name": "purpose",
+          "type": "string",
+          "required": false,
+          "description": "认证用途说明"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "用指纹验证后再打开私密页。",
+          "让我通过系统人脸认证确认身份。"
+        ],
+        "negative": [
+          "调用相机拍一张人脸照片。",
+          "导出手机保存的指纹图像。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "biometric.authenticate.harmonyos.system_auth",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "system_ui:userAuth.getUserAuthInstance_then_start",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.ACCESS_BIOMETRIC"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户与统一系统身份认证界面交互，仅向应用返回认证结果"
+              ],
+              "conditions": [
+                "ACCESS_BIOMETRIC是system_grant，无普通runtime请求。",
+                "需要硬件、已登记凭据、支持的认证类型/信任等级；失败/锁定/取消均单独处理。",
+                "不因生物认证申请CAMERA或读取原始生物数据。"
+              ],
+              "evidence_source_ids": [
+                "sdk.auth",
+                "oh.biometric",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "biometric.authenticate.android.fingerprint_compat",
+              "api_min": 23,
+              "api_max": 27,
+              "route": "compat_ui:AndroidX_BiometricPrompt_using_system_fingerprint_service",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.USE_FINGERPRINT"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户与兼容库指纹认证界面交互，底层为系统指纹服务，仅返回认证结果"
+              ],
+              "conditions": [
+                "旧平台只按实际支持的指纹能力，不承诺人脸。",
+                "具体AndroidX版本最低SDK需与项目依赖匹配。",
+                "API23-27的兼容库提示界面不等同API28+平台原生BiometricPrompt；仍不向应用开放原始指纹模板。"
+              ],
+              "evidence_source_ids": [
+                "android.biometric",
+                "android.permissions",
+                "android.biometric_compat"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "biometric.authenticate.android.biometric_prompt",
+              "api_min": 28,
+              "api_max": 36,
+              "route": "system_ui:BiometricPrompt_or_AndroidX_BiometricPrompt",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.USE_BIOMETRIC"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "系统生物认证交互，仅返回认证结果"
+              ],
+              "conditions": [
+                "USE_BIOMETRIC为normal权限；不调用普通runtime申请。",
+                "先canAuthenticate检查硬件/登记与认证强度；设备凭据组合受API与库版本限制。",
+                "标准BiometricPrompt通常按认证强度/设备凭据筛选，不能保证应用指定仅人脸或仅指纹；严格模态限制无法满足时报告不支持，不擅自切换模态。"
+              ],
+              "evidence_source_ids": [
+                "android.biometric",
+                "android.permissions",
+                "android.biometric_compat",
+                "android.biometric_allowed"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "clipboard.paste_user_initiated",
+      "group": "clipboard",
+      "name": "用户主动粘贴",
+      "definition": "用户点击粘贴安全控件或系统粘贴菜单后，读取并粘贴当前内容；不等同静默监测剪贴板。",
+      "slots": [
+        {
+          "name": "target_field",
+          "type": "string",
+          "required": false,
+          "description": "粘贴目标输入框"
+        },
+        {
+          "name": "content_types",
+          "type": "array",
+          "required": false,
+          "description": "需要的文本/链接等类型"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "把我复制的验证码粘贴到这里。",
+          "点粘贴按钮填入刚复制的地址。"
+        ],
+        "negative": [
+          "后台持续读取我复制的所有内容。",
+          "把这段文字复制到剪贴板。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "clipboard.paste_user_initiated.harmonyos.paste_button",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "security_component:PasteButton_SUCCESS_then_getData",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户点击合规PasteButton后取得剪贴板临时读取授权；到灭屏/应用切后台/退出失效"
+              ],
+              "conditions": [
+                "必须检查PasteButtonOnClickResult.SUCCESS。",
+                "本路线不申请READ_PASTEBOARD；控件应可见、可识别，避免样式导致授权失败。",
+                "授权窗口不是永久/后台剪贴板监控许可。"
+              ],
+              "evidence_source_ids": [
+                "oh.clipboard.pastebutton",
+                "sdk.pasteboard"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "clipboard.paste_user_initiated.android.paste_ui",
+              "api_min": 19,
+              "api_max": 36,
+              "route": "system_ui_or_user_action:focused_input_paste",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [
+                "用户明确粘贴操作触发当前剪贴板内容进入指定输入框"
+              ],
+              "conditions": [
+                "不需要READ_CLIPBOARD危险权限；Android无供普通应用请求的此种运行时权限。",
+                "API29+聚焦/默认输入法限制仍适用；不扩展为后台监听。"
+              ],
+              "evidence_source_ids": [
+                "android.clipboard",
+                "android.clipboard10"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "clipboard.read",
+      "group": "clipboard",
+      "name": "直接读取当前剪贴板",
+      "definition": "应用直接获取当前剪贴板内容；与用户点击系统粘贴控件的路线分开。",
+      "slots": [
+        {
+          "name": "content_types",
+          "type": "array",
+          "required": false,
+          "description": "需要读取的类型"
+        },
+        {
+          "name": "foreground",
+          "type": "boolean",
+          "required": false,
+          "description": "读取时应用状态"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "读取剪贴板内容，检查是不是网址。",
+          "显示当前剪贴板里的一段文字。"
+        ],
+        "negative": [
+          "只把这段话复制到剪贴板。",
+          "由我点击系统粘贴按钮填入内容。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "clipboard.read.harmonyos.direct_read_candidate",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "candidate_only:SystemPasteboard.getData_or_getDataSync",
+              "availability": "needs_verification",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [
+                "commercial_harmonyos_entitlement_and_acl_verification_required"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "商业HarmonyOS/API12普通第三方开放级别未确认；本路线禁止直接转成运行时申请清单。",
+                "API12 SDK明确标READ_PASTEBOARD；OpenHarmony权限表为system_basic/user_grant/ACL=true。",
+                "商业HarmonyOS普通第三方可申请性未确认；推荐经用户粘贴入口改变执行路线，但不默认为已取得授权。"
+              ],
+              "evidence_source_ids": [
+                "sdk.pasteboard",
+                "oh.clipboard",
+                "oh.permissions.restricted"
+              ],
+              "verification_status": "openharmony_reference_only",
+              "candidate_permissions": [
+                "ohos.permission.READ_PASTEBOARD"
+              ],
+              "executable": false,
+              "availability_notes": "manifest/runtime为空表示未形成已核实的可执行申请方案，不表示此操作免权限。"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "clipboard.read.android.read_legacy",
+              "api_min": 19,
+              "api_max": 28,
+              "route": "direct_api:ClipboardManager.getPrimaryClip",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "平台无普通运行时剪贴板读取权限；仍只取任务所需类型。"
+              ],
+              "evidence_source_ids": [
+                "android.clipboard"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "clipboard.read.android.focused_read",
+              "api_min": 29,
+              "api_max": 36,
+              "route": "direct_api:ClipboardManager.getPrimaryClip_when_focused",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "仅当前聚焦应用或默认输入法可访问；后台一般不可读。",
+                "系统可能显示访问提示；无通用requestPermissions可解锁后台读取。"
+              ],
+              "evidence_source_ids": [
+                "android.clipboard",
+                "android.clipboard10"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "clipboard.write",
+      "group": "clipboard",
+      "name": "写入剪贴板",
+      "definition": "将应用提供的内容复制到系统剪贴板，不因此读取原有剪贴板。",
+      "slots": [
+        {
+          "name": "content",
+          "type": "string",
+          "required": true,
+          "description": "要复制的内容"
+        },
+        {
+          "name": "sensitive",
+          "type": "boolean",
+          "required": false,
+          "description": "是否为敏感内容"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "把这段地址复制到剪贴板。",
+          "复制当前结果，方便我粘贴。"
+        ],
+        "negative": [
+          "读取我刚才复制的密码。",
+          "把剪贴板内容粘贴进输入框。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "clipboard.write.harmonyos.write",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:SystemPasteboard.setData",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "写入不需要READ_PASTEBOARD。",
+                "设置合适的内容类型/分享选项，不通过先读旧内容伪造写入依赖。"
+              ],
+              "evidence_source_ids": [
+                "sdk.pasteboard",
+                "oh.clipboard"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "clipboard.write.android.write",
+              "api_min": 19,
+              "api_max": 36,
+              "route": "direct_api:ClipboardManager.setPrimaryClip",
+              "availability": "conditional",
+              "manifest_permissions": [],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "无普通runtime权限；API33+系统显示复制反馈，避免重复提示。",
+                "敏感内容按官方标记策略处理；不附带读取权限。"
+              ],
+              "evidence_source_ids": [
+                "android.clipboard"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "camera.capture_photo",
+      "group": "base_camera",
+      "name": "相机拍照",
+      "definition": "应用直接打开相机采集一张新照片；不把选取已有照片当相机使用。",
+      "slots": [
+        {
+          "name": "camera_facing",
+          "type": "string",
+          "required": false,
+          "description": "前置/后置"
+        },
+        {
+          "name": "capture_trigger",
+          "type": "string",
+          "required": false,
+          "description": "拍照触发与预览确认要求；不包含视频音频槽位"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "打开相机拍张照。",
+          "拍一张收据照片。"
+        ],
+        "negative": [
+          "从相册挑一张照片。",
+          "录一段语音。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "camera.capture_photo.harmonyos.direct_capture",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:CameraKit_capture_photo",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.CAMERA"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.CAMERA"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "需要可用相机硬件、前台可见采集及SystemCapability.Multimedia.Camera.Core。",
+                "将照片保存到公共相册另依赖media.photo.add；先采集到沙箱不要求全库图库权限。"
+              ],
+              "evidence_source_ids": [
+                "sdk.camera",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "camera.capture_photo.android.direct_legacy",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:Camera_capture",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.CAMERA"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "直接相机路线；调用独立系统相机是另一种用户界面委托路线。"
+              ],
+              "evidence_source_ids": [
+                "android.camera"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "camera.capture_photo.android.direct_runtime",
+              "api_min": 23,
+              "api_max": 36,
+              "route": "direct_api:Camera2_or_CameraX_capture",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.CAMERA"
+              ],
+              "runtime_permissions": [
+                "android.permission.CAMERA"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "前台相机采集；后台相机使用受额外生命周期与前台服务限制，此规则不覆盖。",
+                "新照片保存相册按media.photo.add，不默认申请读取相册权限。"
+              ],
+              "evidence_source_ids": [
+                "android.camera",
+                "android.runtime",
+                "android.audio"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "camera.record_video",
+      "group": "base_camera",
+      "name": "相机录制视频",
+      "definition": "应用直接使用相机录制视频画面；是否同时录音由音频槽位决定。",
+      "slots": [
+        {
+          "name": "camera_facing",
+          "type": "string",
+          "required": false,
+          "description": "前置/后置"
+        },
+        {
+          "name": "audio",
+          "type": "boolean",
+          "required": true,
+          "description": "视频是否采集声音；只有true时条件依赖microphone.record_audio"
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "description": "视频长度或停止条件"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "拍一段无声视频。",
+          "录制眼前这段演示的视频画面。"
+        ],
+        "negative": [
+          "只录语音，不要画面。",
+          "从相册选择已有视频。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "camera.record_video.harmonyos.direct_capture",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:CameraKit_capture_video",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.CAMERA"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.CAMERA"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "需要可用相机硬件、前台可见采集及SystemCapability.Multimedia.Camera.Core。",
+                "audio=true时另依赖microphone.record_audio及MICROPHONE；无声视频不加入麦克风。"
+              ],
+              "evidence_source_ids": [
+                "sdk.camera",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "camera.record_video.android.direct_legacy",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:Camera_capture",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.CAMERA"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "直接相机路线；调用独立系统相机是另一种用户界面委托路线。",
+                "有声视频条件依赖RECORD_AUDIO；无声不需要。"
+              ],
+              "evidence_source_ids": [
+                "android.camera"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "camera.record_video.android.direct_runtime",
+              "api_min": 23,
+              "api_max": 36,
+              "route": "direct_api:Camera2_or_CameraX_capture",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.CAMERA"
+              ],
+              "runtime_permissions": [
+                "android.permission.CAMERA"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "前台相机采集；后台相机使用受额外生命周期与前台服务限制，此规则不覆盖。",
+                "audio=true另依赖microphone.record_audio；不把录视频一概标麦克风必需。"
+              ],
+              "evidence_source_ids": [
+                "android.camera",
+                "android.runtime",
+                "android.audio"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "microphone.record_audio",
+      "group": "base_microphone",
+      "name": "麦克风录音",
+      "definition": "采集麦克风声音；不等同播放声音或读取现成音频文件。",
+      "slots": [
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "description": "录制时长或停止条件"
+        },
+        {
+          "name": "foreground",
+          "type": "boolean",
+          "required": false,
+          "description": "是否前台采集"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "录一段语音备忘。",
+          "用麦克风采集这段讲话。"
+        ],
+        "negative": [
+          "播放我已有的录音文件。",
+          "录制无声视频。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "microphone.record_audio.harmonyos.audio_capture",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:AudioCapturer",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.MICROPHONE"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.MICROPHONE"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "前台采集与实际麦克风设备可用；拒绝时不采集。",
+                "持续后台录音需额外任务/生命周期验证，本规则不覆盖。"
+              ],
+              "evidence_source_ids": [
+                "sdk.audio",
+                "oh.permissions.public"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "microphone.record_audio.android.legacy_record",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:MediaRecorder_or_AudioRecord",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.RECORD_AUDIO"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "只采集麦克风；音频文件保存到应用沙箱不需共享存储权限。"
+              ],
+              "evidence_source_ids": [
+                "android.audio"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "microphone.record_audio.android.runtime_record",
+              "api_min": 23,
+              "api_max": 36,
+              "route": "direct_api:MediaRecorder_or_AudioRecord",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.RECORD_AUDIO"
+              ],
+              "runtime_permissions": [
+                "android.permission.RECORD_AUDIO"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "API28+后台不可直接采集，使用合法前台交互；若需前台服务应再核实对应版本/target服务类型。"
+              ],
+              "evidence_source_ids": [
+                "android.audio",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "location.coarse.foreground_once",
+      "group": "base_location",
+      "name": "前台单次粗略定位",
+      "definition": "应用位于前台时获取一次粗略设备位置；不授予后台持续定位。",
+      "slots": [
+        {
+          "name": "precision",
+          "type": "string",
+          "required": true,
+          "description": "coarse"
+        },
+        {
+          "name": "foreground",
+          "type": "boolean",
+          "required": true,
+          "description": "必须前台"
+        },
+        {
+          "name": "purpose",
+          "type": "string",
+          "required": false,
+          "description": "本次定位用途"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "根据我所在的大致区域查天气。",
+          "用粗略位置找附近城市的天气。"
+        ],
+        "negative": [
+          "查北京天气，不需要知道我在哪。",
+          "持续后台记录精确轨迹。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "location.coarse.foreground_once.harmonyos.current_location",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:geoLocationManager.getCurrentLocation",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.APPROXIMATELY_LOCATION"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.APPROXIMATELY_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "module.json5 usedScene.when=inuse；先requestPermissionsFromUser并检查结果。",
+                "需要系统定位开关与定位系统能力；拒绝不定位。",
+                "单独APPROXIMATELY_LOCATION足够，不因附近天气附加精确定位。"
+              ],
+              "evidence_source_ids": [
+                "sdk.location",
+                "oh.location",
+                "oh.location.api",
+                "oh.permissions.public",
+                "oh.authorization"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "location.coarse.foreground_once.android.legacy_current",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:foreground_location_one_shot_legacy",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "使用对应旧版单次定位接口；getCurrentLocation尚不可用。"
+              ],
+              "evidence_source_ids": [
+                "android.location"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "location.coarse.foreground_once.android.runtime_legacy_current",
+              "api_min": 23,
+              "api_max": 29,
+              "route": "direct_api:foreground_location_one_shot_compat",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "采用兼容单次定位实现，获取后注销；不直接调用API30才有的getCurrentLocation。"
+              ],
+              "evidence_source_ids": [
+                "android.location",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "location.coarse.foreground_once.android.get_current",
+              "api_min": 30,
+              "api_max": 36,
+              "route": "direct_api:LocationManager.getCurrentLocation",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "系统定位开关可用，前台可见；粗略与精确的结果精度跨平台不保证一致。",
+                "只申请COARSE，不隐式加入FINE。"
+              ],
+              "evidence_source_ids": [
+                "android.location",
+                "android.location_api",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "location.precise.foreground_once",
+      "group": "base_location",
+      "name": "前台单次精确定位",
+      "definition": "应用位于前台时获取一次精确设备位置；不授予后台持续定位。",
+      "slots": [
+        {
+          "name": "precision",
+          "type": "string",
+          "required": true,
+          "description": "precise"
+        },
+        {
+          "name": "foreground",
+          "type": "boolean",
+          "required": true,
+          "description": "必须前台"
+        },
+        {
+          "name": "purpose",
+          "type": "string",
+          "required": false,
+          "description": "本次定位用途"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "获取我当前精确坐标。",
+          "在地图上精确标出我所在的位置。"
+        ],
+        "negative": [
+          "只按大致区域查天气。",
+          "查询我手动输入的城市天气。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "location.precise.foreground_once.harmonyos.current_location",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "direct_api:geoLocationManager.getCurrentLocation",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.APPROXIMATELY_LOCATION",
+                "ohos.permission.LOCATION"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.APPROXIMATELY_LOCATION",
+                "ohos.permission.LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "module.json5 usedScene.when=inuse；先requestPermissionsFromUser并检查结果。",
+                "需要系统定位开关与定位系统能力；拒绝不定位。",
+                "精确权限与APPROXIMATELY_LOCATION一起申请；仅允许粗略时不能声称已取得精确坐标。"
+              ],
+              "evidence_source_ids": [
+                "sdk.location",
+                "oh.location",
+                "oh.location.api",
+                "oh.permissions.public",
+                "oh.authorization"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "location.precise.foreground_once.android.legacy_current",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:foreground_location_one_shot_legacy",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_FINE_LOCATION"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "使用对应旧版单次定位接口；getCurrentLocation尚不可用。",
+                "此早期版本FINE本身即可满足精确定位；同时列COARSE仅便于统一精度降级处理，不表示系统要求两者同时持有。"
+              ],
+              "evidence_source_ids": [
+                "android.location"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "location.precise.foreground_once.android.runtime_legacy_current",
+              "api_min": 23,
+              "api_max": 29,
+              "route": "direct_api:foreground_location_one_shot_compat",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_FINE_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_FINE_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "采用兼容单次定位实现，获取后注销；不直接调用API30才有的getCurrentLocation。",
+                "此早期版本FINE本身即可满足精确定位；同时列COARSE仅便于统一精度降级处理，不表示系统要求两者同时持有。"
+              ],
+              "evidence_source_ids": [
+                "android.location",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "location.precise.foreground_once.android.get_current",
+              "api_min": 30,
+              "api_max": 36,
+              "route": "direct_api:LocationManager.getCurrentLocation",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_FINE_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_FINE_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "系统定位开关可用，前台可见；粗略与精确的结果精度跨平台不保证一致。",
+                "Android12+精确请求同时声明/请求COARSE和FINE；用户只允许粗略时应降级或澄清。"
+              ],
+              "evidence_source_ids": [
+                "android.location",
+                "android.location_api",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "location.background",
+      "group": "base_location",
+      "name": "后台持续定位",
+      "definition": "应用离开前台后仍获取设备位置；精度、时长和用途需明确，不由普通前台定位推断。",
+      "slots": [
+        {
+          "name": "precision",
+          "type": "string",
+          "required": true,
+          "description": "coarse/precise"
+        },
+        {
+          "name": "duration",
+          "type": "string",
+          "required": true,
+          "description": "持续时长/停止条件"
+        },
+        {
+          "name": "purpose",
+          "type": "string",
+          "required": true,
+          "description": "后台定位用途"
+        }
+      ],
+      "examples": {
+        "positive": [
+          "切到后台后继续记录我的跑步轨迹。",
+          "离开页面后仍持续跟踪位置。"
+        ],
+        "negative": [
+          "只获取这一次当前位置。",
+          "用我输入的城市名查询天气。"
+        ]
+      },
+      "platforms": {
+        "harmonyos": {
+          "rules": [
+            {
+              "rule_id": "location.background.harmonyos.background_location",
+              "api_min": 12,
+              "api_max": 12,
+              "route": "settings_authorization:foreground_location_then_LOCATION_IN_BACKGROUND",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "ohos.permission.APPROXIMATELY_LOCATION",
+                "ohos.permission.LOCATION_IN_BACKGROUND"
+              ],
+              "runtime_permissions": [
+                "ohos.permission.APPROXIMATELY_LOCATION"
+              ],
+              "special_access": [
+                "用户在系统设置将位置访问改为始终允许；后台位置不能通过普通动态弹窗直接授予"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "先获前台定位；precision=precise时再加LOCATION且与APPROXIMATELY_LOCATION一起申请。",
+                "后台任务/长时任务与位置权限是不同条件，还需验证合法后台执行能力。",
+                "存在LOCATION类型长时任务等官方替代条件，本规则采用设置授予后台权限路线；不保证进程无限存活。"
+              ],
+              "evidence_source_ids": [
+                "oh.location",
+                "oh.permissions.public",
+                "oh.authorization",
+                "sdk.location"
+              ],
+              "verification_status": "sdk_verified"
+            }
+          ]
+        },
+        "android": {
+          "rules": [
+            {
+              "rule_id": "location.background.android.background_legacy",
+              "api_min": 19,
+              "api_max": 22,
+              "route": "direct_api:background_location_subject_to_lifecycle",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "runtime_permissions": [],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "API19-22安装时位置授权模型；precision=precise时需FINE。",
+                "后台频率/生命周期受系统限制，非无限运行保证。"
+              ],
+              "evidence_source_ids": [
+                "android.location",
+                "android.background_location",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "location.background.android.background_runtime_23_28",
+              "api_min": 23,
+              "api_max": 28,
+              "route": "direct_api:background_location_subject_to_lifecycle",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "API23-28位置危险权限需运行时授予；precision=precise时需FINE。",
+                "尚无单独ACCESS_BACKGROUND_LOCATION，但仍受系统后台频率和进程限制。"
+              ],
+              "evidence_source_ids": [
+                "android.location",
+                "android.background_location",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "location.background.android.background29",
+              "api_min": 29,
+              "api_max": 29,
+              "route": "runtime_permission:foreground_then_background_location",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_BACKGROUND_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_BACKGROUND_LOCATION"
+              ],
+              "special_access": [],
+              "scoped_authorization": [],
+              "conditions": [
+                "target>=29；精确需求再加FINE。",
+                "Android10后台位置用户界面与Android11+不同；遵守系统后台节流。"
+              ],
+              "evidence_source_ids": [
+                "android.background_location"
+              ],
+              "verification_status": "official_docs_verified"
+            },
+            {
+              "rule_id": "location.background.android.background30plus",
+              "api_min": 30,
+              "api_max": 36,
+              "route": "settings_authorization:foreground_then_background_location",
+              "availability": "conditional",
+              "manifest_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION",
+                "android.permission.ACCESS_BACKGROUND_LOCATION"
+              ],
+              "runtime_permissions": [
+                "android.permission.ACCESS_COARSE_LOCATION"
+              ],
+              "special_access": [
+                "Android11+按目标版本引导用户在应用位置设置授予Allow all the time"
+              ],
+              "scoped_authorization": [],
+              "conditions": [
+                "target>=30前后台定位分步申请，不同时请求而假定成功。",
+                "精度继承用户前台授权；precision=precise时另声明/申请FINE，Android12+需与COARSE一起请求。",
+                "合法长期采集还受前台服务、后台启动和电量限制；不承诺后台持续存活。"
+              ],
+              "evidence_source_ids": [
+                "android.background_location",
+                "android.location",
+                "android.runtime"
+              ],
+              "verification_status": "official_docs_verified"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "oh.permissions.public",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/security/AccessToken/permissions-for-all.md",
+      "platform": "openharmony_reference",
+      "coverage": "公开权限的system_grant/user_grant、相机/麦克风/位置/日历/蓝牙/NFC/运动/认证/代理提醒",
+      "checked_on": "2026-11-17",
+      "note": "OpenHarmony 5.0官方参考；商业HarmonyOS的权限开放与设备行为不能仅据此推定。"
+    },
+    {
+      "id": "oh.permissions.restricted",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/security/AccessToken/permissions-for-system-apps.md",
+      "platform": "openharmony_reference",
+      "coverage": "READ/WRITE_CONTACTS、READ/WRITE_IMAGEVIDEO、READ_PASTEBOARD、READ/WRITE_WHOLE_CALENDAR的system_basic、user_grant、ACL",
+      "checked_on": "2026-11-17",
+      "note": "仅证明OpenHarmony受限权限分类；商业HarmonyOS对应可申请性待核实。"
+    },
+    {
+      "id": "oh.authorization",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/security/AccessToken/request-user-authorization.md",
+      "platform": "openharmony_reference",
+      "coverage": "user_grant检查与requestPermissionsFromUser",
+      "checked_on": "2026-11-17",
+      "note": "动态授权可能被撤销；运行前复查。"
+    },
+    {
+      "id": "oh.photos.picker",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/media/medialibrary/photoAccessHelper-photoviewpicker.md",
+      "platform": "openharmony_reference",
+      "coverage": "PhotoViewPicker用户选图、只读URI、不需图库全库权限",
+      "checked_on": "2026-11-17",
+      "note": "无需申请全库权限不等于无需用户授权；授权来自系统UI选择。"
+    },
+    {
+      "id": "oh.photos.api",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-media-library-kit/js-apis-photoAccessHelper.md",
+      "platform": "openharmony_reference",
+      "coverage": "PhotoViewPicker临时URI授权、getAssets、showAssetsCreationDialog API12",
+      "checked_on": "2026-11-17",
+      "note": "保存确认对新建URI授予写权限，不能据此修改任意既有图片。"
+    },
+    {
+      "id": "oh.photos.savebutton",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/media/medialibrary/photoAccessHelper-savebutton.md",
+      "platform": "openharmony_reference",
+      "coverage": "SaveButton用户点击后创建媒体资源",
+      "checked_on": "2026-11-17",
+      "note": "安全控件路径不申请WRITE_IMAGEVIDEO。"
+    },
+    {
+      "id": "oh.files",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-core-file-kit/js-apis-file-picker.md",
+      "platform": "openharmony_reference",
+      "coverage": "DocumentViewPicker.select/save及返回的文档URI",
+      "checked_on": "2026-11-17",
+      "note": "具体文件选择/保存授权，不是全盘存储访问。"
+    },
+    {
+      "id": "oh.contacts",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-contacts-kit/js-apis-contact.md",
+      "platform": "openharmony_reference",
+      "coverage": "selectContacts与query/add/update/deleteContact",
+      "checked_on": "2026-11-17",
+      "note": "updateContact文档要求READ+WRITE，与本地SDK只标WRITE存在差异，更新路线需核实。"
+    },
+    {
+      "id": "oh.calendar",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-calendar-kit/js-apis-calendarManager.md",
+      "platform": "openharmony_reference",
+      "coverage": "getCalendar/getAllCalendars/createCalendar及Calendar事件操作",
+      "checked_on": "2026-11-17",
+      "note": "getAllCalendars范围为当前应用创建的日历与默认日历，不应宣传为全库日历权限。"
+    },
+    {
+      "id": "oh.notifications",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-notification-kit/js-apis-notificationManager.md",
+      "platform": "openharmony_reference",
+      "coverage": "requestEnableNotification与publish",
+      "checked_on": "2026-11-17",
+      "note": "通知用户开关不是NOTIFICATION_CONTROLLER或通用runtime permission。"
+    },
+    {
+      "id": "oh.reminders",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-backgroundtasks-kit/js-apis-reminderAgentManager.md",
+      "platform": "openharmony_reference",
+      "coverage": "publishReminder、PUBLISH_AGENT_REMINDER、通知开关前置条件",
+      "checked_on": "2026-11-17",
+      "note": "代理提醒与闹钟模型不构成任意绝对精度保证。"
+    },
+    {
+      "id": "oh.wlan",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-connectivity-kit/js-apis-wifiManager.md",
+      "platform": "openharmony_reference",
+      "coverage": "getScanInfoList、废弃scan、候选配置连接",
+      "checked_on": "2026-11-17",
+      "note": "scan在API10废弃，替代主动扫描系统受限；缓存列表不等于主动扫描。"
+    },
+    {
+      "id": "oh.bluetooth",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-connectivity-kit/js-apis-bluetooth-ble.md",
+      "platform": "openharmony_reference",
+      "coverage": "BLE扫描/GATT及ACCESS_BLUETOOTH",
+      "checked_on": "2026-11-17",
+      "note": "具体设备协议、硬件能力和用户授权仍需满足。"
+    },
+    {
+      "id": "oh.location",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/device/location/location-permission-guidelines.md",
+      "platform": "openharmony_reference",
+      "coverage": "前台粗略/精确及后台位置权限申请",
+      "checked_on": "2026-11-17",
+      "note": "该分支粗略位置说明为5公里；不保证与Android粗略定位精度相同。"
+    },
+    {
+      "id": "oh.location.api",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-location-kit/js-apis-geoLocationManager.md",
+      "platform": "openharmony_reference",
+      "coverage": "getCurrentLocation与位置服务API",
+      "checked_on": "2026-11-17",
+      "note": "需要系统定位开关与设备能力。"
+    },
+    {
+      "id": "oh.clipboard",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-basic-services-kit/js-apis-pasteboard.md",
+      "platform": "openharmony_reference",
+      "coverage": "getData/getDataSync与setData",
+      "checked_on": "2026-11-17",
+      "note": "API12直接读取标READ_PASTEBOARD；写入不要求读取权限。"
+    },
+    {
+      "id": "oh.clipboard.pastebutton",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/security/AccessToken/pastebutton.md",
+      "platform": "openharmony_reference",
+      "coverage": "用户点击PasteButton取得剪贴板临时授权",
+      "checked_on": "2026-11-17",
+      "note": "临时授权持续到灭屏、应用切后台或退出，不能把它写成无需用户授权。"
+    },
+    {
+      "id": "oh.biometric",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-user-authentication-kit/js-apis-useriam-userauth.md",
+      "platform": "openharmony_reference",
+      "coverage": "getUserAuthInstance与start的ACCESS_BIOMETRIC",
+      "checked_on": "2026-11-17",
+      "note": "系统认证结果，不返回原始指纹/人脸。"
+    },
+    {
+      "id": "oh.steps",
+      "url": "https://github.com/openharmony/docs/blob/OpenHarmony-5.0-Release/zh-cn/application-dev/reference/apis-sensor-service-kit/js-apis-sensor.md",
+      "platform": "openharmony_reference",
+      "coverage": "PEDOMETER/STEP检测与ACTIVITY_MOTION",
+      "checked_on": "2026-11-17",
+      "note": "系统传感器计步不是全天历史健康数据。"
+    },
+    {
+      "id": "sdk.contact",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.contact.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 selectContacts无READ_CONTACTS注释，query要求READ，add/delete/update注释要求WRITE",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.contact.d.ts；sha256=87634a4e31a32a586185fc56c6db6a7a0bae613b91e77cb6336844fa2443f745。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.calendar",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.calendarManager.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 getCalendar READ_CALENDAR、createCalendar WRITE_CALENDAR、事件方法",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.calendarManager.d.ts；sha256=4cfb3c70b535b62697f0d1ab5205a157228ef14ebe072ac78b6eba209f70f5ea。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.notification",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.notificationManager.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 requestEnableNotification(context)与publish；未发现专用跳通知设置接口",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.notificationManager.d.ts；sha256=c07a34d2c2974dff94e86bd4210bde8a65816468e0257794686ce472076f6730。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.reminder",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.reminderAgentManager.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 publishReminder与PUBLISH_AGENT_REMINDER、ReminderRequestAlarm/Calendar",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.reminderAgentManager.d.ts；sha256=99dc686ae57807c0d4cf1289bfa3e5fe570756bd9da879e535b0544b039c53d2。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.ble",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.bluetooth.ble.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 startBLEScan/createGattClientDevice与ACCESS_BLUETOOTH",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.bluetooth.ble.d.ts；sha256=9a1b293d4c021fc906d4e0ba7e8eabea4f37e2765e3a76261be58569e825346f。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.bluetooth_connection",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.bluetooth.connection.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12配对/已配对设备与ACCESS_BLUETOOTH",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.bluetooth.connection.d.ts；sha256=70fe02bb6e2dc22a48d8f1f109e386ff6caa2165ebacbd13bdc79d0163bbf762。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.wifi",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.wifiManager.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 getScanInfoList、候选网络配置/连接及废弃scan",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.wifiManager.d.ts；sha256=cb6ca909c6f9785aa35da3687ec0390cc5eadf1df556ba18bcbfa4aeb6d32047。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.nfc",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.nfc.tag.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12前台读卡分发与NFC_TAG",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.nfc.tag.d.ts；sha256=95252af58892b6651192ee75c67e44b15f99cfab89a884fc8e6c7ab2fb62a1e5。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.ndef",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/tag/nfctech.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 NDEF readNdef/writeNdef与NFC_TAG",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/tag/nfctech.d.ts；sha256=81d3c234ca4b8da98b89a0f7cc24446e3de1dd1b914b80f4d3a08158b72e011e。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.auth",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.userIAM.userAuth.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 UserAuthInstance.start与ACCESS_BIOMETRIC",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.userIAM.userAuth.d.ts；sha256=2b8810b3ee8aa101352b4ddedac7f49270963575253f8b2a00ebca6003c3d185。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.pasteboard",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.pasteboard.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 getData READ_PASTEBOARD与setData",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.pasteboard.d.ts；sha256=a38d05184b44874e88acc3ce5c9436d91458be5aeb88a5f9afbedc32c7ca7b23。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.sensor",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.sensor.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 PEDOMETER与ACTIVITY_MOTION",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.sensor.d.ts；sha256=6bdecea5810aaab570f185f2a26a448ef162ea76524bcb723382ee228ff5a68a。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.stationary",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.stationary.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "仅still/relativeStill，不等同走路/跑步/骑行分类",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.stationary.d.ts；sha256=8f3d765f38843fc4e89faa98d1b3fd6a41040f24afe3a069008efdea0b129b57。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.photo",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.file.photoAccessHelper.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 PhotoViewPicker及保存确认UI",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.file.photoAccessHelper.d.ts；sha256=04f7c191a5aa925bb62669b05bda2159693498a8b3553d785f27ce1795ac03c0。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.picker",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.file.picker.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12 DocumentViewPicker.select/save",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.file.picker.d.ts；sha256=39144ade663e8d3f3641bf4603c6d73fbabd8bef288bbd7f0be77211cc735a67。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.camera",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.multimedia.camera.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12直接Camera Kit使用权限与系统能力",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.multimedia.camera.d.ts；sha256=638b23a70185f962e58355cfad90a2a9afc43e574c21f797317060d4a84b529c。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.audio",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.multimedia.audio.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12音频采集权限与系统能力",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.multimedia.audio.d.ts；sha256=59672cc585f61f734ac7cb9dbaa2c2ba056bbafc2e2e572eaa497c6271ee9fda。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "sdk.location",
+      "url": "https://github.com/openharmony/interface_sdk-js/blob/OpenHarmony-5.0-Release/api/@ohos.geoLocationManager.d.ts",
+      "platform": "harmonyos_sdk",
+      "coverage": "API12定位接口与权限",
+      "checked_on": "2026-11-17",
+      "note": "实际读取安装器固定HarmonyOS 5.0.0.71/API12内的声明：/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/ets/api/@ohos.geoLocationManager.d.ts；sha256=542a761b59921e6f7ffbe1674425f49fbd2fa125681079402ec774f7d8b94409。URL为官方OpenHarmony对应分支参考；SDK注释证明接口存在，不单独证明商业权限开放。"
+    },
+    {
+      "id": "android.permissions",
+      "url": "https://developer.android.com/reference/android/Manifest.permission",
+      "platform": "android",
+      "coverage": "权限保护等级、CAMERA/RECORD_AUDIO/联系人/日历/蓝牙/NFC/运动/生物认证等常量",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.runtime",
+      "url": "https://developer.android.com/training/permissions/requesting",
+      "platform": "android",
+      "coverage": "API23+危险权限运行时授权，拒绝/撤销处理",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.photo_picker",
+      "url": "https://developer.android.com/training/data-storage/shared/photopicker",
+      "platform": "android",
+      "coverage": "Activity1.7+ PickVisualMedia、不可用回退API19+ ACTION_OPEN_DOCUMENT、URI临时/持久授权",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.media",
+      "url": "https://developer.android.com/training/data-storage/shared/media",
+      "platform": "android",
+      "coverage": "API29+应用新建媒体免存储权限、读取他应用媒体的版本权限、EXIF位置另需权限",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.partial_photos",
+      "url": "https://developer.android.com/about/versions/14/changes/partial-photo-video-access",
+      "platform": "android",
+      "coverage": "API34+选定照片访问、READ_MEDIA_VISUAL_USER_SELECTED、重选与兼容模式",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.files",
+      "url": "https://developer.android.com/training/data-storage/shared/documents-files",
+      "platform": "android",
+      "coverage": "API19+ SAF打开/创建文件、用户选定URI授权、持久授权",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.intents",
+      "url": "https://developer.android.com/guide/components/intents-common",
+      "platform": "android",
+      "coverage": "选择联系人/字段、联系人编辑、新建日程等系统Intent及临时URI授权",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.contacts",
+      "url": "https://developer.android.com/training/contacts-provider/retrieve-names",
+      "platform": "android",
+      "coverage": "直接联系人Provider查询需READ_CONTACTS",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.calendar",
+      "url": "https://developer.android.com/identity/providers/calendar-provider",
+      "platform": "android",
+      "coverage": "READ_CALENDAR/WRITE_CALENDAR、Provider与Intent路线区别",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.notifications",
+      "url": "https://developer.android.com/develop/ui/views/notifications/notification-permission",
+      "platform": "android",
+      "coverage": "API33+ POST_NOTIFICATIONS、target差异及通知用户开关",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.settings",
+      "url": "https://developer.android.com/reference/android/provider/Settings#ACTION_APP_NOTIFICATION_SETTINGS",
+      "platform": "android",
+      "coverage": "API26+应用通知设置Intent及应用详情设置回退",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.alarms",
+      "url": "https://developer.android.com/develop/background-work/services/alarms/schedule",
+      "platform": "android",
+      "coverage": "精确/非精确AlarmManager、target31+特殊访问、SCHEDULE_EXACT_ALARM与USE_EXACT_ALARM替代关系及例外",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.bluetooth",
+      "url": "https://developer.android.com/develop/connectivity/bluetooth/bt-permissions",
+      "platform": "android",
+      "coverage": "target31+ SCAN/CONNECT、旧target定位条件、neverForLocation会过滤部分信标",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.wifi_scan",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-scan",
+      "platform": "android",
+      "coverage": "扫描/取结果权限、target29+精确定位、系统定位开启与节流",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.wifi_permissions",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-permissions",
+      "platform": "android",
+      "coverage": "API33+连接附近设备权限；startScan/getScanResults仍需FINE_LOCATION",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.wifi_saved",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-save-network-passpoint-config",
+      "platform": "android",
+      "coverage": "API30+ ACTION_WIFI_ADD_NETWORKS由用户确认保存WLAN配置",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.wifi_bootstrap",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-bootstrap",
+      "platform": "android",
+      "coverage": "API29+ WifiNetworkSpecifier用户确认连接；此路径不能提供互联网连接",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.nfc",
+      "url": "https://developer.android.com/develop/connectivity/nfc/nfc",
+      "platform": "android",
+      "coverage": "NFC普通manifest权限、用户贴卡/前台发现；文档已出现API37新规则，当前映射仅覆盖到API36",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.ndef",
+      "url": "https://developer.android.com/reference/android/nfc/tech/Ndef",
+      "platform": "android",
+      "coverage": "NDEF读取、writeNdefMessage、可写与容量前提",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.steps",
+      "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_motion",
+      "platform": "android",
+      "coverage": "API19+步数传感器、API29+ ACTIVITY_RECOGNITION、重启后累积语义",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.activity",
+      "url": "https://developers.google.com/android/reference/com/google/android/gms/location/ActivityRecognitionClient",
+      "platform": "android",
+      "coverage": "Google Play services活动分类/转变、API29+ Android权限与旧版GMS权限",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.activity_guide",
+      "url": "https://developer.android.com/develop/sensors-and-location/location/transitions",
+      "platform": "android",
+      "coverage": "活动转变依赖Play services，非所有Android设备自带",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.biometric",
+      "url": "https://developer.android.com/identity/sign-in/biometric-auth",
+      "platform": "android",
+      "coverage": "AndroidX BiometricPrompt、系统认证UI与认证结果",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.clipboard",
+      "url": "https://developer.android.com/develop/ui/views/touch-and-input/copy-paste",
+      "platform": "android",
+      "coverage": "ClipboardManager、用户粘贴与复制、API33+复制提示",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.clipboard10",
+      "url": "https://developer.android.com/about/versions/10/privacy/changes",
+      "platform": "android",
+      "coverage": "API29+仅当前聚焦应用或默认输入法可读剪贴板",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.camera",
+      "url": "https://developer.android.com/guide/topics/media/camera",
+      "platform": "android",
+      "coverage": "直接相机访问需CAMERA；调用现有系统相机的不同路线",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.audio",
+      "url": "https://developer.android.com/media/platform/mediarecorder",
+      "platform": "android",
+      "coverage": "RECORD_AUDIO与API28+后台麦克风限制",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.location",
+      "url": "https://developer.android.com/develop/sensors-and-location/location/permissions",
+      "platform": "android",
+      "coverage": "粗略/精确、前台/后台位置、仅粗略授权降级",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.location_api",
+      "url": "https://developer.android.com/reference/android/location/LocationManager#getCurrentLocation(java.lang.String,%20android.os.CancellationSignal,%20java.util.concurrent.Executor,%20java.util.function.Consumer%3Candroid.location.Location%3E)",
+      "platform": "android",
+      "coverage": "getCurrentLocation为API30+，COARSE或FINE权限",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.background_location",
+      "url": "https://developer.android.com/develop/sensors-and-location/location/permissions/background",
+      "platform": "android",
+      "coverage": "API29+ ACCESS_BACKGROUND_LOCATION、API30+设置页单独授权、后台限制",
+      "checked_on": "2026-11-17",
+      "note": "官方文档已读取；规则明确区分运行设备API和targetSdk条件。"
+    },
+    {
+      "id": "android.connectivity_request",
+      "url": "https://developer.android.com/reference/android/net/ConnectivityManager#requestNetwork(android.net.NetworkRequest,%20android.net.ConnectivityManager.NetworkCallback)",
+      "platform": "android",
+      "coverage": "API21+ requestNetwork需要CHANGE_NETWORK_STATE或修改系统设置能力；当前选普通CHANGE_NETWORK_STATE路线",
+      "checked_on": "2026-11-17",
+      "note": "已读取官方接口正文。网络回调需要适时unregister，用户WiFi确认与此normal权限不是同一件事。"
+    },
+    {
+      "id": "android.biometric_compat",
+      "url": "https://developer.android.com/reference/androidx/biometric/BiometricPrompt",
+      "platform": "android",
+      "coverage": "API28+系统提供认证界面；更早平台为兼容库指纹对话框",
+      "checked_on": "2026-11-17",
+      "note": "已读取官方参考；与catalog_audit独立核查一致。"
+    },
+    {
+      "id": "android.biometric_allowed",
+      "url": "https://developer.android.com/reference/android/hardware/biometrics/BiometricPrompt.Builder",
+      "platform": "android",
+      "coverage": "setAllowedAuthenticators筛选认证强度/凭据，不提供单独FACE/FINGERPRINT筛选",
+      "checked_on": "2026-11-17",
+      "note": "已读取官方参考；与catalog_audit独立核查一致。"
+    }
+  ],
+  "cross_cutting_rules": [
+    {
+      "id": "network.normal_dependency",
+      "description": "在线天气、云接口、在线AI等按实现可能依赖网络：HarmonyOS ohos.permission.INTERNET为普通system_grant manifest依赖，Android android.permission.INTERNET为normal manifest依赖；不占本字典32个能力标签，不通过requestPermissions动态申请。",
+      "evidence_source_ids": [
+        "oh.permissions.public",
+        "android.permissions"
+      ]
+    },
+    {
+      "id": "semantic.not_os_authorization",
+      "description": "中文意图标签不是系统实际授权。required表示执行需要，forbidden只来自明确禁止，未提及保持unmentioned；系统UI/安全控件用户选择仍是授权。",
+      "evidence_source_ids": [
+        "oh.photos.picker",
+        "oh.clipboard.pastebutton",
+        "android.files"
+      ]
+    },
+    {
+      "id": "route_and_dependencies",
+      "description": "同能力可有多条执行路线；只取适合API、target、作用域的路线，不合并互斥方案。音频、查询、通知等条件依赖按槽位/所选路线计算，不从任务名称一律增加权限。",
+      "evidence_source_ids": [
+        "android.alarms",
+        "oh.calendar",
+        "android.bluetooth"
+      ]
+    },
+    {
+      "id": "blocked_candidates",
+      "description": "executable=false与needs_verification路线不可直接投影为权限申请计划。candidate_permissions只记录待核查证据；manifest/runtime为空不代表对应操作免权限。SDK声明可证接口与注释，不能单独证商业权限开放。",
+      "evidence_source_ids": [
+        "oh.permissions.restricted"
+      ]
+    },
+    {
+      "id": "review_scope",
+      "description": "本文件是待人工审核的首批能力字典，不含训练划分、模型阈值、应用改动或部署结果。",
+      "evidence_source_ids": []
+    }
+  ],
+  "review": {
+    "semantic_ai": "reviewed",
+    "cross_review": "reviewed",
+    "human_review": "pending",
+    "notes": [
+      "AI研究依据官方Android文档、官方OpenHarmony 5.0分支与本地API12 SDK。",
+      "商业HarmonyOS官方网页当前为SPA壳，未将其未读到的正文视为已验证证据。",
+      "所有人审均pending；AI研究或交叉复核不等于人工审核。",
+      "2026-11-17：catalog_audit已交叉复核32能力的平台路线及109条规则；提出的问题已修复，未解决的商业开放/精确度/API缺口保留封锁状态。",
+      "2026-11-17：instruction_preview已交叉核对共同ID、语料语义与作用域边界；后台定位分段、拍照槽位、生物认证模态约束已按反馈修正。"
+    ]
+  }
+}

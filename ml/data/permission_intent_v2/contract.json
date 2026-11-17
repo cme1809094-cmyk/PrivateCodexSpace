@@ -1,0 +1,131 @@
+{
+  "schema_version": "0.1.0",
+  "stage": "seed_for_review",
+  "platforms": [
+    "harmonyos",
+    "android"
+  ],
+  "new_groups": {
+    "photos": [
+      "media.photo.pick_one",
+      "media.photo.read_library",
+      "media.photo.add"
+    ],
+    "files": [
+      "files.pick_one",
+      "files.save_user_selected"
+    ],
+    "contacts": [
+      "contacts.pick_one",
+      "contacts.read",
+      "contacts.write"
+    ],
+    "calendar": [
+      "calendar.read",
+      "calendar.write"
+    ],
+    "notifications": [
+      "notifications.publish",
+      "notifications.open_settings"
+    ],
+    "reminders": [
+      "reminders.schedule_local",
+      "reminders.schedule_exact"
+    ],
+    "bluetooth": [
+      "bluetooth.scan",
+      "bluetooth.connect"
+    ],
+    "wlan": [
+      "wlan.scan",
+      "wlan.connect"
+    ],
+    "nfc": [
+      "nfc.read_tag",
+      "nfc.write_tag"
+    ],
+    "motion": [
+      "motion.read_steps",
+      "motion.recognize_activity"
+    ],
+    "biometric": [
+      "biometric.authenticate"
+    ],
+    "clipboard": [
+      "clipboard.paste_user_initiated",
+      "clipboard.read",
+      "clipboard.write"
+    ]
+  },
+  "retained_groups": {
+    "base_camera": [
+      "camera.capture_photo",
+      "camera.record_video"
+    ],
+    "base_microphone": [
+      "microphone.record_audio"
+    ],
+    "base_location": [
+      "location.coarse.foreground_once",
+      "location.precise.foreground_once",
+      "location.background"
+    ]
+  },
+  "corpus_extra_groups": [
+    "cross_capability",
+    "ambiguity",
+    "negation",
+    "no_device_capability",
+    "out_of_scope"
+  ],
+  "corpus_target": {
+    "total": 300,
+    "each_new_group": 20,
+    "retained_and_cross_examples": 60
+  },
+  "intent_status_values": [
+    "in_scope",
+    "ambiguous",
+    "no_device_capability",
+    "out_of_scope"
+  ],
+  "corpus_required_fields": [
+    "schema_version",
+    "id",
+    "primary_group",
+    "text",
+    "context",
+    "actions",
+    "intent_status",
+    "required_capabilities",
+    "forbidden_capabilities",
+    "default_state_for_other_capabilities",
+    "constraints",
+    "needs_clarification",
+    "clarification_question",
+    "tags",
+    "source",
+    "review"
+  ],
+  "source_type": "agent_generated",
+  "human_review_must_be": "pending",
+  "review_contract": {
+    "semantic_ai": "reviewed",
+    "cross_review": [
+      "pending",
+      "reviewed"
+    ],
+    "human_review": "pending",
+    "notes": "array"
+  },
+  "semantic_rules": [
+    "Required and forbidden capabilities are disjoint. Other capabilities default to unmentioned, not forbidden.",
+    "Context describes explicit app state or execution assumptions, not words falsely attributed to the user.",
+    "Instructions cite capability IDs; platform permission strings and rules live only in capability_catalog.json.",
+    "Known intent can be in_scope even if a platform mapping is restricted or still needs verification.",
+    "Online network access is an implementation-dependent cross-cutting dependency, not a location requirement.",
+    "Biometric authentication returns an authentication result; do not interpret it as access to raw face/fingerprint data.",
+    "Do not label an entire capability forbidden when the user only forbids a modality, target, duration, or subset; retain such limits in constraints.",
+    "The data is for review and later expansion; it is not a frozen train/test split or an already human-reviewed corpus."
+  ]
+}
