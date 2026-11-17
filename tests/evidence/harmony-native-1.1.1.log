@@ -1,0 +1,5 @@
+ninja: Entering directory `/workspace/work/git-upload/PrivateCodexSpace/entry/.cxx/default/default/debug/arm64-v8a'
+[1/2] Building CXX object CMakeFiles/permission_hiai.dir/permission_hiai.cpp.o
+clang++: warning: argument unused during compilation: '--gcc-toolchain=/workspace/work/harmony-build/toolchain/command-line-tools/sdk/default/openharmony/native/llvm' [-Wunused-command-line-argument]
+[2/2] Linking CXX shared library /workspace/work/git-upload/PrivateCodexSpace/entry/build/default/intermediates/cmake/default/obj/arm64-v8a/libpermission_hiai.so
+-- permission_hiai C++ catch handlers verified

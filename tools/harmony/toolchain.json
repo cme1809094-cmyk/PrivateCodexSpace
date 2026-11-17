@@ -1,0 +1,16 @@
+{
+  "host": "linux-x64",
+  "command_line_tools": {
+    "version": "5.0.3.906",
+    "harmonyos_sdk": "5.0.0 / API 12",
+    "url": "https://repo.huaweicloud.com/harmonyos/ohpm/5.0.3/commandline-tools-linux-x64-5.0.3.906.zip",
+    "bytes": 3225154486,
+    "sha256": "c6fe61299e1b05e4023e643a319ee74c3eb369af7edecd5c3f1795b16f9db6af"
+  },
+  "jdk": {
+    "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.21%2B9/OpenJDK17U-jdk_x64_linux_hotspot_17.0.21_9.tar.gz",
+    "bytes": 193594705,
+    "sha256": "8b9b611d917e3dfd8419d3566b5949226f69b052fed7e109c1368add1dfe8711",
+    "version": "17.0.21+9"
+  }
+}

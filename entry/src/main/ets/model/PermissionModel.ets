@@ -8,7 +8,7 @@ import { SEQUENCE_LENGTH, TokenizedInput, WordPiece } from './WordPiece';
 
 const BUCKETS: number[] = [16, 32, 64];
 const LABEL_COUNT: number = 5;
-const APP_VERSION: string = '1.1.0';
+const APP_VERSION: string = '1.1.1';
 
 interface ReferenceCase {
   text: string;
@@ -271,8 +271,14 @@ export class PermissionModel {
       this.diagnostic += '\n' + suffix + ' token 自检 ' + report.matched.toString() + '/' + report.checked.toString();
       return session;
     } catch (error) {
-      await disposeHiAI(session);
-      throw error;
+      const reason: string = this.errorMessage(error as Error | string);
+      try {
+        await disposeHiAI(session);
+      } catch (cleanupError) {
+        hilog.warn(0xFF00, 'PermissionNPU', '[PNPU][CLEANUP] model=%{public}s bucket=%{public}d reason=%{public}s',
+          this.modelId, bucket, this.errorMessage(cleanupError as Error | string));
+      }
+      throw new Error(reason);
     }
   }
 

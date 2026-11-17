@@ -1,0 +1,84 @@
+{
+  "kind": "host simulation; NPU/CPU bindings mocked, real paired vocabularies and reference vectors",
+  "device_tested": false,
+  "scenarios": 19,
+  "passed": true,
+  "outcomes": [
+    {
+      "name": "TinyBERT default is lazy, with its own thresholds and vocabulary",
+      "passed": true
+    },
+    {
+      "name": "Every manual bucket is isolated and switching models releases old NPU handles",
+      "passed": true
+    },
+    {
+      "name": "Automatic routing chooses the smallest fitting bucket; manual overflow is rejected",
+      "passed": true
+    },
+    {
+      "name": "Failed forced bucket uses same-model CPU, without silently trying a larger NPU bucket",
+      "passed": true
+    },
+    {
+      "name": "Automatic route can recover from a failed small NPU bucket",
+      "passed": true
+    },
+    {
+      "name": "Switch metadata failure preserves the previous working model",
+      "passed": true
+    },
+    {
+      "name": "NPU acceptance covers 27/33/33 actual paired vectors, fresh sessions, and no CPU calls",
+      "passed": true
+    },
+    {
+      "name": "Acceptance rejects nan outputs and still checks the other buckets",
+      "passed": true
+    },
+    {
+      "name": "Acceptance rejects short outputs and still checks the other buckets",
+      "passed": true
+    },
+    {
+      "name": "Acceptance rejects labels outputs and still checks the other buckets",
+      "passed": true
+    },
+    {
+      "name": "Acceptance rejects drift outputs and still checks the other buckets",
+      "passed": true
+    },
+    {
+      "name": "A RunSync failure during timed runs cannot yield acceptance pass",
+      "passed": true
+    },
+    {
+      "name": "Cleanup failure preserves the original inference validation error",
+      "passed": true
+    },
+    {
+      "name": "Missing NPU cannot pass acceptance through CPU fallback",
+      "passed": true
+    },
+    {
+      "name": "Truncated or LFS-pointer model asset fails before native load",
+      "passed": true
+    },
+    {
+      "name": "Incomplete reference coverage cannot pass even when all remaining labels match",
+      "passed": true
+    },
+    {
+      "name": "Invalid numeric tolerance is rejected at catalog load",
+      "passed": true
+    },
+    {
+      "name": "Concurrent switch, acceptance and benchmark cannot race an active inference",
+      "passed": true
+    },
+    {
+      "name": "Single-profile generated catalog needs no MiniRBT or baseline assets",
+      "passed": true
+    }
+  ]
+}

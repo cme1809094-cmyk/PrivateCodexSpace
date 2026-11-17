@@ -1,0 +1,108 @@
+{
+  "date": "2026-11-17",
+  "app_version": "1.1.1",
+  "source_base_commit": "8077eab0388265721b3477793d68bb20221b9764",
+  "branch": "feat/tinybert-4l-kirin9030",
+  "fix": {
+    "diagnostic": "arkts-limited-throw",
+    "file": "entry/src/main/ets/model/PermissionModel.ets",
+    "behavior": "Normalize caught values to Error; preserve original message if session cleanup also fails"
+  },
+  "toolchain": {
+    "host": "linux-x64",
+    "command_line_tools": {
+      "version": "5.0.3.906",
+      "harmonyos_sdk": "5.0.0 / API 12",
+      "url": "https://repo.huaweicloud.com/harmonyos/ohpm/5.0.3/commandline-tools-linux-x64-5.0.3.906.zip",
+      "bytes": 3225154486,
+      "sha256": "c6fe61299e1b05e4023e643a319ee74c3eb369af7edecd5c3f1795b16f9db6af"
+    },
+    "jdk": {
+      "url": "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.21%2B9/OpenJDK17U-jdk_x64_linux_hotspot_17.0.21_9.tar.gz",
+      "bytes": 193594705,
+      "sha256": "8b9b611d917e3dfd8419d3566b5949226f69b052fed7e109c1368add1dfe8711",
+      "version": "17.0.21+9"
+    },
+    "hvigor": "5.8.9",
+    "ohpm": "5.0.8",
+    "bundled_node": "18.20.1",
+    "sdk_version": "5.0.0.71",
+    "sdk_api": 12
+  },
+  "clean_build": {
+    "passed": true,
+    "errors": 0,
+    "arkts_warnings": 23,
+    "warnings_scope": "optional MindSpore Lite SysCap availability; SDK native unused compiler option; expected missing signing configuration",
+    "arkts": "real SDK CompileArkTS, including UI; no lint suppression",
+    "native": "real SDK AArch64 compile/link, verified C++ catch handlers",
+    "command": "bash tools/harmony/build.sh /workspace/work/harmony-build",
+    "evidence": [
+      "tests/evidence/harmony-build-1.1.1.log",
+      "tests/evidence/harmony-native-1.1.1.log"
+    ]
+  },
+  "hap": {
+    "passed": true,
+    "hap": "entry/build/default/outputs/default/entry-default-unsigned.hap",
+    "bytes": 252576376,
+    "sha256": "63488fb91c5c3bf8a6a0e698ebc13a2d181700c3dbfe39ff73a6158288057b20",
+    "app": {
+      "bundleName": "com.intentlab.permissiondemohiaperf",
+      "vendor": "IntentLab",
+      "versionCode": 1001001,
+      "versionName": "1.1.1",
+      "icon": "$media:app_icon",
+      "label": "$string:app_name"
+    },
+    "compiled_arkts": [
+      "ets/modules.abc"
+    ],
+    "native_bridge": "libs/arm64-v8a/libpermission_hiai.so",
+    "native_architecture": "AArch64",
+    "packaged_model_files": [
+      "resources/rawfile/permission.ms",
+      "resources/rawfile/permission_16.om",
+      "resources/rawfile/permission_32.om",
+      "resources/rawfile/permission_64.om",
+      "resources/rawfile/permission_baseline.om",
+      "resources/rawfile/models/tinybert4l/permission.ms",
+      "resources/rawfile/models/tinybert4l/permission_16.om",
+      "resources/rawfile/models/tinybert4l/permission_32.om",
+      "resources/rawfile/models/tinybert4l/permission_64.om"
+    ],
+    "model_profiles": [
+      "minirbt",
+      "tinybert4l"
+    ],
+    "signed": false,
+    "device_tested": false
+  },
+  "host_switch_regression": {
+    "passed": true,
+    "scenarios": 19,
+    "evidence": "tests/evidence/model-switch-1.1.1-host.json",
+    "device_execution": false
+  },
+  "compiled_source_sha256": {
+    "AppScope/app.json5": "2f4452a39bc0f66ead42fe1821e4feb1eb4f65e8abbb6df71483e17875073785",
+    "build-profile.json5": "d15be650dc73e88b25669c13e1c7c9bbb754c7ce6d23edbead6eb71fe0cdd5da",
+    "entry/build-profile.json5": "a4630da935306c47a3cee3e6d87104af238a41f68a26f75d1bb18053ed78eab6",
+    "entry/src/main/cpp/CMakeLists.txt": "2ec7a9f786621c7e3c3574ed70656873ae0915306834eb0b3dede58ebdd97398",
+    "entry/src/main/cpp/bridge_error.h": "27ef45f51c3eb3f92443baa1652b31518c53f02e6d39b26418c58c370280130b",
+    "entry/src/main/cpp/cann_runtime.h": "3b17df25a1251a0bd212c34cd17b024e2e895735300ba857db8b16919c7b0d15",
+    "entry/src/main/cpp/native_diagnostics.h": "9d58b3a1b14d39103d0484aefee75e14cbfdd48a43813897c575d6311699e298",
+    "entry/src/main/cpp/native_log.h": "9fab64c2be1fd1f05a761af2f266a396f3cc60c5b083498a7d34fa5532f84a30",
+    "entry/src/main/cpp/nnrt_device.h": "d65038073fdaf2f7c2684b9f7dac37ca2e07f9b62fdf865870099e4d4fda0b38",
+    "entry/src/main/cpp/permission_hiai.cpp": "6de50585b90311dc585d1078ee86426023b04a2eb246987d339367472df74b89",
+    "entry/src/main/cpp/tensor_shape.h": "42acd5e7f41381ccf848501ef1b06d9e385a30541aff964285dd94e04408931a",
+    "entry/src/main/cpp/types/libpermission_hiai/Index.d.ts": "d49aba98ff1246212d2a28dbf7a44b27e48d7c98fdd3446290287b54281c3065",
+    "entry/src/main/ets/entryability/EntryAbility.ets": "cc23562926f1231829509f27e7deef30aedbfa50b7cfda506eb1c3c309d10237",
+    "entry/src/main/ets/model/PermissionModel.ets": "c3aaf4fd99696a7e0183cf091aa0d9604353dc3eacbe07d07bbef95654163af1",
+    "entry/src/main/ets/model/WordPiece.ets": "5c12c32d691a9d2390814d1253d0f883711f78bd47847089734101f586daa751",
+    "entry/src/main/ets/pages/Index.ets": "dee1a02757ad42029f8adece9238a817a40fbf5e8c0d17b57fb7753d91c99242"
+  },
+  "device_tested": false,
+  "signed": false,
+  "first_unresolved_step": "Configure device debug signing, install on Mate 80 Pro Max / HarmonyOS 5.0.0 and run the three-bucket NPU acceptance UI"
+}

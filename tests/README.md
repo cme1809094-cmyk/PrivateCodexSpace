@@ -1,13 +1,13 @@
 # NNRT device selection regression checks
 
-## Model switching and acceptance (1.1.0)
+## Model switching and acceptance (1.1.1)
 
 ```sh
 node --experimental-strip-types tests/model_switch_test.mjs
 python3 ml/verify_artifacts.py
 ```
 
-The switching suite exercises the actual ArkTS PermissionModel and WordPiece sources with mocked platform bindings. Both real vocabularies are checked against all 33 paired input-id/mask vectors. Eighteen scenarios cover default selection, all model/bucket combinations, session isolation/release, routing, manual overflow, same-model CPU fallback, metadata failure recovery, exclusive operations, and acceptance gates. Acceptance failures include non-finite/short/wrong-label outputs, excessive logit drift despite identical labels, incomplete reference coverage, Build/RunSync errors and missing NPU. Mock timing is only used to test control flow; it is not a phone performance measurement.
+The switching suite exercises the actual ArkTS PermissionModel and WordPiece sources with mocked platform bindings. Both real vocabularies are checked against all 33 paired input-id/mask vectors. Nineteen scenarios cover default selection, all model/bucket combinations, session isolation/release, routing, manual overflow, same-model CPU fallback, metadata failure recovery, exclusive operations, and acceptance gates. Acceptance failures include non-finite/short/wrong-label outputs, excessive logit drift despite identical labels, incomplete reference coverage, Build/RunSync errors and missing NPU. Version 1.1.1 also checks that cleanup failure preserves the original validation error. Mock timing is only used to test control flow; it is not a phone performance measurement.
 
 The native suite now has 75 scenarios. The six additions call the actual Dispose/Predict exports, checking worker release, idempotence, use-after-dispose rejection, ownership retained by queued inference, restored ownership after queue failure and invalid wrappers. The CMake host DSO still uses placeholder libraries and must never be packaged as a HarmonyOS binary.
 
@@ -47,3 +47,5 @@ Since 1.0.7, native and ArkTS diagnostics use HiLog tag `PermissionNPU` and mess
 Version 1.0.8 adds 23 scenarios (44 total): all three token lengths in four equivalent layouts are loaded through the real bridge callbacks, input ids/masks are checked byte for byte, and returned logits are checked. Eleven rejection cases cover non-vector shapes, unsupported/zero/dynamic dimensions, empty/null shapes, excessive rank, mismatched ids/mask lengths and wrong element counts. Bridge-owned validation uses an explicitly caught fixed-buffer BridgeError and retains the tensor shape plus the failed validation stage. The phone log proved compatibility/Build/executor creation succeeded for MiniRBT, then its old rank-2 guard failed; the actual phone shape and on-device inference still require a rebuilt-app check.
 
 Version 1.0.9 adds 25 N-API boundary scenarios (69 total). Twelve call the exported Predict callback through argument decoding, promise/work creation, Execute/Complete and NNRT RunSync mocks: 16/32/64 token buckets, API lengths of 64 elements or 256 bytes, and zero/nonzero byte offsets. JS backing buffers are cleared after queueing; the worker still receives the expected ids/masks and logits. Thirteen invalid cases never queue or run, including a 256-element Int32Array whose reported length is ambiguously 256, wrong element types, inconsistent view sizes, short/null buffers, misaligned/overflowing offsets, and N-API property/buffer errors. This closes the previous test gap where inputs were assigned directly to Job and the real ReadTokens/Predict boundary was bypassed.
+
+A complete unsigned HAP build with HarmonyOS 5.0.0.71 / API 12 passed for 1.1.1; this includes the real ArkTS checker, AArch64 C++ build and packaged model verification. See `tools/harmony/README.md` and `ml/harmony-build-verification.json`. These build checks still do not establish phone NPU execution.

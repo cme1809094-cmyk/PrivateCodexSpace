@@ -73,7 +73,7 @@ public:
 
     void Failure(char *buffer, size_t size, const char *operation, const char *detail) const noexcept
     {
-        std::snprintf(buffer, size, "%s failed at %s (%s); tensor=%s; exception_type=%.160s; CANN=%s; bridge=1.1.0; detail=%s",
+        std::snprintf(buffer, size, "%s failed at %s (%s); tensor=%s; exception_type=%.160s; CANN=%s; bridge=1.1.1; detail=%s",
             operation, stage_, returned_, tensor_, CurrentExceptionType(), runtime_, detail ? detail : "<no message>");
     }
 

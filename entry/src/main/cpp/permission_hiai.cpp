@@ -458,7 +458,7 @@ Tokens ReadTokens(napi_env env, napi_value value, const char *argument, bool log
 napi_value Devices(napi_env env, napi_callback_info) noexcept
 {
     try {
-        PermissionLog("native bridge 1.1.0: enumerate backends", "DEVICE");
+        PermissionLog("native bridge 1.1.1: enumerate backends", "DEVICE");
         (void)permission_nnrt::GetCannRuntime();
         auto devices = ListDevices();
         napi_value result;

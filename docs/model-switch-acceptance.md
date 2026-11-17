@@ -1,4 +1,4 @@
-# 双模型切换与 TinyBERT 验收 · 1.1.0
+# 双模型切换与 TinyBERT 验收 · 1.1.1
 
 仓库根目录现在构建同一个双模型应用，包名仍为 com.intentlab.permissiondemohiaperf。默认选择 TinyBERT 4L，可切换到 MiniRBT H256；两套模型均可选择自动、16、32、64 token。模型二进制没有重新训练或重新编译，本轮更改集中在集成、切换和验收入口。
 
@@ -16,7 +16,7 @@ python3 ml/verify_artifacts.py
 
 校验应通过十个二进制、两个模型目录及配套元数据。不要使用 GitHub 源码 ZIP 中尚未展开的 LFS 指针文件直接构建。
 
-用 DevEco Studio 打开仓库根目录，配置本机调试签名，Clean/Rebuild native 与 ArkTS 后安装到 Mate 80 Pro Max / HarmonyOS 5.0.0。确认界面版本为 1.1.0。此前的独立 TinyBERT 包名不同，可能与新应用并存。
+用 DevEco Studio 打开仓库根目录，配置本机调试签名，Clean/Rebuild native 与 ArkTS 后安装到 Mate 80 Pro Max / HarmonyOS 5.0.0。确认界面版本为 1.1.1。此前的独立 TinyBERT 包名不同，可能与新应用并存。
 
 1. 保持默认 TinyBERT，输入“录一段视频，别录声音”，分别选16、32、64识别。结果应显示当前模型、实际后端和档位；初次使用会加载并执行参考自检。
 2. 切换 MiniRBT，重复三个档位，再切回 TinyBERT。核对模型名与实际后端，留意异常、残留旧结果和内存增长。
@@ -48,9 +48,9 @@ JSON 包含版本、时间、模型 ID、运行库后端/版本、阈值、档�
 
 2026-11-17 本轮重新执行：
 
-- 18组实际 ArkTS 路由／切换／验收控制流测试通过；NPU 与 MindSpore Lite 接口为 mock。两个真实词表分别在33条 input_ids / attention_mask 上一致。
+- 19组实际 ArkTS 路由／切换／验收控制流测试通过；NPU 与 MindSpore Lite 接口为 mock。两个真实词表分别在33条 input_ids / attention_mask 上一致。
 - 75组实际原生回调与故障注入通过，包括释放、在途推理所有权、重复释放、队列失败恢复；不是手机执行结果。
-- 原生 CMake 主机构建及异常处理检查通过，使用公开 SDK 头文件和占位链接库；生成的主机 SO 不可放入 HAP。
+- 原生 CMake 主机测试继续保留；另已使用真实 HarmonyOS SDK 编译 AArch64 桥接库，验证实际 C++ catch 处理代码，并与 ArkTS 字节码一起打入1.1.1 HAP。早期主机占位链接库没有用于 HAP。
 - 十个模型二进制 SHA-256、目录身份和配套元数据通过校验。
 - TinyBERT 三档标准 ONNX 权限对照为27/27、33/33、33/33，最大 logit 差3.933906555175781e-6。
 - TinyBERT MindSpore Lite CPU 对照33/33，最大 logit 差2.4332202e-5，使用 TinyBERT 自己的阈值。
@@ -74,7 +74,7 @@ python3 ml/verify_ms.py /path/to/mindspore-lite-2.1.0-linux-x64 \
 
 ## 手机与模型质量待验收项
 
-当前 Codex 没有完整 HarmonyOS SDK／OHPM／Hvigor、签名配置及连接的手机，尚未构建1.1.0 HAP，也未产生手机验收 JSON。已有手机日志只证明 MiniRBT 1.0.8 完成三档会话创建，随后在 TypedArray 参数校验被阻断；1.0.9 的兼容性修复尚未获得新的手机 RunSync 结果。不能以本轮主机测试宣布真机问题已经解决。
+当前 Codex 已安装 HarmonyOS 5.0.0.71 / API 12、OHPM、Hvigor、JDK 17，并完成1.1.1完整干净构建及未签名 HAP 包内校验，详见 [云端构建](../tools/harmony/README.md)。当前仍没有签名配置及连接的手机，未产生手机验收 JSON。已有手机日志只证明 MiniRBT 1.0.8 完成三档会话创建，随后在 TypedArray 参数校验被阻断；1.0.9 的兼容性修复尚未获得新的手机 RunSync 结果。不能以本轮主机测试宣布真机问题已经解决。
 
 首轮手机验收需确认三档 RunSync、全部参考输出与误差；随后测冷加载、真实指令的端到端耗时、峰值内存、连续推理温升与跨模型反复切换。CPU Model 的公开 JS 接口没有 dispose，切换时只能清掉应用引用，回收时机由运行库决定；需要在手机上观察实际内存。
 

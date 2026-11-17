@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "hap": "entry/build/default/outputs/default/entry-default-unsigned.hap",
+  "bytes": 252576376,
+  "sha256": "63488fb91c5c3bf8a6a0e698ebc13a2d181700c3dbfe39ff73a6158288057b20",
+  "app": {
+    "bundleName": "com.intentlab.permissiondemohiaperf",
+    "vendor": "IntentLab",
+    "versionCode": 1001001,
+    "versionName": "1.1.1",
+    "icon": "$media:app_icon",
+    "label": "$string:app_name"
+  },
+  "compiled_arkts": [
+    "ets/modules.abc"
+  ],
+  "native_bridge": "libs/arm64-v8a/libpermission_hiai.so",
+  "native_architecture": "AArch64",
+  "packaged_model_files": [
+    "resources/rawfile/permission.ms",
+    "resources/rawfile/permission_16.om",
+    "resources/rawfile/permission_32.om",
+    "resources/rawfile/permission_64.om",
+    "resources/rawfile/permission_baseline.om",
+    "resources/rawfile/models/tinybert4l/permission.ms",
+    "resources/rawfile/models/tinybert4l/permission_16.om",
+    "resources/rawfile/models/tinybert4l/permission_32.om",
+    "resources/rawfile/models/tinybert4l/permission_64.om"
+  ],
+  "model_profiles": [
+    "minirbt",
+    "tinybert4l"
+  ],
+  "signed": false,
+  "device_tested": false
+}

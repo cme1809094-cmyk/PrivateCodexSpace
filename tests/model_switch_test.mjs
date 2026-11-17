@@ -65,6 +65,7 @@ const native = {
     session.disposed = true;
     state.live.delete(session);
     state.disposed.push(session.profile + ':' + session.bucket);
+    if (state.releaseFailure && session.bucket === 16) throw new Error('Injected disposal completion failure');
   }
 };
 globalThis.__permissionTest = {
@@ -220,7 +221,7 @@ try {
     const progress = [];
     const report = await m.acceptNpu(message => progress.push(message));
     assert.equal(report.passed, true);
-    assert.equal(report.appVersion, '1.1.0');
+    assert.equal(report.appVersion, '1.1.1');
     assert.equal(report.modelId, 'tinybert4l');
     assert.ok(report.runtimeBackend.includes('CANN mock'));
     assert.equal(report.cpuFallbackAllowed, false);
@@ -268,6 +269,18 @@ try {
     assert.equal(report.passed, false);
     assert.match(report.buckets[0].error, /RunSync failure during timing/);
     assert.equal(state.live.size, 0);
+  });
+  await scenario('Cleanup failure preserves the original inference validation error', async () => {
+    const m = await start();
+    state.corrupt = 'nan';
+    state.releaseFailure = true;
+    const report = await m.acceptNpu(() => {});
+    assert.equal(report.passed, false);
+    assert.match(report.buckets[0].error, /5 个有限 logit/);
+    assert.ok(!report.buckets[0].error.includes('disposal'));
+    assert.ok(logs.some(({args}) => args[2].startsWith('[PNPU][CLEANUP]')));
+    assert.equal(report.buckets[1].passed, true);
+    assert.equal(report.buckets[2].passed, true);
   });
   await scenario('Missing NPU cannot pass acceptance through CPU fallback', async () => {
     state.noNpu = true;

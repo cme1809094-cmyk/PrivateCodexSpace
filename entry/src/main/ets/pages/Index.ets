@@ -297,7 +297,7 @@ struct Index {
           Text('从中文指令识别相机、麦克风和定位权限')
             .fontSize(15)
             .fontColor(MUTED)
-          Text(this.ready ? this.modelName + ' · HiAI 优先 · 1.1.0' : (this.busy ? '正在加载模型' : '模型未就绪'))
+          Text(this.ready ? this.modelName + ' · HiAI 优先 · 1.1.1' : (this.busy ? '正在加载模型' : '模型未就绪'))
             .fontSize(12)
             .fontWeight(FontWeight.Medium)
             .fontColor(GREEN)
