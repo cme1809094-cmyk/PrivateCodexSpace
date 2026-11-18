@@ -32,6 +32,10 @@ def main():
     for path in (ROOT / "ml").glob("*.py"):
         main_files[path.relative_to(ROOT).as_posix()] = path
     main_files["ml/requirements-training-cpu.txt"] = ROOT / "ml/requirements-training-cpu.txt"
+    for path in (ROOT / "ml").glob("LICENSE*.txt"):
+        main_files[path.relative_to(ROOT).as_posix()] = path
+    for path in (ROOT / "ml").glob("THIRD-PARTY*.txt"):
+        main_files[path.relative_to(ROOT).as_posix()] = path
     directories = ["ml/data/permission_intent_v3"]
     if args.data_version == "v4":
         directories.append("ml/data/permission_intent_v4")
@@ -56,7 +60,9 @@ def main():
             continue
         # Include all attempted configurations, with weights only for the winner.
         rel = path.relative_to(args.experiments)
-        if rel.parts[0].startswith(("pilot-", "full-", "probe-", "refine-")) or len(rel.parts) == 1:
+        if path.suffix == ".npz":
+            continue  # Reproducible training caches are not mobile artifacts.
+        if rel.parts[0].startswith(("pilot-", "full-", "probe-", "refine-", "teacher-")) or len(rel.parts) == 1:
             main_files["development_attempts/" + rel.as_posix()] = path
     manifest = {"scope": "Selected checkpoint plus standard ONNX; human review pending; not a phone-ready OMC profile",
                 "files": {name: {"bytes": path.stat().st_size, "sha256": sha256(path)}

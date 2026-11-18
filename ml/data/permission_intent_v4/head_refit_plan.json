@@ -1,0 +1,17 @@
+{
+  "stage": "Validation-driven frozen-feature head refinement, before any new320 evaluation",
+  "reason": "Three teacher epochs reach validation score0.4607, below student0.6026. Optimize the new task heads on fixed encoder features before judging transfer.",
+  "encoder_updates": false,
+  "representations": ["Best v4 mobile student", "Selected NLI teacher encoder"],
+  "normalization": "Mean/std from training features only; std clamped at0.02; fold into final linear weights and biases",
+  "optimizer": "Full-batch Adam; classifier weights LR0.01, biases LR0.03",
+  "regularization_candidates": [0.01,0.10],
+  "steps_per_candidate": 100,
+  "validation_every_steps": 5,
+  "loss": "sqrt capability weights CE +0.5 inverse-intent CE +L2 averaged by class groups",
+  "selection": "Unchanged v4 optimization score; keep initial model if no improvement",
+  "mobile_precision_gate": "Quantized head inputs/weights/biases with FP32 accumulation must stay within0.1 absolute logits on validation; not a whole-graph or phone check",
+  "distillation_gate": "Best teacher must exceed best mobile student validation score by0.02",
+  "data_rules": "Same frozen train/validation. No fresh-test text, targets or examples used in fit; original nine targets unchanged",
+  "human_review": "pending"
+}

@@ -19,3 +19,7 @@ python3 ml/prepare_intent_v4.py --require-review --freeze
 ```
 
 审核表为 `train_review.csv`、`validation_review.csv`；评测后再生成保留题与逐条预测审核表。模型选择预算与九项预设实验目标见 `experiment_plan.json`。这些内部合成数据实验不能代替真实用户、人工审核和手机 NPU 验收。
+
+`extension_plan.json`、`head_refit_plan.json`、`specialist_distillation_plan.json` 是原预算结束后、打开新保留测试前记录的验证驱动追加实验。它们不修改原数据或九项预设目标。`teacher_source.json` 固定公开 NLI 教师的 revision、文件字节数和 SHA；教师权重不属于部署模型。
+
+`product_examples.jsonl` 为助手自行挑选的 25 条日常说明性案例，仅在锁定最终候选后展示新旧预测，不用于训练、选模型或宣称真实用户验收。它不是冻结训练／验证／保留测试的一部分。

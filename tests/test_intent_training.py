@@ -19,6 +19,8 @@ from train_permission_intent_v2 import prepare_data
 from intent_contrast import packed_group_batches, pair_margin_loss, calibrate_policy
 from evaluate_intent_contrast import grouped_result
 from intent_optimization import focal_objective, trim_padding
+from distill_permission_intent import correct_teacher_kl, load_training_cache, clarification_specialist_kl
+from refit_permission_heads import cap_linear, fold
 
 
 class IntentTrainingTests(unittest.TestCase):
@@ -237,6 +239,47 @@ class IntentTrainingTests(unittest.TestCase):
         self.assertEqual(trimmed["input_ids"].shape, (2, 5))
         self.assertEqual(trimmed["input_ids"][1].tolist(), [2, 5, 6, 7, 3])
         self.assertEqual(trimmed["attention_mask"].sum().item(), batch["attention_mask"].sum().item())
+
+    def test_distillation_ignores_incorrect_teacher_targets(self):
+        student = torch.zeros((2, 3), requires_grad=True)
+        teacher = torch.tensor([[10.0, -10.0, -10.0], [-10.0, 10.0, -10.0]])
+        loss = correct_teacher_kl(student, teacher, torch.tensor([1, 1]), torch.ones(2))
+        loss.backward()
+        torch.testing.assert_close(student.grad[0], torch.zeros(3), rtol=0, atol=0)
+        self.assertLess(float(student.grad[1, 1]), 0)
+
+    def test_distillation_cache_must_match_training_ids_and_order(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "teacher.npz"
+            np.savez_compressed(path, ids=np.asarray(["train_a", "train_b"]),
+                                capability_logits=np.zeros((2, 3, 3)), intent_logits=np.zeros((2, 4)),
+                                pooled_features=np.ones((2, 8), dtype=np.float16))
+            loaded = load_training_cache(path, ["train_a", "train_b"])
+            self.assertEqual(loaded["pooled_features"].dtype, torch.float32)
+            for ids in (["validation_a", "validation_b"], ["train_b", "train_a"]):
+                with self.assertRaisesRegex(ValueError, "IDs/order"):
+                    load_training_cache(path, ids)
+
+    def test_head_normalization_fold_preserves_class_probabilities(self):
+        for conditional in (False, True):
+            features = torch.randn(7, 3, 5) if conditional else torch.randn(7, 5)
+            mean = torch.randn(3, 5) if conditional else torch.randn(5)
+            scale = (torch.rand(3, 5) if conditional else torch.rand(5)) + 0.2
+            weight, bias = torch.randn(3, 3, 5), torch.randn(3, 3)
+            before = cap_linear((features - mean) / scale, weight, bias).softmax(-1)
+            after_weight, after_bias = fold(weight, bias, mean, scale)
+            after = cap_linear(features, after_weight, after_bias).softmax(-1)
+            torch.testing.assert_close(before, after, rtol=1e-5, atol=1e-6)
+
+    def test_clarification_specialist_does_not_copy_other_intent_classes(self):
+        student = torch.zeros((3, 4), requires_grad=True)
+        teacher = torch.tensor([[0., 10., 0., 0.], [0., 10., 0., 0.], [0., 0., 10., 0.]])
+        loss = clarification_specialist_kl(student, teacher, torch.tensor([0, 1, 3]), torch.ones(3))
+        loss.backward()
+        torch.testing.assert_close(student.grad[0], torch.zeros(4), rtol=0, atol=0)
+        self.assertLess(float(student.grad[1, 1]), 0)
+        torch.testing.assert_close(student.grad[2, 0], student.grad[2, 2], rtol=0, atol=0)
+        torch.testing.assert_close(student.grad[2, 2], student.grad[2, 3], rtol=0, atol=0)
 
     def test_run_split_covers_statuses_and_never_moves_test(self):
         import json

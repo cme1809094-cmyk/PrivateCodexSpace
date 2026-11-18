@@ -1,0 +1,19 @@
+TinyBERT v4 experiment provenance
+
+Student: Huawei Noah TinyBERT 4L Chinese, inherited through the paired v3
+checkpoint. See LICENSE-TinyBERT.txt. This project fine-tunes it and adds a gated
+capability evidence head. All model files, vocabulary and protocol must stay paired.
+
+Cloud-only teacher: IDEA-CCNL/Erlangshen-Roberta-110M-NLI, revision
+864d25be3ce5e90d9193cb49d9fbd52722cdc6b0, Apache-2.0 per upstream model card.
+Upstream: https://huggingface.co/IDEA-CCNL/Erlangshen-Roberta-110M-NLI
+The experiment stores the upstream README, verified source manifest, training
+configuration and derivatives locally. The downloadable mobile package omits
+teacher weights and reproducible numerical caches; fetch_permission_teacher.py
+restores the pinned public base files and verifies their size and SHA256.
+The teacher is never shipped as the four-layer phone model. Complete teacher
+distillation failed the validation gate; only clarification-specialist transfer
+was tried. Final selected mobile weights are recorded separately.
+
+Runtime/training dependencies and their own licenses remain with their respective
+owners. Versions used for this experiment are pinned in requirements-training-cpu.txt.

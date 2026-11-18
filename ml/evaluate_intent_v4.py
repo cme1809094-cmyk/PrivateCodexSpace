@@ -72,10 +72,14 @@ def main():
     legacy = [r for r in read_rows(ROOT / "ml/data/permission_intent_v2/expansion/all_instructions.jsonl") if r["id"] in old_ids]
     report = {"scope": "AI-authored and independently AI-reviewed fresh cases; human review pending. All 32 output capabilities scored.",
               "old280_scope": "Previously inspected regression only; excluded from v4 train/validation/model selection",
+              "product_examples_scope": "Assistant-curated development examples; may resemble known tasks; not independent user evidence or held-out acceptance",
               "selection_lock": lock, "fresh_test_sha256": sha256(DATA / "reserved_test.jsonl"),
               "baseline_validation_lock_sha256": sha256(args.output / "baseline_validation_lock.json"),
               "further_tuning_on_fresh_test": False, "datasets": {}}
-    for name, rows in (("fresh_reserved", fresh), ("known_v3_regression", regression), ("legacy_v2_regression", legacy)):
+    datasets = [("fresh_reserved", fresh), ("known_v3_regression", regression), ("legacy_v2_regression", legacy)]
+    if (DATA / "product_examples.jsonl").exists():
+        datasets.append(("product_examples", read_rows(DATA / "product_examples.jsonl")))
+    for name, rows in datasets:
         encoded = encode(tokenizer, rows, 64)
         targets, statuses = labels(rows, ids)
         targets, statuses = targets.numpy(), statuses.numpy()

@@ -1,0 +1,36 @@
+{
+  "stage": "Validation-driven extension, declared after the original v4 probe/refinement budget and before fresh-test evaluation",
+  "reason": "The lightweight refinement still reaches only validation required F1 0.5721 / forbidden F1 0.4880. The new-validation ambiguity breakdown exposes weak conflict understanding; the new320 remains unopened.",
+  "original_plan_unchanged": true,
+  "data_unchanged": true,
+  "fresh_reserved_still_unopened": true,
+  "teacher": {
+    "model_id": "IDEA-CCNL/Erlangshen-Roberta-110M-NLI",
+    "revision": "864d25be3ce5e90d9193cb49d9fbd52722cdc6b0",
+    "license": "Apache-2.0",
+    "weight_sha256": "3ee7de12d0dc27d21a3e4a8713e270fa431102c20d74351b876d76f9c8a30b03",
+    "role": "Cloud CPU training reference, not the phone deployment model",
+    "epochs": 3,
+    "trainable_encoder_layers": 4,
+    "encoder_lr": 0.00002,
+    "head_lr": 0.001,
+    "loss": "inverse capability/intent class weights, gamma0 CE with smoothing0.03, pair margin0.1"
+  },
+  "student_distillation": {
+    "condition": "Teacher validation optimization score at least 0.02 above the current best student",
+    "initial": "Current best v4 4-layer student",
+    "max_epochs": 8,
+    "min_epochs": 5,
+    "patience": 3,
+    "temperature": 2,
+    "loss": "0.6 supervised focal +0.4 correct-teacher capability KL*T^2 +0.2 correct-teacher intent KL*T^2 +0.1 pooled-feature cosine loss",
+    "training_only_projection": "312 to768 feature projection discarded from inference",
+    "encoder_lr": 0.00001,
+    "head_lr": 0.0001,
+    "data_rule": "Teacher logits/features from train IDs only enter distillation; validation is evaluated with hard gold only"
+  },
+  "selection": "Highest unchanged v4 validation optimization score among the original mobile candidates and distilled student; teacher is not a mobile candidate",
+  "prospective_targets": "The original nine targets remain unchanged",
+  "test_rule": "Freeze the final mobile choice before any new320 evaluation; no tuning on its results",
+  "human_review": "pending"
+}

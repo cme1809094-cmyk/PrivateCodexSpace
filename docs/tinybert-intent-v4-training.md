@@ -46,3 +46,24 @@ python3 ml/export_intent_contrast.py --run /path/to/selected \
 旧 v3 权重分别保留原协议、以及仅在当前验证集重新校准的协议，与 v4 在同一新 320 条上比较；原 280 条及旧 295 条只作已知回归。新题结果不用于继续调参，所有未达标项均公开。
 
 三档标准 ONNX 与 CPU 对照不代表 OMC 编译或手机 NPU 验收。32 能力协议也不能直接替换现有五标签 HAP，权重、配置、词表、阈值和参考向量必须配套。本轮结果与下载将保存于 `ml/results/tinybert-intent-v4-20261118/`。
+
+## 验证驱动的追加实验
+
+原定两组初训和一次续训结束后，验证集仍显示冲突类判断弱，因此在打开新 320 条前另行记录 `extension_plan.json`、`head_refit_plan.json`、`specialist_distillation_plan.json`。这些属于看到开发验证结果后的追加实验，不能表述成最初预注册的预算；冻结的数据和九项目标没有改动。
+
+追加实验先训练公开的中文 NLI 教师，再固定编码器重拟合分类头。分类头的均值／方差只用训练集计算，最后折叠回线性权重，推理不增加归一化操作。小模型验证分数由续训的 0.6026 升到 0.6361，所需能力 F1 约 0.6429。
+
+教师使用 `IDEA-CCNL/Erlangshen-Roberta-110M-NLI`，固定 revision `864d25be3ce5e90d9193cb49d9fbd52722cdc6b0`，来源及逐文件 SHA 见 `teacher_source.json`。它约 1.02 亿参数，仅用于云端训练；底部 8 层冻结，顶部 4 层、pooler 和新任务头训练。教师整任务验证分数 0.5992，没有达到完整多头蒸馏门槛，因此不复制其能力头和其它意图头。
+
+教师的澄清 F1 为 0.8852，高于小模型的 0.7679，因此再试一次最多 8 轮的专项蒸馏：只迁移“需澄清／不需澄清”，用小模型原输出约束能力和其它意图，并加入训练专用特征投影。投影在部署时丢弃。最终仍以相同验证分数选优，蒸馏前小模型作为候补，不能为了采用蒸馏而强行换模型。
+
+```sh
+python3 ml/fetch_permission_teacher.py --output /path/to/teacher-base
+python3 ml/train_permission_teacher.py --help
+python3 ml/refit_permission_heads.py --help
+python3 ml/distill_permission_intent.py --help
+```
+
+教师词表与学生词表的两个特殊字符位置不同，教师独立分词后按冻结训练 ID 对齐缓存；学生仍用原词表，另验证其与应用内 WordPiece 的一致性。缓存不是新标注，也不包含保留测试输入。
+
+`product_examples.jsonl` 是按日常功能挑选的 25 条说明性案例，覆盖相机／麦克风、选择器／图库、剪贴板路径、联系人读写、系统生物验证、提醒、位置和歧义。它们不参与训练、验证或选模型，也不冒充真实用户反馈或独立盲测。最终给出对应的新旧预测审核表。

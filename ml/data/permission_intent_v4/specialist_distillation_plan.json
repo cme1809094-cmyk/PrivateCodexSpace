@@ -1,0 +1,20 @@
+{
+  "stage": "Validation-driven clarification-specialist distillation; declared before new320 evaluation",
+  "full_teacher_gate": "Failed: teacher score0.5992 < mobile0.6361+0.02. Full multihead teacher distillation is skipped.",
+  "specialist_evidence": {
+    "teacher_ambiguous_precision":0.9473684210526315,"teacher_ambiguous_recall":0.8307692307692308,"teacher_ambiguous_f1":0.8852459016393442,
+    "student_ambiguous_precision":0.9148936170212766,"student_ambiguous_recall":0.6615384615384615,"student_ambiguous_f1":0.7678571428571429
+  },
+  "specialist_gate": "Teacher clarification F1 at least0.03 above current mobile on validation",
+  "teacher_targets": "Binary ambiguous versus non-ambiguous only; teacher's weaker capability and other intent heads are not copied",
+  "capability_anchor": "Initial best mobile logits on frozen training IDs, masked to cells where its class matches gold",
+  "other_intent_anchor": "Initial mobile conditional distribution among the three non-ambiguous classes, correct-target masked",
+  "feature_target": "Teacher pooled features whitened using training-only mean/std with std floor0.02; training-only 312-to768 projector initialized by ridge fit",
+  "loss": "0.6 supervised focal +0.3 capability self-KL*T^2 +0.2 clarification specialist KL*T^2 +0.1 other-intent self-KL*T^2 +0.1 feature cosine loss",
+  "temperature":2,"max_epochs":8,"min_epochs":5,"patience":3,
+  "encoder_lr":0.00001,"head_lr":0.0001,
+  "selection": "Highest unchanged v4 validation score, including pre-distillation mobile as fallback",
+  "data_rules": "Same frozen train/validation; no new320 or illustrative product examples in training. Nine original targets unchanged.",
+  "mobile_inference": "Four layers and existing 32x3+4 outputs; training projector discarded",
+  "human_review":"pending"
+}
