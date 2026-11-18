@@ -1,0 +1,9 @@
+{
+  "source_commit": "fbf013c",
+  "note": "Model/helper source preserved before subsequent feature-extraction refactor; pooled teacher forward unchanged",
+  "sha256": {
+    "train_intent_v4.py": "a4a54ab80a2978b6b2a3154c7be6de095e2d1789a75b3edc1071d3515ef41c4a",
+    "intent_optimization.py": "adf65833c9c914fdd0415f5ca0efc15ad9bfcd1b5c54cfa9ce865dcfa9f8df70",
+    "permission_intent_model.py": "eba895760cf06a68869fd78e19dcf55ba634ae0eaf0127372b9108e6287ff0f9"
+  }
+}

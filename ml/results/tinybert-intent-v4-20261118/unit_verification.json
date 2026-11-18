@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "tests": 22,
+  "command": "python -m unittest discover -s tests -p test_intent_training.py -v",
+  "versions": {
+    "torch": "2.8.0+cpu",
+    "transformers": "4.55.4",
+    "numpy": "1.26.4",
+    "onnx": "1.16.2",
+    "onnxruntime": "1.23.2"
+  },
+  "scope": "Host numerical/training integrity checks; not device NPU validation"
+}

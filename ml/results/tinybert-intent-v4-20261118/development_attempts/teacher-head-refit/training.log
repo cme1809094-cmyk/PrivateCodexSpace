@@ -1,0 +1,4 @@
+{'event': 'head_refit_start', 'kind': 'teacher', 'baseline_score': 0.46072420595142616}
+{'regularization': 0.01, 'best_score': 0.599188860247461, 'best_step': 100}
+{'regularization': 0.1, 'best_score': 0.599188860247461, 'best_step': 100}
+{'event': 'head_refit_complete', 'kind': 'teacher', 'score': 0.599188860247461, 'head_fp16_error': 0.0025234222412109375}

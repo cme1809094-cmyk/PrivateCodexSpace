@@ -1,0 +1,27 @@
+test_both_heads_and_encoder_receive_finite_gradients (test_intent_training.IntentTrainingTests) ... ok
+test_calibration_does_not_reward_always_empty_required_predictions (test_intent_training.IntentTrainingTests) ... ok
+test_capability_balancing_gives_rare_states_equal_loss_mass (test_intent_training.IntentTrainingTests) ... ok
+test_checkpoint_roundtrip_preserves_heads_and_label_order (test_intent_training.IntentTrainingTests) ... ok
+test_clarification_specialist_does_not_copy_other_intent_classes (test_intent_training.IntentTrainingTests) ... ok
+test_distillation_cache_must_match_training_ids_and_order (test_intent_training.IntentTrainingTests) ... ok
+test_distillation_ignores_incorrect_teacher_targets (test_intent_training.IntentTrainingTests) ... ok
+test_evidence_gate_preserves_old_head_and_checkpoint (test_intent_training.IntentTrainingTests) ... ok
+test_evidence_ignores_padding_and_trains_queries (test_intent_training.IntentTrainingTests) ... ok
+test_explicit_denial_violation_is_measured (test_intent_training.IntentTrainingTests) ... ok
+test_focal_disabled_matches_existing_objective (test_intent_training.IntentTrainingTests) ... ok
+test_head_normalization_fold_preserves_class_probabilities (test_intent_training.IntentTrainingTests) ... ok
+test_label_attention_is_masked_trainable_and_reloadable (test_intent_training.IntentTrainingTests) ... ok
+test_long_input_is_rejected_without_cutting_negation (test_intent_training.IntentTrainingTests) ... ok
+test_nonexecuting_intent_gates_required_but_keeps_prohibitions (test_intent_training.IntentTrainingTests) ... ok
+test_opposite_roles_must_both_pass_for_a_scenario_to_pass (test_intent_training.IntentTrainingTests) ... ok
+test_opposite_roles_stay_together_and_receive_opposite_margin_gradients (test_intent_training.IntentTrainingTests) ... ok
+test_padding_trim_keeps_final_content_and_separator (test_intent_training.IntentTrainingTests) ... ok
+test_policy_calibration_cannot_win_by_refusing_everything (test_intent_training.IntentTrainingTests) ... ok
+test_run_split_covers_statuses_and_never_moves_test (test_intent_training.IntentTrainingTests) ... ok
+test_tristate_keeps_unmentioned_distinct_from_forbidden (test_intent_training.IntentTrainingTests) ... ok
+test_weak_policy_fallback_keeps_coverage_visible (test_intent_training.IntentTrainingTests) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 1.354s
+
+OK

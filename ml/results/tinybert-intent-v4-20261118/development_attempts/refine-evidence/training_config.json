@@ -1,0 +1,253 @@
+{
+  "variant": "focal_evidence",
+  "initial": "/workspace/work/tinybert-intent-v4/probe-evidence/checkpoint",
+  "output": "/workspace/work/tinybert-intent-v4/refine-evidence",
+  "epochs": 10,
+  "min_epochs": 6,
+  "patience": 4,
+  "learning_rate": 1e-05,
+  "head_learning_rate": 0.0001,
+  "batch_size": 16,
+  "threads": 4,
+  "seed": 20261118,
+  "rows": {
+    "train": 2849,
+    "validation": 623
+  },
+  "data_hashes": {
+    "v4_freeze": {
+      "frozen_before_training": true,
+      "frozen_at_utc": "2026-11-18T12:12:32.802247+00:00",
+      "source_sha256": {
+        "lexicon.json": "04cfeda05dc49691c3de16796217937436e40c8b0e7d8d84254837762d7c433d",
+        "train.jsonl": "ccc4f13f213c8f311dfc887fdb5e17f0d473b7cc110d678c4b0ca5aa954f8644",
+        "validation.jsonl": "295ee4ae2d0181a6e0debd0753ae00da09ed8f0b484d01a445d845868bd43f0e",
+        "reserved_test.jsonl": "b68e4701df793c0eeee6fbe342a28d22774a175fc2a637b3a177125f37353fd0",
+        "generate_intent_v4.py": "d038896347faee2cd3f03f57f5470c368fd9d7452f2b615241e91201ac429b88"
+      },
+      "audit_sha256": "507bfb3a8a7fcc2ba1a1d72b17cbc9d4974c54c1ea278cefd8cefd63ac653e53",
+      "plan_sha256": "cd658704d1fea291d480ff9f932bba8add4dd17c49ad95e98865e82acf8880f3",
+      "root_read_reserved_before_selection": false,
+      "human_review": "pending"
+    },
+    "legacy": {
+      "v2_all_sha256": "ad3e33a410801fb8817b29159ee6670890c2a2311154b2903994268c5eea8931",
+      "v2_run_manifest_sha256": "d8e5e09e5f83884feca10f0cd1382ad45f84003b7ca5b0d01f216bf8b1b87766",
+      "legacy_exclusions": {
+        "train_family_ids": [],
+        "validation_family_ids": [
+          "exp_a_photos_12"
+        ],
+        "validation_ids": [
+          "exp_a_photos_12_1",
+          "exp_a_photos_12_2",
+          "exp_a_photos_12_3",
+          "exp_a_photos_12_4",
+          "exp_a_photos_12_5"
+        ],
+        "new_training_group_ids": [
+          "v3_a_photo_library_10"
+        ],
+        "policy": "Remove the full old validation family from current model selection; preserve its immutable original source for legacy regression. Do not modify old data files.",
+        "actual_legacy_manifest": "ml/results/tinybert-intent-v2-20261118/data_manifest.json",
+        "actual_legacy_manifest_sha256": "d8e5e09e5f83884feca10f0cd1382ad45f84003b7ca5b0d01f216bf8b1b87766",
+        "new_train_old_validation_conflict_resolved_by_exclusion": true,
+        "new_validation_old_training_confirmed_conflicts_remaining": 0
+      },
+      "a_photos_contacts.jsonl": "5c8bfc92482bc7a69808dc9c06b2c95f6251e767d11e1e29bdb9abc68fd1f3b6",
+      "b_clipboard_recording.jsonl": "ae0f7c634877e5ec0c32554827d291ba7ec280cb02bed392ce2c639e57ea8948",
+      "c_status_contrasts.jsonl": "462c4074c2688d56db18318d6d98608506f6a3a6504f0b8a885f529c9dac49e9",
+      "audit_sha256": "e86817da8437daf4af2d9329702bdf26b0140c02e67ca54dbdbdd25d05cd8250",
+      "freeze_sha256": "c8f8d972de9c9b49799b01cb09bd35a518e63bb512e494b0916f56cf37e50251",
+      "reserved_test_sha256": "ba025f9f2d7bb110e20fbf3dc719ee067b6483aacb89ee4ed863387c28615a6a"
+    }
+  },
+  "initial_files_sha256": {
+    "tokenizer.json": "b47773afab60a07be5b72eaa2620b6eedcef9a4bb264eddc5a5e539430429ba5",
+    "config.json": "5bd3b79a985df3a5235fd8a112084019babcffcce6290722d2fc649463c8f2dd",
+    "vocab.txt": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a",
+    "special_tokens_map.json": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a",
+    "model.safetensors": "fde958df6a119c6317f247c485c599b082bb16f8e7901f53ce6c2f5d989fe57c",
+    "protocol.json": "988d2950e509fb03257070f4622c1bee9927d02009ab154c228a186bfbc45fef",
+    "tokenizer_config.json": "1e6850f09bf217ed3b3af40742a9fd3ee75d1db1fcb0e3b567ec53c248684c95"
+  },
+  "source_sha256": {
+    "train_intent_v4.py": "a4a54ab80a2978b6b2a3154c7be6de095e2d1789a75b3edc1071d3515ef41c4a",
+    "intent_optimization.py": "adf65833c9c914fdd0415f5ca0efc15ad9bfcd1b5c54cfa9ce865dcfa9f8df70",
+    "permission_intent_model.py": "eba895760cf06a68869fd78e19dcf55ba634ae0eaf0127372b9108e6287ff0f9",
+    "intent_contrast.py": "f01f0cc526a2ba7c6f0a663dd527439edfa40a880903af16e889aa82263f02ca"
+  },
+  "capability_state_counts": [
+    [
+      2683.0,
+      103.0,
+      63.0
+    ],
+    [
+      2683.0,
+      94.0,
+      72.0
+    ],
+    [
+      2762.0,
+      46.0,
+      41.0
+    ],
+    [
+      2739.0,
+      61.0,
+      49.0
+    ],
+    [
+      2744.0,
+      61.0,
+      44.0
+    ],
+    [
+      2765.0,
+      40.0,
+      44.0
+    ],
+    [
+      2669.0,
+      100.0,
+      80.0
+    ],
+    [
+      2659.0,
+      122.0,
+      68.0
+    ],
+    [
+      2762.0,
+      43.0,
+      44.0
+    ],
+    [
+      2745.0,
+      55.0,
+      49.0
+    ],
+    [
+      2744.0,
+      61.0,
+      44.0
+    ],
+    [
+      2779.0,
+      31.0,
+      39.0
+    ],
+    [
+      2743.0,
+      62.0,
+      44.0
+    ],
+    [
+      2764.0,
+      36.0,
+      49.0
+    ],
+    [
+      2759.0,
+      41.0,
+      49.0
+    ],
+    [
+      2759.0,
+      46.0,
+      44.0
+    ],
+    [
+      2754.0,
+      51.0,
+      44.0
+    ],
+    [
+      2769.0,
+      36.0,
+      44.0
+    ],
+    [
+      2759.0,
+      51.0,
+      39.0
+    ],
+    [
+      2758.0,
+      47.0,
+      44.0
+    ],
+    [
+      2764.0,
+      46.0,
+      39.0
+    ],
+    [
+      2769.0,
+      41.0,
+      39.0
+    ],
+    [
+      2745.0,
+      65.0,
+      39.0
+    ],
+    [
+      2768.0,
+      40.0,
+      41.0
+    ],
+    [
+      2645.0,
+      107.0,
+      97.0
+    ],
+    [
+      2646.0,
+      140.0,
+      63.0
+    ],
+    [
+      2737.0,
+      42.0,
+      70.0
+    ],
+    [
+      2651.0,
+      100.0,
+      98.0
+    ],
+    [
+      2641.0,
+      114.0,
+      94.0
+    ],
+    [
+      2757.0,
+      43.0,
+      49.0
+    ],
+    [
+      2757.0,
+      38.0,
+      54.0
+    ],
+    [
+      2754.0,
+      36.0,
+      59.0
+    ]
+  ],
+  "intent_counts": [
+    2016.0,
+    422.0,
+    265.0,
+    146.0
+  ],
+  "capability_weight_power": 0.5,
+  "intent_weight_power": 1.0,
+  "training_padding": "Right padding trimmed within each batch, never text truncated",
+  "reserved_prompts_read": false,
+  "human_review": "pending"
+}

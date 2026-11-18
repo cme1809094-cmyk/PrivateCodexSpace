@@ -1,0 +1,42 @@
+{
+  "source_files": {
+    "ml/data/permission_intent_v2/expansion/all_instructions.jsonl": {
+      "sha256": "ad3e33a410801fb8817b29159ee6670890c2a2311154b2903994268c5eea8931",
+      "rows": 1500
+    },
+    "ml/data/permission_intent_v3/shards/a_photos_contacts.jsonl": {
+      "sha256": "5c8bfc92482bc7a69808dc9c06b2c95f6251e767d11e1e29bdb9abc68fd1f3b6",
+      "rows": 320
+    },
+    "ml/data/permission_intent_v3/shards/b_clipboard_recording.jsonl": {
+      "sha256": "ae0f7c634877e5ec0c32554827d291ba7ec280cb02bed392ce2c639e57ea8948",
+      "rows": 320
+    },
+    "ml/data/permission_intent_v3/shards/c_status_contrasts.jsonl": {
+      "sha256": "462c4074c2688d56db18318d6d98608506f6a3a6504f0b8a885f529c9dac49e9",
+      "rows": 480
+    },
+    "ml/data/permission_intent_v3/reserved_test.jsonl": {
+      "sha256": "ba025f9f2d7bb110e20fbf3dc719ee067b6483aacb89ee4ed863387c28615a6a",
+      "rows": 280
+    },
+    "ml/data/permission_intent_v4/train.jsonl": {
+      "sha256": "ccc4f13f213c8f311dfc887fdb5e17f0d473b7cc110d678c4b0ca5aa954f8644",
+      "rows": 1248
+    },
+    "ml/data/permission_intent_v4/validation.jsonl": {
+      "sha256": "295ee4ae2d0181a6e0debd0753ae00da09ed8f0b484d01a445d845868bd43f0e",
+      "rows": 224
+    },
+    "ml/data/permission_intent_v4/reserved_test.jsonl": {
+      "sha256": "b68e4701df793c0eeee6fbe342a28d22774a175fc2a637b3a177125f37353fd0",
+      "rows": 320
+    },
+    "ml/data/permission_intent_v4/product_examples.jsonl": {
+      "sha256": "08b8f8039faa03a06cd51903565e10c816ebffa889f6fd222201ea0c732a1e64",
+      "rows": 25
+    }
+  },
+  "total": 4717,
+  "scope": "All old and new raw texts plus 25 illustrative examples; after final model selection"
+}

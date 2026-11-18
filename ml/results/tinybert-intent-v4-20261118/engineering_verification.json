@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "stage": "Untrained warm-start head export smoke; not accuracy or phone/NPU acceptance",
+  "parameters": 11460636,
+  "extra_parameters": 10016,
+  "max_abs_logit_error": 2.86102294921875e-06,
+  "input_dtype": "int32",
+  "output_shapes": [
+    [
+      1,
+      32,
+      3
+    ],
+    [
+      1,
+      4
+    ]
+  ]
+}

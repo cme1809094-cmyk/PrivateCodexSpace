@@ -1,0 +1,28 @@
+{
+  "TinyBERT-intent-v4-model-and-64-20261118.zip": {
+    "local_path": "/workspace/work/tinybert-intent-v4/packages/TinyBERT-intent-v4-model-and-64-20261118.zip",
+    "bytes": 92561747,
+    "sha256": "55547258064eb96bb76a1e12f7d85e713a7582ba263d99962be2be771ba3ad3f",
+    "zip_crc_passed": true,
+    "drive_file_id": "1hfTwQ16wuDVt2fgHACx5ECSN3wyehSPr",
+    "drive_url": "https://drive.google.com/file/d/1hfTwQ16wuDVt2fgHACx5ECSN3wyehSPr/view?usp=drivesdk",
+    "remote_bytes": 92561747,
+    "remote_size_verified": true,
+    "remote_hash_verified": false,
+    "sharing_changed": false,
+    "scope": "Experimental paired four-layer 32-capability profile; human and OMC/phone NPU acceptance pending"
+  },
+  "TinyBERT-intent-v4-onnx-16-32-20261118.zip": {
+    "local_path": "/workspace/work/tinybert-intent-v4/packages/TinyBERT-intent-v4-onnx-16-32-20261118.zip",
+    "bytes": 86115363,
+    "sha256": "8f081caed4f1a84e7c010600d6b9f42323597888d66ccb7d4fdb2cd68ef6dd48",
+    "zip_crc_passed": true,
+    "drive_file_id": "1BYkncwVOm5rUFKvvTtM5FCIAVh-z14NE",
+    "drive_url": "https://drive.google.com/file/d/1BYkncwVOm5rUFKvvTtM5FCIAVh-z14NE/view?usp=drivesdk",
+    "remote_bytes": 86115363,
+    "remote_size_verified": true,
+    "remote_hash_verified": false,
+    "sharing_changed": false,
+    "scope": "Experimental paired four-layer 32-capability profile; human and OMC/phone NPU acceptance pending"
+  }
+}

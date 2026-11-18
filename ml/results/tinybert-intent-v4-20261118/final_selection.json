@@ -1,0 +1,33 @@
+{
+  "selected_run": "full-specialist-distilled",
+  "selected_absolute_path": "/workspace/work/tinybert-intent-v4/full-specialist-distilled",
+  "all_mobile_validation_scores": {
+    "probe-pooled": 0.5514681884724255,
+    "probe-evidence": 0.5616680093355068,
+    "refine-evidence": 0.6026358522539412,
+    "refine-head-student": 0.6360665377989092,
+    "full-specialist-distilled": 0.6511402650950269
+  },
+  "criterion": "Highest unchanged v4 validation score; includes pre-distillation fallback",
+  "fresh_reserved_opened": false,
+  "code_commit_before_test": "4fe1c6090c3deafaf47ced67b0cae75f82f8cc0f",
+  "profile_lock": {
+    "checkpoint_files_sha256": {
+      "tokenizer.json": "9b1a5e20e1adad4080627aaeecbdd7b82e65df9eec06a1f2142a2263d1e729e8",
+      "config.json": "5bd3b79a985df3a5235fd8a112084019babcffcce6290722d2fc649463c8f2dd",
+      "vocab.txt": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a",
+      "special_tokens_map.json": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a",
+      "model.safetensors": "d33b72e1c2670474e6fea369928be976ff00117fb86a0731319225a8b6cee400",
+      "protocol.json": "64c3818429462a2c99d9363c71430085dbf2cabdbabedc659e6b8441f11e2fb4",
+      "tokenizer_config.json": "1e6850f09bf217ed3b3af40742a9fd3ee75d1db1fcb0e3b567ec53c248684c95"
+    },
+    "weights_sha256": "d33b72e1c2670474e6fea369928be976ff00117fb86a0731319225a8b6cee400",
+    "protocol_sha256": "64c3818429462a2c99d9363c71430085dbf2cabdbabedc659e6b8441f11e2fb4",
+    "selected_using": "V4 validation only",
+    "fresh_reserved_opened": false
+  },
+  "no_further_training_or_threshold_tuning_after_fresh_evaluation": true,
+  "human_review": "pending",
+  "full_teacher_gate_passed": false,
+  "clarification_specialist_gate_passed": true
+}

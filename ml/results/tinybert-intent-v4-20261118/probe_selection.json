@@ -1,0 +1,10 @@
+{
+  "selected_probe": "probe-evidence",
+  "variant": "focal_evidence",
+  "criterion": "Highest validation optimization score",
+  "fresh_reserved_opened": false,
+  "probe_scores": {
+    "probe-pooled": 0.5514681884724255,
+    "probe-evidence": 0.5616680093355068
+  }
+}

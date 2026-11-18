@@ -1,0 +1,12 @@
+{"event": "start", "variant": "focal_evidence", "rows": {"train": 2849, "validation": 623}, "parameters": 11460636}
+{"epoch": 1, "loss": 0.4413, "score": 0.5677, "required_f1": 0.5421, "required_recall": 0.5438, "forbidden_f1": 0.4497, "ambiguous_recall": 0.5846, "intent_macro_f1": 0.7371, "best_epoch": 1, "seconds": 37.6}
+{"epoch": 2, "loss": 0.4238, "score": 0.5625, "required_f1": 0.5297, "required_recall": 0.6273, "forbidden_f1": 0.4439, "ambiguous_recall": 0.6, "intent_macro_f1": 0.7453, "best_epoch": 1, "seconds": 36.4}
+{"epoch": 3, "loss": 0.4099, "score": 0.5727, "required_f1": 0.5432, "required_recall": 0.5438, "forbidden_f1": 0.4505, "ambiguous_recall": 0.6462, "intent_macro_f1": 0.7504, "best_epoch": 3, "seconds": 35.2}
+{"epoch": 4, "loss": 0.3979, "score": 0.5809, "required_f1": 0.5482, "required_recall": 0.5092, "forbidden_f1": 0.4612, "ambiguous_recall": 0.6923, "intent_macro_f1": 0.7526, "best_epoch": 4, "seconds": 35.5}
+{"epoch": 5, "loss": 0.3802, "score": 0.5962, "required_f1": 0.5606, "required_recall": 0.5275, "forbidden_f1": 0.489, "ambiguous_recall": 0.6462, "intent_macro_f1": 0.7625, "best_epoch": 5, "seconds": 39.3}
+{"epoch": 6, "loss": 0.374, "score": 0.5873, "required_f1": 0.5546, "required_recall": 0.5173, "forbidden_f1": 0.4663, "ambiguous_recall": 0.6923, "intent_macro_f1": 0.7635, "best_epoch": 5, "seconds": 36.3}
+{"epoch": 7, "loss": 0.3689, "score": 0.5868, "required_f1": 0.5554, "required_recall": 0.5255, "forbidden_f1": 0.4678, "ambiguous_recall": 0.6769, "intent_macro_f1": 0.7585, "best_epoch": 5, "seconds": 36.5}
+{"epoch": 8, "loss": 0.3625, "score": 0.5974, "required_f1": 0.5724, "required_recall": 0.5234, "forbidden_f1": 0.4755, "ambiguous_recall": 0.6615, "intent_macro_f1": 0.7622, "best_epoch": 8, "seconds": 38.7}
+{"epoch": 9, "loss": 0.3596, "score": 0.6026, "required_f1": 0.5721, "required_recall": 0.5295, "forbidden_f1": 0.488, "ambiguous_recall": 0.6923, "intent_macro_f1": 0.7687, "best_epoch": 9, "seconds": 39.3}
+{"epoch": 10, "loss": 0.3582, "score": 0.6002, "required_f1": 0.5717, "required_recall": 0.5234, "forbidden_f1": 0.4804, "ambiguous_recall": 0.6769, "intent_macro_f1": 0.7685, "best_epoch": 9, "seconds": 38.0}
+{"event": "complete", "variant": "focal_evidence", "epoch": 9, "validation_score": 0.6026358522539412, "seconds": 383.6}

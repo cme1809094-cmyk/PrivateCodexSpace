@@ -1,0 +1,314 @@
+{
+  "selected_epoch": 5,
+  "epochs_run": 8,
+  "validation_score": 0.6511402650950269,
+  "validation": {
+    "samples": 623,
+    "required": {
+      "precision": 0.6130742049469965,
+      "recall": 0.7067209775967414,
+      "f1": 0.6565752128666036,
+      "tp": 347,
+      "fp": 219,
+      "fn": 144
+    },
+    "forbidden": {
+      "precision": 0.4957627118644068,
+      "recall": 0.5909090909090909,
+      "f1": 0.5391705069124424,
+      "tp": 117,
+      "fp": 119,
+      "fn": 81
+    },
+    "required_set_exact": 345,
+    "required_set_exact_rate": 0.5537720706260032,
+    "all_capability_states_exact": 264,
+    "all_capability_states_exact_rate": 0.42375601926163725,
+    "joint_states_and_intent_exact": 244,
+    "joint_states_and_intent_exact_rate": 0.391653290529695,
+    "intent_accuracy": 0.8539325842696629,
+    "intent_macro_f1": 0.7815456092343964,
+    "intent_per_class": {
+      "in_scope": {
+        "precision": 0.8706140350877193,
+        "recall": 0.9497607655502392,
+        "f1": 0.9084668192219679,
+        "tp": 397,
+        "fp": 59,
+        "fn": 21
+      },
+      "ambiguous": {
+        "precision": 0.9555555555555556,
+        "recall": 0.6615384615384615,
+        "f1": 0.7818181818181819,
+        "tp": 43,
+        "fp": 2,
+        "fn": 22
+      },
+      "no_device_capability": {
+        "precision": 0.6785714285714286,
+        "recall": 0.6551724137931034,
+        "f1": 0.6666666666666666,
+        "tp": 57,
+        "fp": 27,
+        "fn": 30
+      },
+      "out_of_scope": {
+        "precision": 0.9210526315789473,
+        "recall": 0.660377358490566,
+        "f1": 0.7692307692307693,
+        "tp": 35,
+        "fp": 3,
+        "fn": 18
+      }
+    },
+    "overrequested_samples": 199,
+    "overrequested_sample_rate": 0.31942215088282505,
+    "explicit_prohibition_violation_samples": 24,
+    "explicit_prohibition_violation_rate": 0.038523274478330656,
+    "clarification": {
+      "precision": 0.9555555555555556,
+      "recall": 0.6615384615384615,
+      "f1": 0.7818181818181819,
+      "tp": 43,
+      "fp": 2,
+      "fn": 22
+    },
+    "intent_confusion_matrix": [
+      [
+        397,
+        1,
+        18,
+        2
+      ],
+      [
+        17,
+        43,
+        5,
+        0
+      ],
+      [
+        29,
+        0,
+        57,
+        1
+      ],
+      [
+        13,
+        1,
+        4,
+        35
+      ]
+    ]
+  },
+  "validation_policy": {
+    "samples": 623,
+    "required": {
+      "precision": 0.6343283582089553,
+      "recall": 0.5193482688391039,
+      "f1": 0.5711086226203808,
+      "tp": 255,
+      "fp": 147,
+      "fn": 236
+    },
+    "forbidden": {
+      "precision": 0.4957627118644068,
+      "recall": 0.5909090909090909,
+      "f1": 0.5391705069124424,
+      "tp": 117,
+      "fp": 119,
+      "fn": 81
+    },
+    "required_set_exact": 308,
+    "required_set_exact_rate": 0.4943820224719101,
+    "all_capability_states_exact": 232,
+    "all_capability_states_exact_rate": 0.3723916532905297,
+    "joint_states_and_intent_exact": 199,
+    "joint_states_and_intent_exact_rate": 0.31942215088282505,
+    "intent_accuracy": 0.8539325842696629,
+    "intent_macro_f1": 0.7815456092343964,
+    "intent_per_class": {
+      "in_scope": {
+        "precision": 0.8706140350877193,
+        "recall": 0.9497607655502392,
+        "f1": 0.9084668192219679,
+        "tp": 397,
+        "fp": 59,
+        "fn": 21
+      },
+      "ambiguous": {
+        "precision": 0.9555555555555556,
+        "recall": 0.6615384615384615,
+        "f1": 0.7818181818181819,
+        "tp": 43,
+        "fp": 2,
+        "fn": 22
+      },
+      "no_device_capability": {
+        "precision": 0.6785714285714286,
+        "recall": 0.6551724137931034,
+        "f1": 0.6666666666666666,
+        "tp": 57,
+        "fp": 27,
+        "fn": 30
+      },
+      "out_of_scope": {
+        "precision": 0.9210526315789473,
+        "recall": 0.660377358490566,
+        "f1": 0.7692307692307693,
+        "tp": 35,
+        "fp": 3,
+        "fn": 18
+      }
+    },
+    "overrequested_samples": 134,
+    "overrequested_sample_rate": 0.21508828250401285,
+    "explicit_prohibition_violation_samples": 15,
+    "explicit_prohibition_violation_rate": 0.024077046548956663,
+    "clarification": {
+      "precision": 0.9555555555555556,
+      "recall": 0.6615384615384615,
+      "f1": 0.7818181818181819,
+      "tp": 43,
+      "fp": 2,
+      "fn": 22
+    },
+    "intent_confusion_matrix": [
+      [
+        397,
+        1,
+        18,
+        2
+      ],
+      [
+        17,
+        43,
+        5,
+        0
+      ],
+      [
+        29,
+        0,
+        57,
+        1
+      ],
+      [
+        13,
+        1,
+        4,
+        35
+      ]
+    ],
+    "families": 259,
+    "families_all_paraphrases_correct": 56,
+    "mean_family_joint_accuracy": 0.32972972972972975,
+    "acceptance_coverage": 0.43820224719101125,
+    "in_scope_acceptance_coverage": 0.6124401913875598,
+    "accepted_samples": 273,
+    "operational_clarification_samples": 228,
+    "accepted_subset": {
+      "samples": 273,
+      "required": {
+        "precision": 0.6343283582089553,
+        "recall": 0.8333333333333334,
+        "f1": 0.7203389830508474,
+        "tp": 255,
+        "fp": 147,
+        "fn": 51
+      },
+      "forbidden": {
+        "precision": 0.43373493975903615,
+        "recall": 0.5070422535211268,
+        "f1": 0.4675324675324675,
+        "tp": 36,
+        "fp": 47,
+        "fn": 35
+      },
+      "required_set_exact": 120,
+      "required_set_exact_rate": 0.43956043956043955,
+      "all_capability_states_exact": 94,
+      "all_capability_states_exact_rate": 0.3443223443223443,
+      "joint_states_and_intent_exact": 92,
+      "joint_states_and_intent_exact_rate": 0.336996336996337,
+      "intent_accuracy": 0.9377289377289377,
+      "intent_macro_f1": 0.24196597353497165,
+      "intent_per_class": {
+        "in_scope": {
+          "precision": 0.9377289377289377,
+          "recall": 1.0,
+          "f1": 0.9678638941398866,
+          "tp": 256,
+          "fp": 17,
+          "fn": 0
+        },
+        "ambiguous": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 8
+        },
+        "no_device_capability": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 7
+        },
+        "out_of_scope": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 2
+        }
+      },
+      "overrequested_samples": 134,
+      "overrequested_sample_rate": 0.4908424908424908,
+      "explicit_prohibition_violation_samples": 15,
+      "explicit_prohibition_violation_rate": 0.054945054945054944,
+      "clarification": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 8
+      },
+      "intent_confusion_matrix": [
+        [
+          256,
+          0,
+          0,
+          0
+        ],
+        [
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0
+        ]
+      ]
+    }
+  },
+  "checkpoint_roundtrip_exact": true,
+  "fresh_reserved_opened": false,
+  "mobile_parameters": 11460636,
+  "human_review": "pending",
+  "seconds": 305.3242585659027
+}

@@ -1,0 +1,94 @@
+{
+  "TinyBERT-intent-v4-model-and-64-20261118.zip": {
+    "drive_file_id": "1hfTwQ16wuDVt2fgHACx5ECSN3wyehSPr",
+    "drive_url": "https://drive.google.com/file/d/1hfTwQ16wuDVt2fgHACx5ECSN3wyehSPr/view?usp=drivesdk",
+    "remote_bytes": 92561747,
+    "remote_size_verified": true,
+    "remote_hash_verified": false,
+    "sharing_changed": false,
+    "upload_receipt": {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "1hfTwQ16wuDVt2fgHACx5ECSN3wyehSPr",
+      "title": "TinyBERT-intent-v4-model-and-64-20261118.zip",
+      "file_name": "TinyBERT-intent-v4-model-and-64-20261118.zip",
+      "mime_type": "application/zip",
+      "url": "https://drive.google.com/file/d/1hfTwQ16wuDVt2fgHACx5ECSN3wyehSPr/view?usp=drivesdk",
+      "parent_id": null,
+      "structuredContent": {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1hfTwQ16wuDVt2fgHACx5ECSN3wyehSPr",
+        "title": "TinyBERT-intent-v4-model-and-64-20261118.zip",
+        "file_name": "TinyBERT-intent-v4-model-and-64-20261118.zip",
+        "mime_type": "application/zip",
+        "url": "https://drive.google.com/file/d/1hfTwQ16wuDVt2fgHACx5ECSN3wyehSPr/view?usp=drivesdk",
+        "parent_id": null
+      }
+    },
+    "metadata_readback": {
+      "id": "1hfTwQ16wuDVt2fgHACx5ECSN3wyehSPr",
+      "title": "TinyBERT-intent-v4-model-and-64-20261118.zip",
+      "mime_type": "application/zip",
+      "size": "92561747",
+      "url": "https://drive.google.com/file/d/1hfTwQ16wuDVt2fgHACx5ECSN3wyehSPr/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1hfTwQ16wuDVt2fgHACx5ECSN3wyehSPr/view?usp=drivesdk",
+      "file_or_folder": "file",
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": null,
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    }
+  },
+  "TinyBERT-intent-v4-onnx-16-32-20261118.zip": {
+    "drive_file_id": "1BYkncwVOm5rUFKvvTtM5FCIAVh-z14NE",
+    "drive_url": "https://drive.google.com/file/d/1BYkncwVOm5rUFKvvTtM5FCIAVh-z14NE/view?usp=drivesdk",
+    "remote_bytes": 86115363,
+    "remote_size_verified": true,
+    "remote_hash_verified": false,
+    "sharing_changed": false,
+    "upload_receipt": {
+      "accepted_input": "file_uri",
+      "success": true,
+      "id": "1BYkncwVOm5rUFKvvTtM5FCIAVh-z14NE",
+      "title": "TinyBERT-intent-v4-onnx-16-32-20261118.zip",
+      "file_name": "TinyBERT-intent-v4-onnx-16-32-20261118.zip",
+      "mime_type": "application/zip",
+      "url": "https://drive.google.com/file/d/1BYkncwVOm5rUFKvvTtM5FCIAVh-z14NE/view?usp=drivesdk",
+      "parent_id": null,
+      "structuredContent": {
+        "accepted_input": "file_uri",
+        "success": true,
+        "id": "1BYkncwVOm5rUFKvvTtM5FCIAVh-z14NE",
+        "title": "TinyBERT-intent-v4-onnx-16-32-20261118.zip",
+        "file_name": "TinyBERT-intent-v4-onnx-16-32-20261118.zip",
+        "mime_type": "application/zip",
+        "url": "https://drive.google.com/file/d/1BYkncwVOm5rUFKvvTtM5FCIAVh-z14NE/view?usp=drivesdk",
+        "parent_id": null
+      }
+    },
+    "metadata_readback": {
+      "id": "1BYkncwVOm5rUFKvvTtM5FCIAVh-z14NE",
+      "title": "TinyBERT-intent-v4-onnx-16-32-20261118.zip",
+      "mime_type": "application/zip",
+      "size": "86115363",
+      "url": "https://drive.google.com/file/d/1BYkncwVOm5rUFKvvTtM5FCIAVh-z14NE/view?usp=drivesdk",
+      "display_url": "https://drive.google.com/file/d/1BYkncwVOm5rUFKvvTtM5FCIAVh-z14NE/view?usp=drivesdk",
+      "file_or_folder": "file",
+      "created_time": null,
+      "modified_time": null,
+      "parent_ids": null,
+      "drive_id": null,
+      "current_user_can_share": null,
+      "has_augmented_permissions": null,
+      "shared": null,
+      "permissions": null,
+      "source_visibility_status": "access_not_verified"
+    }
+  }
+}

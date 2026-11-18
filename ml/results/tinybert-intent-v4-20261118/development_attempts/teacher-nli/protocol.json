@@ -1,0 +1,46 @@
+{
+  "capability_ids": [
+    "media.photo.pick_one",
+    "media.photo.read_library",
+    "media.photo.add",
+    "files.pick_one",
+    "files.save_user_selected",
+    "contacts.pick_one",
+    "contacts.read",
+    "contacts.write",
+    "calendar.read",
+    "calendar.write",
+    "notifications.publish",
+    "notifications.open_settings",
+    "reminders.schedule_local",
+    "reminders.schedule_exact",
+    "bluetooth.scan",
+    "bluetooth.connect",
+    "wlan.scan",
+    "wlan.connect",
+    "nfc.read_tag",
+    "nfc.write_tag",
+    "motion.read_steps",
+    "motion.recognize_activity",
+    "biometric.authenticate",
+    "clipboard.paste_user_initiated",
+    "clipboard.read",
+    "clipboard.write",
+    "camera.capture_photo",
+    "camera.record_video",
+    "microphone.record_audio",
+    "location.coarse.foreground_once",
+    "location.precise.foreground_once",
+    "location.background"
+  ],
+  "thresholds": {
+    "required": 0.7,
+    "forbidden": 0.8
+  },
+  "policy": {
+    "min_in_scope_probability": 0.0,
+    "defer_uncertain_required": false
+  },
+  "teacher_only": true,
+  "source_model": "IDEA-CCNL/Erlangshen-Roberta-110M-NLI"
+}

@@ -1,0 +1,31 @@
+{
+  "buckets": {
+    "16": {
+      "held_out_rows_that_fit": 0,
+      "unlabeled_engineering_smoke_rows": 3,
+      "capability_max_abs_logit_error": 7.987022399902344e-06,
+      "intent_max_abs_logit_error": 1.0967254638671875e-05,
+      "decoded_mismatch_ids": [],
+      "policy_decision_mismatch_ids": []
+    },
+    "32": {
+      "held_out_rows_that_fit": 147,
+      "unlabeled_engineering_smoke_rows": 3,
+      "capability_max_abs_logit_error": 9.059906005859375e-06,
+      "intent_max_abs_logit_error": 1.0967254638671875e-05,
+      "decoded_mismatch_ids": [],
+      "policy_decision_mismatch_ids": []
+    },
+    "64": {
+      "held_out_rows_that_fit": 320,
+      "unlabeled_engineering_smoke_rows": 3,
+      "capability_max_abs_logit_error": 9.059906005859375e-06,
+      "intent_max_abs_logit_error": 1.0967254638671875e-05,
+      "decoded_mismatch_ids": [],
+      "policy_decision_mismatch_ids": []
+    }
+  },
+  "tests_passed": 22,
+  "tokenizer_raw_texts_agree": 4717,
+  "phone_npu_verified": false
+}

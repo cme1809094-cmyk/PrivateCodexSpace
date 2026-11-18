@@ -1,0 +1,32 @@
+{
+  "model_id": "IDEA-CCNL/Erlangshen-Roberta-110M-NLI",
+  "revision": "864d25be3ce5e90d9193cb49d9fbd52722cdc6b0",
+  "license": "apache-2.0",
+  "files": [
+    {
+      "rfilename": "README.md",
+      "blobId": "9a74fb13a8919c1eb9ba9cb81515cecc30c424d1",
+      "size": 3354
+    },
+    {
+      "rfilename": "config.json",
+      "blobId": "4f8446e6af84807d8528ee289842cc217d6840da",
+      "size": 931
+    },
+    {
+      "rfilename": "pytorch_model.bin",
+      "blobId": "588efcd3834e245c7c17cda48aa8b3812549b4c4",
+      "size": 409163949,
+      "lfs": {
+        "sha256": "3ee7de12d0dc27d21a3e4a8713e270fa431102c20d74351b876d76f9c8a30b03",
+        "size": 409163949,
+        "pointerSize": 134
+      }
+    },
+    {
+      "rfilename": "vocab.txt",
+      "blobId": "ca4f9781030019ab9b253c6dcb8c7878b6dc87a5",
+      "size": 109540
+    }
+  ]
+}

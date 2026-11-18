@@ -1,0 +1,10 @@
+{
+  "TinyBERT-intent-v4-model-and-64-20261118.zip": {
+    "manifest_entries_verified": 211,
+    "all_file_sha256_and_sizes_passed": true
+  },
+  "TinyBERT-intent-v4-onnx-16-32-20261118.zip": {
+    "manifest_entries_verified": 4,
+    "all_file_sha256_and_sizes_passed": true
+  }
+}

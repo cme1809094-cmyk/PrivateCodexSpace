@@ -1,0 +1,9 @@
+{
+  "scope": "Only reproducible public upstream download cache evicted after teacher training; all trained checkpoints and teacher deltas retained",
+  "file": "/workspace/work/permission-teacher/downloads/pytorch_model.bin",
+  "bytes": 409163949,
+  "sha256": "3ee7de12d0dc27d21a3e4a8713e270fa431102c20d74351b876d76f9c8a30b03",
+  "recover_command": "python ml/fetch_permission_teacher.py --output /workspace/work/permission-teacher/downloads",
+  "teacher_fresh_holdout_evaluated": false,
+  "specialist_training_uses_verified_cached_training_logits_only": true
+}

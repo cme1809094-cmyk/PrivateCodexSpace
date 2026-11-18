@@ -1,0 +1,662 @@
+{
+  "human_review": "pending",
+  "scope": "After final held-out evaluation; not used for model selection",
+  "error_sample_counts": {
+    "missing_required": 102,
+    "extra_required": 53,
+    "forbidden_set_mismatch": 99,
+    "intent_status_mismatch": 122,
+    "explicit_prohibition_violation": 7
+  },
+  "per_capability": {
+    "media.photo.pick_one": {
+      "required": {
+        "precision": 0.6666666666666666,
+        "recall": 1.0,
+        "f1": 0.8,
+        "tp": 4,
+        "fp": 2,
+        "fn": 0,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666,
+        "tp": 2,
+        "fp": 2,
+        "fn": 0,
+        "gold_support": 2
+      }
+    },
+    "media.photo.read_library": {
+      "required": {
+        "precision": 0.6666666666666666,
+        "recall": 0.6666666666666666,
+        "f1": 0.6666666666666666,
+        "tp": 4,
+        "fp": 2,
+        "fn": 2,
+        "gold_support": 6
+      },
+      "forbidden": {
+        "precision": 0.6666666666666666,
+        "recall": 1.0,
+        "f1": 0.8,
+        "tp": 2,
+        "fp": 1,
+        "fn": 0,
+        "gold_support": 2
+      }
+    },
+    "media.photo.add": {
+      "required": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 3,
+        "fn": 4,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "gold_support": 0
+      }
+    },
+    "files.pick_one": {
+      "required": {
+        "precision": 0.6666666666666666,
+        "recall": 0.25,
+        "f1": 0.36363636363636365,
+        "tp": 2,
+        "fp": 1,
+        "fn": 6,
+        "gold_support": 8
+      },
+      "forbidden": {
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.8888888888888888,
+        "tp": 4,
+        "fp": 1,
+        "fn": 0,
+        "gold_support": 4
+      }
+    },
+    "files.save_user_selected": {
+      "required": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 3,
+        "fn": 12,
+        "gold_support": 12
+      },
+      "forbidden": {
+        "precision": 0.25,
+        "recall": 0.25,
+        "f1": 0.25,
+        "tp": 1,
+        "fp": 3,
+        "fn": 3,
+        "gold_support": 4
+      }
+    },
+    "contacts.pick_one": {
+      "required": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 4,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "gold_support": 0
+      }
+    },
+    "contacts.read": {
+      "required": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6666666666666666,
+        "tp": 2,
+        "fp": 0,
+        "fn": 2,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "tp": 3,
+        "fp": 1,
+        "fn": 1,
+        "gold_support": 4
+      }
+    },
+    "contacts.write": {
+      "required": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 1,
+        "fn": 4,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 0.3333333333333333,
+        "recall": 0.5,
+        "f1": 0.4,
+        "tp": 1,
+        "fp": 2,
+        "fn": 1,
+        "gold_support": 2
+      }
+    },
+    "calendar.read": {
+      "required": {
+        "precision": 0.6666666666666666,
+        "recall": 0.75,
+        "f1": 0.7058823529411765,
+        "tp": 6,
+        "fp": 3,
+        "fn": 2,
+        "gold_support": 8
+      },
+      "forbidden": {
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.8888888888888888,
+        "tp": 4,
+        "fp": 1,
+        "fn": 0,
+        "gold_support": 4
+      }
+    },
+    "calendar.write": {
+      "required": {
+        "precision": 0.125,
+        "recall": 0.1,
+        "f1": 0.1111111111111111,
+        "tp": 1,
+        "fp": 7,
+        "fn": 9,
+        "gold_support": 10
+      },
+      "forbidden": {
+        "precision": 0.7142857142857143,
+        "recall": 0.625,
+        "f1": 0.6666666666666666,
+        "tp": 5,
+        "fp": 2,
+        "fn": 3,
+        "gold_support": 8
+      }
+    },
+    "notifications.publish": {
+      "required": {
+        "precision": 1.0,
+        "recall": 0.125,
+        "f1": 0.2222222222222222,
+        "tp": 1,
+        "fp": 0,
+        "fn": 7,
+        "gold_support": 8
+      },
+      "forbidden": {
+        "precision": 0.45454545454545453,
+        "recall": 0.625,
+        "f1": 0.5263157894736842,
+        "tp": 5,
+        "fp": 6,
+        "fn": 3,
+        "gold_support": 8
+      }
+    },
+    "notifications.open_settings": {
+      "required": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6666666666666666,
+        "tp": 2,
+        "fp": 0,
+        "fn": 2,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "gold_support": 0
+      }
+    },
+    "reminders.schedule_local": {
+      "required": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 2,
+        "fn": 8,
+        "gold_support": 8
+      },
+      "forbidden": {
+        "precision": 0.8,
+        "recall": 0.6666666666666666,
+        "f1": 0.7272727272727273,
+        "tp": 4,
+        "fp": 1,
+        "fn": 2,
+        "gold_support": 6
+      }
+    },
+    "reminders.schedule_exact": {
+      "required": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6666666666666666,
+        "tp": 2,
+        "fp": 0,
+        "fn": 2,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "tp": 6,
+        "fp": 0,
+        "fn": 0,
+        "gold_support": 6
+      }
+    },
+    "bluetooth.scan": {
+      "required": {
+        "precision": 1.0,
+        "recall": 0.75,
+        "f1": 0.8571428571428571,
+        "tp": 3,
+        "fp": 0,
+        "fn": 1,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 0.75,
+        "recall": 0.375,
+        "f1": 0.5,
+        "tp": 3,
+        "fp": 1,
+        "fn": 5,
+        "gold_support": 8
+      }
+    },
+    "bluetooth.connect": {
+      "required": {
+        "precision": 0.5,
+        "recall": 0.16666666666666666,
+        "f1": 0.25,
+        "tp": 1,
+        "fp": 1,
+        "fn": 5,
+        "gold_support": 6
+      },
+      "forbidden": {
+        "precision": 0.875,
+        "recall": 0.875,
+        "f1": 0.875,
+        "tp": 7,
+        "fp": 1,
+        "fn": 1,
+        "gold_support": 8
+      }
+    },
+    "wlan.scan": {
+      "required": {
+        "precision": 0.6,
+        "recall": 0.75,
+        "f1": 0.6666666666666666,
+        "tp": 3,
+        "fp": 2,
+        "fn": 1,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 0.5,
+        "recall": 0.75,
+        "f1": 0.6,
+        "tp": 3,
+        "fp": 3,
+        "fn": 1,
+        "gold_support": 4
+      }
+    },
+    "wlan.connect": {
+      "required": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 2,
+        "fn": 6,
+        "gold_support": 6
+      },
+      "forbidden": {
+        "precision": 0.375,
+        "recall": 0.5,
+        "f1": 0.42857142857142855,
+        "tp": 3,
+        "fp": 5,
+        "fn": 3,
+        "gold_support": 6
+      }
+    },
+    "nfc.read_tag": {
+      "required": {
+        "precision": 0.45454545454545453,
+        "recall": 0.5,
+        "f1": 0.47619047619047616,
+        "tp": 5,
+        "fp": 6,
+        "fn": 5,
+        "gold_support": 10
+      },
+      "forbidden": {
+        "precision": 0.16666666666666666,
+        "recall": 0.25,
+        "f1": 0.2,
+        "tp": 1,
+        "fp": 5,
+        "fn": 3,
+        "gold_support": 4
+      }
+    },
+    "nfc.write_tag": {
+      "required": {
+        "precision": 0.3333333333333333,
+        "recall": 0.25,
+        "f1": 0.2857142857142857,
+        "tp": 2,
+        "fp": 4,
+        "fn": 6,
+        "gold_support": 8
+      },
+      "forbidden": {
+        "precision": 0.4444444444444444,
+        "recall": 1.0,
+        "f1": 0.6153846153846154,
+        "tp": 4,
+        "fp": 5,
+        "fn": 0,
+        "gold_support": 4
+      }
+    },
+    "motion.read_steps": {
+      "required": {
+        "precision": 0.5,
+        "recall": 0.3333333333333333,
+        "f1": 0.4,
+        "tp": 2,
+        "fp": 2,
+        "fn": 4,
+        "gold_support": 6
+      },
+      "forbidden": {
+        "precision": 0.125,
+        "recall": 0.25,
+        "f1": 0.16666666666666666,
+        "tp": 1,
+        "fp": 7,
+        "fn": 3,
+        "gold_support": 4
+      }
+    },
+    "motion.recognize_activity": {
+      "required": {
+        "precision": 0.2,
+        "recall": 0.16666666666666666,
+        "f1": 0.18181818181818182,
+        "tp": 1,
+        "fp": 4,
+        "fn": 5,
+        "gold_support": 6
+      },
+      "forbidden": {
+        "precision": 0.75,
+        "recall": 0.5,
+        "f1": 0.6,
+        "tp": 3,
+        "fp": 1,
+        "fn": 3,
+        "gold_support": 6
+      }
+    },
+    "biometric.authenticate": {
+      "required": {
+        "precision": 0.3333333333333333,
+        "recall": 0.16666666666666666,
+        "f1": 0.2222222222222222,
+        "tp": 1,
+        "fp": 2,
+        "fn": 5,
+        "gold_support": 6
+      },
+      "forbidden": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "gold_support": 2
+      }
+    },
+    "clipboard.paste_user_initiated": {
+      "required": {
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5,
+        "tp": 4,
+        "fp": 2,
+        "fn": 6,
+        "gold_support": 10
+      },
+      "forbidden": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 2,
+        "fn": 0,
+        "gold_support": 0
+      }
+    },
+    "clipboard.read": {
+      "required": {
+        "precision": 0.6666666666666666,
+        "recall": 0.3333333333333333,
+        "f1": 0.4444444444444444,
+        "tp": 2,
+        "fp": 1,
+        "fn": 4,
+        "gold_support": 6
+      },
+      "forbidden": {
+        "precision": 0.6666666666666666,
+        "recall": 1.0,
+        "f1": 0.8,
+        "tp": 8,
+        "fp": 4,
+        "fn": 0,
+        "gold_support": 8
+      }
+    },
+    "clipboard.write": {
+      "required": {
+        "precision": 0.7142857142857143,
+        "recall": 0.3125,
+        "f1": 0.43478260869565216,
+        "tp": 5,
+        "fp": 2,
+        "fn": 11,
+        "gold_support": 16
+      },
+      "forbidden": {
+        "precision": 0.5714285714285714,
+        "recall": 0.6666666666666666,
+        "f1": 0.6153846153846154,
+        "tp": 4,
+        "fp": 3,
+        "fn": 2,
+        "gold_support": 6
+      }
+    },
+    "camera.capture_photo": {
+      "required": {
+        "precision": 0.25,
+        "recall": 0.08333333333333333,
+        "f1": 0.125,
+        "tp": 1,
+        "fp": 3,
+        "fn": 11,
+        "gold_support": 12
+      },
+      "forbidden": {
+        "precision": 0.7142857142857143,
+        "recall": 0.625,
+        "f1": 0.6666666666666666,
+        "tp": 5,
+        "fp": 2,
+        "fn": 3,
+        "gold_support": 8
+      }
+    },
+    "camera.record_video": {
+      "required": {
+        "precision": 0.3333333333333333,
+        "recall": 0.25,
+        "f1": 0.2857142857142857,
+        "tp": 1,
+        "fp": 2,
+        "fn": 3,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 0.75,
+        "recall": 0.5,
+        "f1": 0.6,
+        "tp": 3,
+        "fp": 1,
+        "fn": 3,
+        "gold_support": 6
+      }
+    },
+    "microphone.record_audio": {
+      "required": {
+        "precision": 0.6666666666666666,
+        "recall": 0.3333333333333333,
+        "f1": 0.4444444444444444,
+        "tp": 2,
+        "fp": 1,
+        "fn": 4,
+        "gold_support": 6
+      },
+      "forbidden": {
+        "precision": 0.8571428571428571,
+        "recall": 1.0,
+        "f1": 0.9230769230769231,
+        "tp": 6,
+        "fp": 1,
+        "fn": 0,
+        "gold_support": 6
+      }
+    },
+    "location.coarse.foreground_once": {
+      "required": {
+        "precision": 0.25,
+        "recall": 0.25,
+        "f1": 0.25,
+        "tp": 1,
+        "fp": 3,
+        "fn": 3,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6666666666666666,
+        "tp": 5,
+        "fp": 0,
+        "fn": 5,
+        "gold_support": 10
+      }
+    },
+    "location.precise.foreground_once": {
+      "required": {
+        "precision": 0.6666666666666666,
+        "recall": 0.3333333333333333,
+        "f1": 0.4444444444444444,
+        "tp": 2,
+        "fp": 1,
+        "fn": 4,
+        "gold_support": 6
+      },
+      "forbidden": {
+        "precision": 0.6923076923076923,
+        "recall": 0.6428571428571429,
+        "f1": 0.6666666666666666,
+        "tp": 9,
+        "fp": 4,
+        "fn": 5,
+        "gold_support": 14
+      }
+    },
+    "location.background": {
+      "required": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 4,
+        "gold_support": 4
+      },
+      "forbidden": {
+        "precision": 0.6153846153846154,
+        "recall": 0.6666666666666666,
+        "f1": 0.64,
+        "tp": 8,
+        "fp": 5,
+        "fn": 4,
+        "gold_support": 12
+      }
+    }
+  },
+  "ambiguous_gold_samples": 64,
+  "ambiguous_semantic_correct": 23,
+  "ambiguous_policy_requested_clarification": 51,
+  "explicitly_forbidden_samples": 118,
+  "violations_among_explicit_bans": 7,
+  "conditional_violation_rate": 0.059322033898305086,
+  "experiment_goals_passed": 0,
+  "experiment_goals_total": 9,
+  "quality_status": "Prospective targets not all met; keep existing phone profile"
+}

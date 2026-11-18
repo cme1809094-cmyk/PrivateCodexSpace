@@ -1,0 +1,10 @@
+{
+  "rows": 4717,
+  "mismatch_ids": [],
+  "passed": true,
+  "scope": "Actual app WordPiece versus saved HF tokenizer; no NPU execution",
+  "node_version": "v24.22.1",
+  "input_sha256": "c4e32e015d88c5c0e241559b2c00f7b8bdb44a0c52f2b96e60504121c1c3e6d3",
+  "app_source_sha256": "5c12c32d691a9d2390814d1253d0f883711f78bd47847089734101f586daa751",
+  "vocab_sha256": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a"
+}

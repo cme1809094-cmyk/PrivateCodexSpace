@@ -1,0 +1,15 @@
+{
+  "checkpoint_files_sha256": {
+    "tokenizer.json": "9b1a5e20e1adad4080627aaeecbdd7b82e65df9eec06a1f2142a2263d1e729e8",
+    "config.json": "5bd3b79a985df3a5235fd8a112084019babcffcce6290722d2fc649463c8f2dd",
+    "vocab.txt": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a",
+    "special_tokens_map.json": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a",
+    "model.safetensors": "d33b72e1c2670474e6fea369928be976ff00117fb86a0731319225a8b6cee400",
+    "protocol.json": "64c3818429462a2c99d9363c71430085dbf2cabdbabedc659e6b8441f11e2fb4",
+    "tokenizer_config.json": "1e6850f09bf217ed3b3af40742a9fd3ee75d1db1fcb0e3b567ec53c248684c95"
+  },
+  "weights_sha256": "d33b72e1c2670474e6fea369928be976ff00117fb86a0731319225a8b6cee400",
+  "protocol_sha256": "64c3818429462a2c99d9363c71430085dbf2cabdbabedc659e6b8441f11e2fb4",
+  "selected_using": "V4 validation only",
+  "fresh_reserved_opened": false
+}

@@ -1,0 +1,43 @@
+{
+  "16": {
+    "path": "onnx/permission_intent_16.onnx",
+    "bytes": 46298024,
+    "sha256": "81d13e3fca8401be3890fc4d4ae9ac7fc7fa7097e132affbecf7cc1bc777fb87",
+    "checked_rows": 3,
+    "capability_max_abs_logit_error": 7.987022399902344e-06,
+    "intent_max_abs_logit_error": 1.0967254638671875e-05,
+    "decoded_mismatch_ids": [],
+    "scope": "PyTorch versus ONNX Runtime CPU; not OMC or NPU",
+    "held_out_rows_that_fit": 0,
+    "unlabeled_engineering_smoke_rows": 3,
+    "policy_decision_mismatch_ids": []
+  },
+  "32": {
+    "path": "onnx/permission_intent_32.onnx",
+    "bytes": 46298220,
+    "sha256": "1546e3487c0c2bc0a45843f992012fb6de48c86c9e6c811dee1f58f6f124a4b2",
+    "checked_rows": 150,
+    "capability_max_abs_logit_error": 9.059906005859375e-06,
+    "intent_max_abs_logit_error": 1.0967254638671875e-05,
+    "decoded_mismatch_ids": [],
+    "scope": "PyTorch versus ONNX Runtime CPU; not OMC or NPU",
+    "held_out_rows_that_fit": 147,
+    "unlabeled_engineering_smoke_rows": 3,
+    "policy_decision_mismatch_ids": []
+  },
+  "64": {
+    "path": "onnx/permission_intent_64.onnx",
+    "bytes": 46298604,
+    "sha256": "6dff285442caefe2329107fd5abb08fbecd8e7d9048a79e4369e99d4ef40511f",
+    "checked_rows": 323,
+    "capability_max_abs_logit_error": 9.059906005859375e-06,
+    "intent_max_abs_logit_error": 1.0967254638671875e-05,
+    "decoded_mismatch_ids": [],
+    "scope": "PyTorch versus ONNX Runtime CPU; not OMC or NPU",
+    "held_out_rows_that_fit": 320,
+    "unlabeled_engineering_smoke_rows": 3,
+    "policy_decision_mismatch_ids": []
+  },
+  "verification_scope": "ONNX Runtime CPU numerical/decision parity only; OMC conversion and physical NPU are not verified.",
+  "input_data_sha256": "b68e4701df793c0eeee6fbe342a28d22774a175fc2a637b3a177125f37353fd0"
+}
