@@ -1,0 +1,22 @@
+{
+  "code_commit": "2a76e55b289ad98068d8576e4dba7919e4949030",
+  "reserved_opened": true,
+  "head_comparison": "head_comparison.json",
+  "frozen_data_manifest": "ml/data/permission_intent_v3/freeze_manifest.json",
+  "full_configurations_budget": 2,
+  "primary_run": "full-pooled-20261118-run1",
+  "continuation_condition": "Run1 validation required F1 < .75 or forbidden F1 < .70",
+  "final_selection": "full-pooled-20261118-run2",
+  "existing_app_updated": false,
+  "omc_compiled": false,
+  "phone_npu_verified": false,
+  "continuation_triggered": true,
+  "trigger_observed_validation": {
+    "required_f1": 0.47368421052631576,
+    "forbidden_f1": 0.21068249258160238
+  },
+  "continuation_run": "full-pooled-20261118-run2",
+  "full_configurations_completed": 2,
+  "quality_status": "Failed prospective targets; 1 of 8 passed",
+  "reserved_used_for_further_tuning": false
+}

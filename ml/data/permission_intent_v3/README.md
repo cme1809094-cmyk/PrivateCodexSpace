@@ -25,3 +25,5 @@ python3 ml/prepare_intent_contrast_data.py --require-review --render
 ```
 
 训练脚本不会读取保留题的文本和金标，只校验冻结哈希。比较脚本先验证最终模型锁，再用开发集校准旧版阈值，最后才读取保留题；评测后不据此继续调参。预设实验目标记录在 `experiment_targets.json`，达标情况会逐项如实报告。
+
+本轮评测现已完成，结果见 `ml/results/tinybert-intent-v3-20261118/`。这 280 条题已经被观察并公开，下一轮只能作为已知回归，需另备独立保留题。人工审核表位于本轮模型包的 `run/reserved_review.csv`，逐条预测对照为 `run/prediction_review.csv`。

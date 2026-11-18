@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "tests": 14,
+  "command": "python -m unittest discover -s tests -p test_intent_training.py -v",
+  "ran_at_utc": "2026-11-18T09:50:17.236031+00:00",
+  "packages": {
+    "torch": "2.8.0+cpu",
+    "transformers": "4.55.4",
+    "numpy": "1.26.4",
+    "onnx": "1.16.2",
+    "onnxruntime": "1.23.2"
+  },
+  "test_source_sha256": "ea20afcf5f3a68696aa078bdb2c64a791e3918fb78d0dc0be9ed8027c852663b"
+}

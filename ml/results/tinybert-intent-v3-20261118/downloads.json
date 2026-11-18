@@ -1,0 +1,26 @@
+{
+  "TinyBERT-intent-v3-model-and-64-20261118.zip": {
+    "local_path": "/workspace/work/tinybert-intent-v3/packages/TinyBERT-intent-v3-model-and-64-20261118.zip",
+    "bytes": 86424873,
+    "sha256": "52b213756157a2a02bfee48a401d7eed859629b3b7e636db49d7cd078d86ccc8",
+    "zip_crc_passed": true,
+    "drive_file_id": "1MCWkosDEW5DRMhmzndbtckr7cVqX_079",
+    "download_url": "https://drive.google.com/file/d/1MCWkosDEW5DRMhmzndbtckr7cVqX_079/view?usp=drivesdk",
+    "remote_bytes": 86424873,
+    "remote_size_verified": true,
+    "remote_hash_verified": false,
+    "archived_file_sha256_manifest_verified": true
+  },
+  "TinyBERT-intent-v3-onnx-16-32-20261118.zip": {
+    "local_path": "/workspace/work/tinybert-intent-v3/packages/TinyBERT-intent-v3-onnx-16-32-20261118.zip",
+    "bytes": 85361095,
+    "sha256": "944761b5cbf4f33f912f2bfc53c39fd3decebef7adbc11556b897b12e706c994",
+    "zip_crc_passed": true,
+    "drive_file_id": "18v4l7VO7E1ksx8o2sEOZrKI9i7Ox9HWI",
+    "download_url": "https://drive.google.com/file/d/18v4l7VO7E1ksx8o2sEOZrKI9i7Ox9HWI/view?usp=drivesdk",
+    "remote_bytes": 85361095,
+    "remote_size_verified": true,
+    "remote_hash_verified": false,
+    "archived_file_sha256_manifest_verified": true
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "weights_sha256": "92f54d737c013076ca968826340230b3818d1d6d2a6bdc7e5762699970d491aa",
+  "protocol_sha256": "71d21a381c5a174fb470e17c92babdd66d4a855a901caf28f58815d50e1274cd",
+  "checkpoint_files_sha256": {
+    "config.json": "00349d408cf7206897415e748719f89494f78dc6dcb99c4154d5ee11b1b6f76c",
+    "model.safetensors": "92f54d737c013076ca968826340230b3818d1d6d2a6bdc7e5762699970d491aa",
+    "protocol.json": "71d21a381c5a174fb470e17c92babdd66d4a855a901caf28f58815d50e1274cd",
+    "special_tokens_map.json": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+    "tokenizer.json": "9b1a5e20e1adad4080627aaeecbdd7b82e65df9eec06a1f2142a2263d1e729e8",
+    "tokenizer_config.json": "e711904cac23112776b678356ccf702cf934babaa01125f698ac43bf9ad38e73",
+    "vocab.txt": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a"
+  },
+  "selected_using": "development data only",
+  "reserved_test_opened": false
+}

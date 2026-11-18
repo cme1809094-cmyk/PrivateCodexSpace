@@ -42,13 +42,14 @@ def main():
                  "docs/tinybert-intent-v3-training.md"):
         main_files[name] = ROOT / name
     for path in args.experiments.rglob("*"):
-        if not path.is_file() or args.run in path.parents or path.suffix in (".safetensors", ".zip"):
+        if not path.is_file() or args.run in path.parents or path.suffix in (".safetensors", ".zip", ".onnx"):
             continue
-        if any(part == "checkpoint" for part in path.relative_to(args.experiments).parts):
+        if (any(part == "checkpoint" for part in path.relative_to(args.experiments).parts)
+                and path.name not in ("config.json", "protocol.json")):
             continue
-        # Only pilot provenance and the root experiment summaries, not unrelated runs.
+        # Include all attempted configurations, with weights only for the winner.
         rel = path.relative_to(args.experiments)
-        if rel.parts[0].startswith("pilot-") or len(rel.parts) == 1:
+        if rel.parts[0].startswith(("pilot-", "full-")) or len(rel.parts) == 1:
             main_files["development_attempts/" + rel.as_posix()] = path
     manifest = {"scope": "Selected checkpoint plus standard ONNX; human review pending; not a phone-ready OMC profile",
                 "files": {name: {"bytes": path.stat().st_size, "sha256": sha256(path)}

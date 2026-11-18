@@ -46,7 +46,10 @@ python3 ml/export_intent_contrast.py --run /path/to/new-run
 python3 ml/verify_intent_tokenizer.py --checkpoint /path/to/new-run/checkpoint \
   --data ml/data/permission_intent_v3/reserved_test.jsonl \
   --output /path/to/new-run/tokenizer_reserved_verification.json
+python3 ml/analyze_intent_contrast.py --run /path/to/new-run
 ```
+
+续训的 v2 初始权重可从[已有 v2 主包](https://drive.google.com/file/d/1LoC0yhKytiP9JF93Vh_qSvBgmuo8COF2/view?usp=drivesdk)取得。它没有重复装入 v3 主包；当前 v3 checkpoint 单独即可推理。
 
 ## 如何看验收结果
 

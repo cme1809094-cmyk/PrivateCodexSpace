@@ -1,0 +1,266 @@
+{
+  "mode": "full",
+  "head": "pooled",
+  "base": "/workspace/work/tinybert/downloads",
+  "initial_checkpoint": null,
+  "output": "/workspace/work/tinybert-intent-v3/full-pooled-20261118-run1",
+  "data_dir": "/workspace/work/git-upload/PrivateCodexSpace/ml/data/permission_intent_v3",
+  "epochs": 35,
+  "min_epochs": 12,
+  "patience": 8,
+  "batch_size": 16,
+  "threads": 4,
+  "seed": 20261118,
+  "learning_rate": 5e-05,
+  "head_learning_rate": 0.0002,
+  "dropout": 0.15,
+  "pair_loss_weight": 0.15,
+  "evaluate_reserved": false,
+  "data_hashes": {
+    "v2_all_sha256": "ad3e33a410801fb8817b29159ee6670890c2a2311154b2903994268c5eea8931",
+    "v2_run_manifest_sha256": "d8e5e09e5f83884feca10f0cd1382ad45f84003b7ca5b0d01f216bf8b1b87766",
+    "legacy_exclusions": {
+      "train_family_ids": [],
+      "validation_family_ids": [
+        "exp_a_photos_12"
+      ],
+      "validation_ids": [
+        "exp_a_photos_12_1",
+        "exp_a_photos_12_2",
+        "exp_a_photos_12_3",
+        "exp_a_photos_12_4",
+        "exp_a_photos_12_5"
+      ],
+      "new_training_group_ids": [
+        "v3_a_photo_library_10"
+      ],
+      "policy": "Remove the full old validation family from current model selection; preserve its immutable original source for legacy regression. Do not modify old data files.",
+      "actual_legacy_manifest": "ml/results/tinybert-intent-v2-20261118/data_manifest.json",
+      "actual_legacy_manifest_sha256": "d8e5e09e5f83884feca10f0cd1382ad45f84003b7ca5b0d01f216bf8b1b87766",
+      "new_train_old_validation_conflict_resolved_by_exclusion": true,
+      "new_validation_old_training_confirmed_conflicts_remaining": 0
+    },
+    "a_photos_contacts.jsonl": "5c8bfc92482bc7a69808dc9c06b2c95f6251e767d11e1e29bdb9abc68fd1f3b6",
+    "b_clipboard_recording.jsonl": "ae0f7c634877e5ec0c32554827d291ba7ec280cb02bed392ce2c639e57ea8948",
+    "c_status_contrasts.jsonl": "462c4074c2688d56db18318d6d98608506f6a3a6504f0b8a885f529c9dac49e9",
+    "audit_sha256": "e86817da8437daf4af2d9329702bdf26b0140c02e67ca54dbdbdd25d05cd8250",
+    "freeze_sha256": "c8f8d972de9c9b49799b01cb09bd35a518e63bb512e494b0916f56cf37e50251",
+    "reserved_test_sha256": "ba025f9f2d7bb110e20fbf3dc719ee067b6483aacb89ee4ed863387c28615a6a"
+  },
+  "rows": {
+    "train": 1601,
+    "validation": 399
+  },
+  "source_sha256": {
+    "train_intent_contrast.py": "a6c65b4b915317e74443114119c28d044a501460788854f562cc2ffe084c196b",
+    "intent_contrast.py": "f01f0cc526a2ba7c6f0a663dd527439edfa40a880903af16e889aa82263f02ca",
+    "permission_intent_model.py": "b86921eac64f8dca7ef49d9607427cfc2c4474adb582f8dd9376740e74bab887"
+  },
+  "capability_ids": [
+    "media.photo.pick_one",
+    "media.photo.read_library",
+    "media.photo.add",
+    "files.pick_one",
+    "files.save_user_selected",
+    "contacts.pick_one",
+    "contacts.read",
+    "contacts.write",
+    "calendar.read",
+    "calendar.write",
+    "notifications.publish",
+    "notifications.open_settings",
+    "reminders.schedule_local",
+    "reminders.schedule_exact",
+    "bluetooth.scan",
+    "bluetooth.connect",
+    "wlan.scan",
+    "wlan.connect",
+    "nfc.read_tag",
+    "nfc.write_tag",
+    "motion.read_steps",
+    "motion.recognize_activity",
+    "biometric.authenticate",
+    "clipboard.paste_user_initiated",
+    "clipboard.read",
+    "clipboard.write",
+    "camera.capture_photo",
+    "camera.record_video",
+    "microphone.record_audio",
+    "location.coarse.foreground_once",
+    "location.precise.foreground_once",
+    "location.background"
+  ],
+  "capability_class_counts": [
+    [
+      1495.0,
+      77.0,
+      29.0
+    ],
+    [
+      1495.0,
+      68.0,
+      38.0
+    ],
+    [
+      1574.0,
+      20.0,
+      7.0
+    ],
+    [
+      1551.0,
+      35.0,
+      15.0
+    ],
+    [
+      1556.0,
+      35.0,
+      10.0
+    ],
+    [
+      1577.0,
+      14.0,
+      10.0
+    ],
+    [
+      1481.0,
+      74.0,
+      46.0
+    ],
+    [
+      1471.0,
+      96.0,
+      34.0
+    ],
+    [
+      1574.0,
+      17.0,
+      10.0
+    ],
+    [
+      1557.0,
+      29.0,
+      15.0
+    ],
+    [
+      1556.0,
+      35.0,
+      10.0
+    ],
+    [
+      1591.0,
+      5.0,
+      5.0
+    ],
+    [
+      1555.0,
+      36.0,
+      10.0
+    ],
+    [
+      1576.0,
+      10.0,
+      15.0
+    ],
+    [
+      1571.0,
+      15.0,
+      15.0
+    ],
+    [
+      1571.0,
+      20.0,
+      10.0
+    ],
+    [
+      1566.0,
+      25.0,
+      10.0
+    ],
+    [
+      1581.0,
+      10.0,
+      10.0
+    ],
+    [
+      1571.0,
+      25.0,
+      5.0
+    ],
+    [
+      1570.0,
+      21.0,
+      10.0
+    ],
+    [
+      1576.0,
+      20.0,
+      5.0
+    ],
+    [
+      1581.0,
+      15.0,
+      5.0
+    ],
+    [
+      1557.0,
+      39.0,
+      5.0
+    ],
+    [
+      1580.0,
+      14.0,
+      7.0
+    ],
+    [
+      1457.0,
+      81.0,
+      63.0
+    ],
+    [
+      1458.0,
+      114.0,
+      29.0
+    ],
+    [
+      1549.0,
+      16.0,
+      36.0
+    ],
+    [
+      1463.0,
+      74.0,
+      64.0
+    ],
+    [
+      1453.0,
+      88.0,
+      60.0
+    ],
+    [
+      1569.0,
+      17.0,
+      15.0
+    ],
+    [
+      1569.0,
+      12.0,
+      20.0
+    ],
+    [
+      1566.0,
+      10.0,
+      25.0
+    ]
+  ],
+  "initial_checkpoint_files_sha256": null,
+  "intent_class_counts": [
+    1184.0,
+    118.0,
+    201.0,
+    98.0
+  ],
+  "class_weighting": "inverse frequency",
+  "test_read_before_selection": false,
+  "selection": "Development only: recall>=0.4 where possible, then 0.45 required F0.5 +0.30 forbidden F1 +0.25 intent macro F1 -0.10 prohibition violation rate",
+  "query_initialization": "Pretrained contextual mean of semantic capability name/definition; not permission mappings or example answers"
+}
