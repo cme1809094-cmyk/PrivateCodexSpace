@@ -1,0 +1,223 @@
+{
+  "chosen_head": "pooled",
+  "criterion": "Predeclared development contrast score emphasizing required precision; pooled wins 0.279927 vs0.241554",
+  "pilot_scope": "Eight capability target projection of v2 development data; full-32 production claims are not supported",
+  "max_epochs": 18,
+  "same_seed": 20261118,
+  "same_data": {
+    "train": 705,
+    "validation": 180
+  },
+  "reserved_test_opened": false,
+  "arms": {
+    "pooled": {
+      "selected_epoch": 11,
+      "score": 0.279927473538533,
+      "validation": {
+        "samples": 180,
+        "required": {
+          "precision": 0.4166666666666667,
+          "recall": 0.125,
+          "f1": 0.19230769230769232,
+          "tp": 5,
+          "fp": 7,
+          "fn": 35
+        },
+        "forbidden": {
+          "precision": 0.042105263157894736,
+          "recall": 0.2,
+          "f1": 0.06956521739130435,
+          "tp": 4,
+          "fp": 91,
+          "fn": 16
+        },
+        "required_set_exact": 145,
+        "required_set_exact_rate": 0.8055555555555556,
+        "all_capability_states_exact": 128,
+        "all_capability_states_exact_rate": 0.7111111111111111,
+        "joint_states_and_intent_exact": 111,
+        "joint_states_and_intent_exact_rate": 0.6166666666666667,
+        "intent_accuracy": 0.8666666666666667,
+        "intent_macro_f1": 0.5359791080320415,
+        "intent_per_class": {
+          "in_scope": {
+            "precision": 0.9019607843137255,
+            "recall": 0.9517241379310345,
+            "f1": 0.9261744966442953,
+            "tp": 138,
+            "fp": 15,
+            "fn": 7
+          },
+          "ambiguous": {
+            "precision": 0.9375,
+            "recall": 1.0,
+            "f1": 0.967741935483871,
+            "tp": 15,
+            "fp": 1,
+            "fn": 0
+          },
+          "no_device_capability": {
+            "precision": 0.3333333333333333,
+            "recall": 0.2,
+            "f1": 0.25,
+            "tp": 3,
+            "fp": 6,
+            "fn": 12
+          },
+          "out_of_scope": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 2,
+            "fn": 5
+          }
+        },
+        "overrequested_samples": 7,
+        "overrequested_sample_rate": 0.03888888888888889,
+        "explicit_prohibition_violation_samples": 5,
+        "explicit_prohibition_violation_rate": 0.027777777777777776,
+        "clarification": {
+          "precision": 0.9375,
+          "recall": 1.0,
+          "f1": 0.967741935483871,
+          "tp": 15,
+          "fp": 1,
+          "fn": 0
+        },
+        "intent_confusion_matrix": [
+          [
+            138,
+            1,
+            4,
+            2
+          ],
+          [
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            12,
+            0,
+            3,
+            0
+          ],
+          [
+            3,
+            0,
+            2,
+            0
+          ]
+        ]
+      },
+      "source": "/workspace/work/tinybert-intent-v3/pilot-pooled-20261118/training_report.json"
+    },
+    "attention": {
+      "selected_epoch": 17,
+      "score": 0.24155387224867833,
+      "validation": {
+        "samples": 180,
+        "required": {
+          "precision": 0.13178294573643412,
+          "recall": 0.425,
+          "f1": 0.20118343195266272,
+          "tp": 17,
+          "fp": 112,
+          "fn": 23
+        },
+        "forbidden": {
+          "precision": 0.09649122807017543,
+          "recall": 0.55,
+          "f1": 0.16417910447761194,
+          "tp": 11,
+          "fp": 103,
+          "fn": 9
+        },
+        "required_set_exact": 142,
+        "required_set_exact_rate": 0.7888888888888889,
+        "all_capability_states_exact": 136,
+        "all_capability_states_exact_rate": 0.7555555555555555,
+        "joint_states_and_intent_exact": 117,
+        "joint_states_and_intent_exact_rate": 0.65,
+        "intent_accuracy": 0.8944444444444445,
+        "intent_macro_f1": 0.5140207075064711,
+        "intent_per_class": {
+          "in_scope": {
+            "precision": 0.90625,
+            "recall": 1.0,
+            "f1": 0.9508196721311475,
+            "tp": 145,
+            "fp": 15,
+            "fn": 0
+          },
+          "ambiguous": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          },
+          "no_device_capability": {
+            "precision": 0.25,
+            "recall": 0.06666666666666667,
+            "f1": 0.10526315789473684,
+            "tp": 1,
+            "fp": 3,
+            "fn": 14
+          },
+          "out_of_scope": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 1,
+            "fn": 5
+          }
+        },
+        "overrequested_samples": 18,
+        "overrequested_sample_rate": 0.1,
+        "explicit_prohibition_violation_samples": 9,
+        "explicit_prohibition_violation_rate": 0.05,
+        "clarification": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 15,
+          "fp": 0,
+          "fn": 0
+        },
+        "intent_confusion_matrix": [
+          [
+            145,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            13,
+            0,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            3,
+            0
+          ]
+        ]
+      },
+      "source": "/workspace/work/tinybert-intent-v3/pilot-attention-20261118/training_report.json"
+    }
+  },
+  "caveat": "Limited-budget exploratory probe, not exhaustive architecture tuning. Both arms remain weak on this small development sample."
+}

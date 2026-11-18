@@ -1,0 +1,19 @@
+{
+  "frozen_at_utc": "2026-11-18T09:51:09.104723+00:00",
+  "frozen_before_training": true,
+  "reserved_test_sha256": "ba025f9f2d7bb110e20fbf3dc719ee067b6483aacb89ee4ed863387c28615a6a",
+  "reserved_rows": 280,
+  "reserved_groups": 70,
+  "audit_sha256": "e86817da8437daf4af2d9329702bdf26b0140c02e67ca54dbdbdd25d05cd8250",
+  "development_source_sha256": {
+    "a_photos_contacts.jsonl": "5c8bfc92482bc7a69808dc9c06b2c95f6251e767d11e1e29bdb9abc68fd1f3b6",
+    "b_clipboard_recording.jsonl": "ae0f7c634877e5ec0c32554827d291ba7ec280cb02bed392ce2c639e57ea8948",
+    "c_status_contrasts.jsonl": "462c4074c2688d56db18318d6d98608506f6a3a6504f0b8a885f529c9dac49e9"
+  },
+  "head_comparison_sha256": "8f9377043e9d0374a3b56cddbb1852b2f589f9321aeed95439d5f6a0838cd475",
+  "chosen_head": "pooled",
+  "experiment_targets_sha256": "d369601c52360832ff2ec215b7bead7e07e625307438c2eefa661531aaf07e44",
+  "root_read_reserved_prompts_before_selection": false,
+  "human_review": "pending",
+  "scope": "AI-reviewed focused contrast experiment; not a human-verified full-32 benchmark"
+}

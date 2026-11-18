@@ -15,6 +15,8 @@ from permission_intent_model import (INTENTS, STATES, PermissionIntentModel, bal
                                      objective, save_checkpoint)
 from permission_intent_model import selection_score
 from train_permission_intent_v2 import prepare_data
+from intent_contrast import packed_group_batches, pair_margin_loss, calibrate_policy
+from evaluate_intent_contrast import grouped_result
 
 
 class IntentTrainingTests(unittest.TestCase):
@@ -101,6 +103,73 @@ class IntentTrainingTests(unittest.TestCase):
                 for before, after in zip(model(ids, torch.ones_like(ids)), restored(ids, torch.ones_like(ids))):
                     torch.testing.assert_close(before, after, rtol=0, atol=0)
             self.assertEqual(restored_protocol["capability_ids"], protocol["capability_ids"])
+
+    def test_label_attention_is_masked_trainable_and_reloadable(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary)
+            tokenizer = self.tokenizer(path)
+            config = BertConfig(vocab_size=9, hidden_size=12, num_hidden_layers=1, num_attention_heads=3,
+                                intermediate_size=24, max_position_embeddings=64,
+                                permission_intent_head="label_attention", cls_token_id=2, sep_token_id=3)
+            model = PermissionIntentModel(config, 3)
+            model.initialize_label_queries(tokenizer, ["录音", "不要录音", "录"])
+            ids = torch.tensor([[2, 5, 6, 3, 0]])
+            cap, intent = model(ids, (ids != 0).long())
+            self.assertEqual(cap.shape, (1, 3, 3))
+            (cap.square().mean() + intent.square().mean()).backward()
+            self.assertTrue(torch.isfinite(model.label_queries.grad).all())
+            self.assertGreater(float(model.label_queries.grad.abs().sum()), 0)
+            model.eval()
+            protocol = {"capability_ids": ["audio", "camera", "location"], "states": STATES, "intent_statuses": INTENTS}
+            save_checkpoint(model, tokenizer, path / "checkpoint", protocol)
+            restored, _, _ = load_checkpoint(path / "checkpoint")
+            self.assertEqual(restored.head_type, "label_attention")
+            with torch.inference_mode():
+                for before, after in zip(model(ids, (ids != 0).long()), restored(ids, (ids != 0).long())):
+                    torch.testing.assert_close(before, after, rtol=0, atol=0)
+
+    def test_opposite_roles_stay_together_and_receive_opposite_margin_gradients(self):
+        rows = [{"id": str(i), "family_id": "g_" + role, "scenario_group_id": "g", "contrast_role": role}
+                for i, role in enumerate(["a", "a", "b", "b"])]
+        batches = list(packed_group_batches(rows, 4, torch.Generator().manual_seed(1)))
+        self.assertEqual(batches[0].tolist(), [0, 1, 2, 3])
+        caps = torch.zeros((4, 1, 3), requires_grad=True)
+        statuses = torch.zeros((4, 4), requires_grad=True)
+        target = torch.tensor([[1], [1], [2], [2]])
+        loss = pair_margin_loss(caps, statuses, target, torch.zeros(4, dtype=torch.long), rows)
+        loss.backward()
+        self.assertLess(float(caps.grad[0, 0, 1]), 0)
+        self.assertGreater(float(caps.grad[0, 0, 2]), 0)
+        self.assertLess(float(caps.grad[2, 0, 2]), 0)
+
+    def test_policy_calibration_cannot_win_by_refusing_everything(self):
+        caps = np.array([[[0.05, 0.9, 0.05]], [[0.05, 0.9, 0.05]]])
+        probs = np.array([[0.8, 0.1, 0.05, 0.05], [0.8, 0.1, 0.05, 0.05]])
+        rows = [{"family_id": "a"}, {"family_id": "b"}]
+        policy, result = calibrate_policy(caps, probs, np.ones((2, 1), dtype=int), np.zeros(2, dtype=int),
+                                          rows, {"required": 0.6, "forbidden": 0.6})
+        self.assertEqual(result["accepted_samples"], 2)
+        self.assertEqual(result["required"]["recall"], 1)
+
+    def test_weak_policy_fallback_keeps_coverage_visible(self):
+        caps = np.array([[[0.05, 0.9, 0.05], [0.9, 0.05, 0.05]]])
+        probs = np.array([[0.8, 0.1, 0.05, 0.05]])
+        policy, result = calibrate_policy(caps, probs, np.array([[0, 1]]), np.array([0]),
+                                          [{"family_id": "a"}], {"required": 0.6, "forbidden": 0.6})
+        self.assertEqual(result["required"]["recall"], 0)
+        self.assertEqual(result["accepted_samples"], 1)
+        self.assertEqual(result["overrequested_samples"], 1)
+
+    def test_opposite_roles_must_both_pass_for_a_scenario_to_pass(self):
+        rows = [{"family_id": "g_" + role, "scenario_group_id": "g"}
+                for role in ("a", "a", "b", "b")]
+        target = np.array([[1], [1], [2], [2]])
+        predicted = np.array([[1], [1], [2], [1]])
+        status = np.zeros(4, dtype=int)
+        result = grouped_result(predicted, status, target, status, rows)
+        self.assertEqual(result["joint_states_and_intent_exact"], 3)
+        self.assertEqual(result["families_all_paraphrases_correct"], 1)
+        self.assertEqual(result["scenario_groups_all_roles_and_paraphrases_correct"], 0)
 
     def test_run_split_covers_statuses_and_never_moves_test(self):
         import json

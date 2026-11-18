@@ -21,19 +21,64 @@ class PermissionIntentModel(nn.Module):
         config._attn_implementation = "eager"
         self.encoder = BertModel(config)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.capability_classifier = nn.Linear(config.hidden_size, capability_count * len(STATES))
+        self.head_type = getattr(config, "permission_intent_head", "pooled")
+        if self.head_type == "pooled":
+            self.capability_classifier = nn.Linear(config.hidden_size, capability_count * len(STATES))
+        elif self.head_type == "label_attention":
+            self.label_queries = nn.Parameter(torch.empty(capability_count, config.hidden_size))
+            nn.init.normal_(self.label_queries, std=config.initializer_range)
+            self.capability_classifier = nn.Sequential(
+                nn.Linear(config.hidden_size * 4, config.hidden_size // 2), nn.GELU(),
+                nn.Dropout(config.hidden_dropout_prob), nn.Linear(config.hidden_size // 2, len(STATES)))
+        else:
+            raise ValueError("Unknown permission intent head: " + self.head_type)
         self.intent_classifier = nn.Linear(config.hidden_size, len(INTENTS))
         self.capability_count = capability_count
         for head in (self.capability_classifier, self.intent_classifier):
-            nn.init.normal_(head.weight, std=config.initializer_range)
-            nn.init.zeros_(head.bias)
+            for layer in head.modules():
+                if isinstance(layer, nn.Linear):
+                    nn.init.normal_(layer.weight, std=config.initializer_range)
+                    nn.init.zeros_(layer.bias)
 
     def forward(self, input_ids, attention_mask):
         encoded = self.encoder(input_ids=input_ids, attention_mask=attention_mask,
                                token_type_ids=torch.zeros_like(input_ids), return_dict=False)
         pooled = self.dropout(encoded[1])
-        capabilities = self.capability_classifier(pooled).reshape(-1, self.capability_count, len(STATES))
+        if self.head_type == "pooled":
+            capabilities = self.capability_classifier(pooled).reshape(-1, self.capability_count, len(STATES))
+        else:
+            tokens = encoded[0]
+            query = F.normalize(self.label_queries, dim=-1)
+            keys = F.normalize(tokens, dim=-1)
+            scores = torch.matmul(keys, query.transpose(0, 1)).transpose(1, 2) * 10.0
+            valid = attention_mask.bool()
+            cls_id = getattr(self.encoder.config, "cls_token_id", None)
+            sep_id = getattr(self.encoder.config, "sep_token_id", None)
+            valid = valid & (input_ids != (101 if cls_id is None else cls_id))
+            valid = valid & (input_ids != (102 if sep_id is None else sep_id))
+            scores = scores.masked_fill(~valid[:, None, :], -10000.0)
+            attention = scores.softmax(dim=-1)
+            context = torch.matmul(attention, tokens)
+            queries = self.label_queries[None, :, :].expand_as(context)
+            features = torch.cat((context, pooled[:, None, :].expand_as(context),
+                                  context * queries, (context - queries).abs()), dim=-1)
+            capabilities = self.capability_classifier(self.dropout(features))
         return capabilities, self.intent_classifier(pooled)
+
+    def initialize_label_queries(self, tokenizer, descriptions):
+        if self.head_type != "label_attention":
+            return
+        self.encoder.eval()
+        encoded = tokenizer(descriptions, padding=True, truncation=False, return_tensors="pt",
+                            return_token_type_ids=False)
+        if encoded["input_ids"].shape[1] > self.encoder.config.max_position_embeddings:
+            raise ValueError("Capability descriptions exceed encoder position limit")
+        with torch.inference_mode():
+            tokens = self.encoder(**encoded, return_dict=False)[0]
+            valid = encoded["attention_mask"].bool() & (encoded["input_ids"] != tokenizer.cls_token_id)
+            valid &= encoded["input_ids"] != tokenizer.sep_token_id
+            mean = (tokens * valid[:, :, None]).sum(dim=1) / valid.sum(dim=1, keepdim=True).clamp_min(1)
+            self.label_queries.copy_(mean)
 
 
 def labels(rows, capability_ids):
@@ -189,11 +234,20 @@ def load_checkpoint(directory):
 
 
 def prediction_records(rows, cap_probs, intent_probs, protocol):
-    states, statuses = decode(cap_probs, intent_probs, protocol["thresholds"])
+    policy = protocol.get("policy")
+    if policy is not None:
+        from intent_contrast import decode_policy
+        states, statuses, accepted, decisions = decode_policy(cap_probs, intent_probs, protocol["thresholds"], policy)
+    else:
+        states, statuses = decode(cap_probs, intent_probs, protocol["thresholds"])
     for i, row in enumerate(rows):
         required = [cid for cid, state in zip(protocol["capability_ids"], states[i]) if state == 1]
         forbidden = [cid for cid, state in zip(protocol["capability_ids"], states[i]) if state == 2]
-        yield {"id": row.get("id"), "text": row["text"], "required_capabilities": required,
-               "forbidden_capabilities": forbidden, "intent_status": INTENTS[statuses[i]],
-               "needs_clarification": bool(statuses[i] == 1),
-               "intent_probabilities": dict(zip(INTENTS, intent_probs[i].tolist()))}
+        record = {"id": row.get("id"), "text": row["text"], "required_capabilities": required,
+                  "forbidden_capabilities": forbidden, "intent_status": INTENTS[statuses[i]],
+                  "needs_clarification": bool(statuses[i] == 1),
+                  "intent_probabilities": dict(zip(INTENTS, intent_probs[i].tolist()))}
+        if policy is not None:
+            record.update(decision=str(decisions[i]), accepted=bool(accepted[i]),
+                          needs_clarification=bool(decisions[i] == "clarify"))
+        yield record

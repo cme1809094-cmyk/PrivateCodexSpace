@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.3.0",
+  "passed": true,
+  "errors": [],
+  "development_rows": 1120,
+  "development_groups": 280,
+  "split_counts": {
+    "train_candidate": 896,
+    "validation_candidate": 224
+  },
+  "source_sha256": {
+    "a_photos_contacts.jsonl": "5c8bfc92482bc7a69808dc9c06b2c95f6251e767d11e1e29bdb9abc68fd1f3b6",
+    "b_clipboard_recording.jsonl": "ae0f7c634877e5ec0c32554827d291ba7ec280cb02bed392ce2c639e57ea8948",
+    "c_status_contrasts.jsonl": "462c4074c2688d56db18318d6d98608506f6a3a6504f0b8a885f529c9dac49e9"
+  },
+  "status_counts": {
+    "in_scope": 754,
+    "no_device_capability": 186,
+    "out_of_scope": 94,
+    "ambiguous": 86
+  },
+  "reserved_prompts_read": false,
+  "human_review": "pending",
+  "training_performed_by_this_check": false
+}

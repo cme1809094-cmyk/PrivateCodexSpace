@@ -1,0 +1,53 @@
+{
+  "status": "Prospective experiment targets, declared before full training and reserved-test evaluation; not production acceptance criteria",
+  "scope": "Fresh focus-eight AI-generated contrast cases; model still predicts all 32 capabilities",
+  "semantic_metrics": "Raw model with validation-selected semantic thresholds; no operational deferral",
+  "policy_metrics": "Validation-selected policy, with required recall and in-scope coverage reported to prevent all-reject claims",
+  "targets": {
+    "required_f1": {
+      "direction": "minimum",
+      "value": 0.75
+    },
+    "forbidden_f1": {
+      "direction": "minimum",
+      "value": 0.7
+    },
+    "out_of_scope_recall": {
+      "direction": "minimum",
+      "value": 0.7
+    },
+    "no_device_capability_recall": {
+      "direction": "minimum",
+      "value": 0.7
+    },
+    "explicit_prohibition_violation_rate": {
+      "direction": "maximum",
+      "value": 0.02
+    },
+    "overrequested_sample_rate": {
+      "direction": "maximum",
+      "value": 0.1
+    },
+    "in_scope_acceptance_coverage": {
+      "direction": "minimum",
+      "value": 0.5
+    },
+    "required_recall": {
+      "direction": "minimum",
+      "value": 0.5
+    }
+  },
+  "test_rules": [
+    "Freeze reserved bytes and AI review before full training.",
+    "Lock final weights, thresholds and policy on development data before parsing reserved prompts or labels.",
+    "Do not tune or retrain on the resulting reserved-test errors.",
+    "Report missed targets and all-32 extra predictions, not only focus-eight scores.",
+    "Keep all human_review fields pending until actual human review."
+  ],
+  "validation_selection_budget": {
+    "maximum_full_configurations": 2,
+    "first": "Pinned official pretrained initialization, 35 epochs maximum",
+    "optional_second": "If first misses validation required F1 0.75 or forbidden F1 0.70, continue unchanged v2 weights for at most 25 epochs, encoder LR 2e-5, head LR 1e-4",
+    "final_selection": "Higher predeclared contrast score on validation only; fresh reserved test remains unopened until final selection"
+  }
+}

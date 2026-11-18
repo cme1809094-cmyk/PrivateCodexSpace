@@ -1,0 +1,59 @@
+{
+  "schema_version": "0.3.0",
+  "stage": "contrastive_data_for_experimental_training",
+  "catalog_path": "../permission_intent_v2/capability_catalog.json",
+  "focus_capabilities": [
+    "media.photo.pick_one", "media.photo.read_library", "contacts.read", "contacts.write",
+    "clipboard.read", "clipboard.write", "camera.record_video", "microphone.record_audio"
+  ],
+  "total_rows": 1400,
+  "rows_per_scenario_group": 4,
+  "semantic_roles_per_group": ["a", "b"],
+  "paraphrases_per_role": 2,
+  "split_counts": {"train_candidate": 896, "validation_candidate": 224, "reserved_test": 280},
+  "authors": {
+    "a_photos_contacts": {
+      "file": "shards/a_photos_contacts.jsonl",
+      "capabilities": ["media.photo.pick_one", "media.photo.read_library", "contacts.read", "contacts.write"],
+      "rows": 320,
+      "groups_per_capability": 20,
+      "train_groups_per_capability": 16,
+      "validation_groups_per_capability": 4
+    },
+    "b_clipboard_recording": {
+      "file": "shards/b_clipboard_recording.jsonl",
+      "capabilities": ["clipboard.read", "clipboard.write", "camera.record_video", "microphone.record_audio"],
+      "rows": 320,
+      "groups_per_capability": 20,
+      "train_groups_per_capability": 16,
+      "validation_groups_per_capability": 4
+    },
+    "c_status_contrasts": {
+      "file": "shards/c_status_contrasts.jsonl",
+      "status_strata": ["ambiguous", "no_device_capability", "out_of_scope"],
+      "rows": 480,
+      "groups_per_status": 40,
+      "train_groups_per_status": 32,
+      "validation_groups_per_status": 8
+    },
+    "reserved_test_owner": {
+      "file": "reserved_test.jsonl",
+      "rows": 280,
+      "focus_groups_per_capability": 5,
+      "status_groups_per_stratum": 10
+    }
+  },
+  "additional_required_fields": ["scenario_group_id", "scenario_summary", "contrast_role", "family_id", "focus_capability", "status_stratum", "contrast_type", "split_candidate"],
+  "semantics": [
+    "Retain the original row fields for text/context/actions/intent_status/required/forbidden/constraints/clarification/source/review; use schema_version 0.3.0.",
+    "Each scenario group has two semantic roles a/b, each with two natural paraphrases sharing identical gold. Family ID is group ID plus role. Both roles and all paraphrases stay in one split.",
+    "Roles must form a meaningful contrast such as request versus full prohibition, read/write reversal, partial/full prohibition, user action versus cached data, supported action versus a genuinely unsupported operation, or ambiguous request versus explicit clarification.",
+    "Different groups must contain substantively different ordinary-phone situations, not just different names, numbers or synonyms. Keep language natural and avoid implementation jargon.",
+    "Use only the existing 32 capabilities. Focus capabilities guide the requested positive tasks; incidental explicit prohibitions may refer to other catalog capabilities. Never relabel a supported capability out_of_scope solely because a platform route is restricted.",
+    "For status groups, role a has the status_stratum, and role b is a clarified/supported in_scope request using focus capabilities. No hidden context is permitted to change gold; put all necessary facts into each text.",
+    "required and forbidden are disjoint, unmentioned is distinct, and partial target/modality/duration limitations remain constraints. Silence does not itself prove prohibition of microphone capture.",
+    "Do not repeat normalized text from v2 data or other v3 rows. Keep IDs and group IDs unique. No permission strings in user texts or labels.",
+    "The reserved test is authored separately. Root receives only its coverage and hashes before model selection; no predictions, metrics or prompts are used for development. Freeze after independent semantic review and before training with v3 data.",
+    "All data is agent-generated. semantic_ai may be reviewed after author self-review; cross_review remains pending until independent review completes; human_review remains pending. A fresh held-out synthetic candidate is not a human-verified production benchmark."
+  ]
+}

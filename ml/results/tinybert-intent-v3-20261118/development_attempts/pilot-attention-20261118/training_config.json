@@ -1,0 +1,93 @@
+{
+  "mode": "pilot",
+  "head": "label_attention",
+  "base": "/workspace/work/tinybert/downloads",
+  "output": "/workspace/work/tinybert-intent-v3/pilot-attention-20261118",
+  "data_dir": "/workspace/work/git-upload/PrivateCodexSpace/ml/data/permission_intent_v3",
+  "epochs": 18,
+  "min_epochs": 10,
+  "patience": 6,
+  "batch_size": 16,
+  "threads": 4,
+  "seed": 20261118,
+  "learning_rate": 5e-05,
+  "head_learning_rate": 0.0002,
+  "dropout": 0.1,
+  "pair_loss_weight": 0.15,
+  "evaluate_reserved": false,
+  "data_hashes": {
+    "v2_all_sha256": "ad3e33a410801fb8817b29159ee6670890c2a2311154b2903994268c5eea8931",
+    "v2_run_manifest_sha256": "d8e5e09e5f83884feca10f0cd1382ad45f84003b7ca5b0d01f216bf8b1b87766"
+  },
+  "rows": {
+    "train": 705,
+    "validation": 180
+  },
+  "source_sha256": {
+    "train_intent_contrast.py": "d0711ae645d0b4f8356fdea2c4cd4710060214af3df16b924dfede474f2d6670",
+    "intent_contrast.py": "8919b2de71aec3c54d5db4214b76507fc1beb08965153fe2a7bf79a59a34a047",
+    "permission_intent_model.py": "b86921eac64f8dca7ef49d9607427cfc2c4474adb582f8dd9376740e74bab887"
+  },
+  "capability_ids": [
+    "media.photo.pick_one",
+    "media.photo.read_library",
+    "contacts.read",
+    "contacts.write",
+    "clipboard.read",
+    "clipboard.write",
+    "camera.record_video",
+    "microphone.record_audio"
+  ],
+  "capability_class_counts": [
+    [
+      675.0,
+      15.0,
+      15.0
+    ],
+    [
+      675.0,
+      10.0,
+      20.0
+    ],
+    [
+      665.0,
+      10.0,
+      30.0
+    ],
+    [
+      675.0,
+      20.0,
+      10.0
+    ],
+    [
+      665.0,
+      15.0,
+      25.0
+    ],
+    [
+      670.0,
+      30.0,
+      5.0
+    ],
+    [
+      665.0,
+      10.0,
+      30.0
+    ],
+    [
+      665.0,
+      20.0,
+      20.0
+    ]
+  ],
+  "intent_class_counts": [
+    580.0,
+    50.0,
+    55.0,
+    20.0
+  ],
+  "class_weighting": "inverse frequency",
+  "test_read_before_selection": false,
+  "selection": "Development only: recall>=0.4 where possible, then 0.45 required F0.5 +0.30 forbidden F1 +0.25 intent macro F1 -0.10 prohibition violation rate",
+  "query_initialization": "Pretrained contextual mean of semantic capability name/definition; not permission mappings or example answers"
+}

@@ -1,0 +1,21 @@
+{
+  "only_changed_field": "review.cross_review",
+  "human_review": "pending",
+  "files": {
+    "a_photos_contacts.jsonl": {
+      "before_sha256": "b7af6f826310f42007536d42f026968001f90a7a78502183518badbb2364f15a",
+      "after_sha256": "5c8bfc92482bc7a69808dc9c06b2c95f6251e767d11e1e29bdb9abc68fd1f3b6",
+      "rows": 320
+    },
+    "b_clipboard_recording.jsonl": {
+      "before_sha256": "49f52a5a46db12ada8c0979b18944c0ba0d007b38ce18129f36131df76e0b2d5",
+      "after_sha256": "ae0f7c634877e5ec0c32554827d291ba7ec280cb02bed392ce2c639e57ea8948",
+      "rows": 320
+    },
+    "c_status_contrasts.jsonl": {
+      "before_sha256": "b8c80bf8eef41e6369bb273602ac75ff7fb5e1d21e58a672a7789d6e2207fa92",
+      "after_sha256": "462c4074c2688d56db18318d6d98608506f6a3a6504f0b8a885f529c9dac49e9",
+      "rows": 480
+    }
+  }
+}
