@@ -7,3 +7,5 @@ ml/native_v2/evidence/**/*.log -whitespace
 variants/**/evidence/**/*.log -whitespace
 variants/**/THIRD-PARTY-NOTICES.txt -whitespace
 entry/src/main/resources/rawfile/**/THIRD-PARTY-NOTICES.txt -whitespace
+# Preserve the pinned upstream model card byte-for-byte for SHA256 provenance.
+ml/results/tinybert-intent-v4-20261118/teacher-upstream-README.md -whitespace
