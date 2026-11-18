@@ -3,6 +3,7 @@ import argparse
 from collections import Counter, defaultdict
 import csv
 from datetime import datetime, timezone
+from pathlib import Path
 
 from transformers import BertTokenizerFast
 
@@ -19,7 +20,7 @@ def canonical(row):
             tuple(sorted(row["forbidden_capabilities"])), row["ambiguity_type"])
 
 
-def inspect(require_review=False):
+def inspect(require_review=False, tokenizer_path=None):
     catalog = read_json(ROOT / "ml/data/permission_intent_v2/capability_catalog.json")
     caps = {c["id"] for c in catalog["capabilities"]}
     old = read_rows(ROOT / "ml/data/permission_intent_v2/expansion/all_instructions.jsonl")
@@ -68,7 +69,10 @@ def inspect(require_review=False):
               "Insufficient validation capability families: " + cap)
         for field in ("required_capabilities", "forbidden_capabilities"):
             check(any(cap in r[field] for r in splits["train"]), "Missing augmented train state: " + cap + "/" + field)
-    tokenizer = BertTokenizerFast.from_pretrained('/workspace/work/tinybert/downloads', local_files_only=True)
+    if tokenizer_path is None:
+        packaged = ROOT / "run/checkpoint"
+        tokenizer_path = packaged if packaged.exists() else Path('/workspace/work/tinybert/downloads')
+    tokenizer = BertTokenizerFast.from_pretrained(tokenizer_path, local_files_only=True)
     all_rows = splits["train"] + val
     lengths = tokenizer([r["text"] for r in all_rows], truncation=False, return_length=True)["length"]
     check(max(lengths) <= 64, "An instruction would be truncated")
@@ -89,8 +93,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--require-review", action="store_true")
     parser.add_argument("--freeze", action="store_true")
+    parser.add_argument("--tokenizer", type=Path, help="Local paired checkpoint/tokenizer; packaged run/checkpoint is auto-detected")
     args = parser.parse_args()
-    splits, report = inspect(args.require_review or args.freeze)
+    splits, report = inspect(args.require_review or args.freeze, args.tokenizer)
     write_json(DATA / "development_validation.json", report)
     if not report["passed"]:
         raise ValueError(report["errors"])
