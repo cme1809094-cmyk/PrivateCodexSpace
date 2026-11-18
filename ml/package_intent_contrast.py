@@ -12,6 +12,7 @@ def main():
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--experiments", type=Path, required=True)
+    parser.add_argument("--data-version", choices=("v3", "v4"), default="v3")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     main_files, extra_files = {}, {}
@@ -31,7 +32,10 @@ def main():
     for path in (ROOT / "ml").glob("*.py"):
         main_files[path.relative_to(ROOT).as_posix()] = path
     main_files["ml/requirements-training-cpu.txt"] = ROOT / "ml/requirements-training-cpu.txt"
-    for directory in ("ml/data/permission_intent_v3",):
+    directories = ["ml/data/permission_intent_v3"]
+    if args.data_version == "v4":
+        directories.append("ml/data/permission_intent_v4")
+    for directory in directories:
         for path in (ROOT / directory).rglob("*"):
             if path.is_file():
                 main_files[path.relative_to(ROOT).as_posix()] = path
@@ -39,7 +43,10 @@ def main():
                  "ml/data/permission_intent_v2/expansion/all_instructions.jsonl",
                  "ml/results/tinybert-intent-v2-20261118/data_manifest.json",
                  "entry/src/main/ets/model/WordPiece.ets", "tests/test_intent_training.py",
-                 "docs/tinybert-intent-v3-training.md"):
+                 f"docs/tinybert-intent-{args.data_version}-training.md"):
+        main_files[name] = ROOT / name
+    if args.data_version == "v4":
+        name = "ml/results/tinybert-intent-v3-20261118/evaluation/comparison_report.json"
         main_files[name] = ROOT / name
     for path in args.experiments.rglob("*"):
         if not path.is_file() or args.run in path.parents or path.suffix in (".safetensors", ".zip", ".onnx"):
@@ -49,7 +56,7 @@ def main():
             continue
         # Include all attempted configurations, with weights only for the winner.
         rel = path.relative_to(args.experiments)
-        if rel.parts[0].startswith(("pilot-", "full-")) or len(rel.parts) == 1:
+        if rel.parts[0].startswith(("pilot-", "full-", "probe-", "refine-")) or len(rel.parts) == 1:
             main_files["development_attempts/" + rel.as_posix()] = path
     manifest = {"scope": "Selected checkpoint plus standard ONNX; human review pending; not a phone-ready OMC profile",
                 "files": {name: {"bytes": path.stat().st_size, "sha256": sha256(path)}
@@ -57,8 +64,8 @@ def main():
     write_json(args.run / "artifact_manifest.json", manifest)
     main_files["run/artifact_manifest.json"] = args.run / "artifact_manifest.json"
     downloads = {}
-    for name, files in (("TinyBERT-intent-v3-model-and-64-20261118.zip", main_files),
-                        ("TinyBERT-intent-v3-onnx-16-32-20261118.zip", extra_files)):
+    for name, files in ((f"TinyBERT-intent-{args.data_version}-model-and-64-20261118.zip", main_files),
+                        (f"TinyBERT-intent-{args.data_version}-onnx-16-32-20261118.zip", extra_files)):
         destination = args.output / name
         if destination.exists():
             raise ValueError("Refusing to overwrite an existing archive: " + str(destination))

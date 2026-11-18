@@ -1,5 +1,6 @@
 """Task-semantic and artifact guards for the new TinyBERT trainer."""
 from pathlib import Path
+import copy
 import sys
 import tempfile
 import unittest
@@ -17,6 +18,7 @@ from permission_intent_model import selection_score
 from train_permission_intent_v2 import prepare_data
 from intent_contrast import packed_group_batches, pair_margin_loss, calibrate_policy
 from evaluate_intent_contrast import grouped_result
+from intent_optimization import focal_objective, trim_padding
 
 
 class IntentTrainingTests(unittest.TestCase):
@@ -170,6 +172,71 @@ class IntentTrainingTests(unittest.TestCase):
         self.assertEqual(result["joint_states_and_intent_exact"], 3)
         self.assertEqual(result["families_all_paraphrases_correct"], 1)
         self.assertEqual(result["scenario_groups_all_roles_and_paraphrases_correct"], 0)
+
+    def test_evidence_gate_preserves_old_head_and_checkpoint(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary)
+            tokenizer = self.tokenizer(path)
+            config = BertConfig(vocab_size=9, hidden_size=12, num_hidden_layers=1, num_attention_heads=3,
+                                intermediate_size=24, max_position_embeddings=64, cls_token_id=2, sep_token_id=3)
+            old = PermissionIntentModel(config, 3).eval()
+            gated_config = copy.deepcopy(config)
+            gated_config.permission_intent_head = "pooled_label_attention"
+            gated = PermissionIntentModel(gated_config, 3).eval()
+            missing, unexpected = gated.load_state_dict(old.state_dict(), strict=False)
+            self.assertEqual(set(missing), {"label_queries", "label_gates"})
+            self.assertFalse(unexpected)
+            ids = torch.tensor([[2, 5, 6, 3]])
+            with torch.no_grad():
+                gated.label_gates.fill_(-100)
+                for left, right in zip(old(ids, torch.ones_like(ids)), gated(ids, torch.ones_like(ids))):
+                    torch.testing.assert_close(left, right, rtol=1e-6, atol=1e-6)
+            protocol = {"capability_ids": ["audio", "camera", "location"], "states": STATES, "intent_statuses": INTENTS}
+            save_checkpoint(gated, tokenizer, path / "checkpoint", protocol)
+            restored, _, _ = load_checkpoint(path / "checkpoint")
+            with torch.inference_mode():
+                for left, right in zip(gated(ids, torch.ones_like(ids)), restored(ids, torch.ones_like(ids))):
+                    torch.testing.assert_close(left, right, rtol=0, atol=0)
+
+    def test_evidence_ignores_padding_and_trains_queries(self):
+        config = BertConfig(vocab_size=9, hidden_size=12, num_hidden_layers=1, num_attention_heads=3,
+                            intermediate_size=24, max_position_embeddings=64, cls_token_id=2, sep_token_id=3,
+                            permission_intent_head="pooled_label_attention")
+        model = PermissionIntentModel(config, 3).eval()
+        ids = torch.tensor([[2, 5, 6, 7, 3, 0]])
+        mask = (ids != 0).long()
+        changed = ids.clone()
+        changed[0, -1] = 8
+        with torch.inference_mode():
+            for a, b in zip(model(ids, mask), model(changed, mask)):
+                torch.testing.assert_close(a, b, rtol=1e-6, atol=1e-6)
+            for a, b in zip(model(ids, mask), model(ids[:, :-1], mask[:, :-1])):
+                torch.testing.assert_close(a, b, rtol=1e-6, atol=1e-6)
+        model.train()
+        cap, status = model(ids, mask)
+        (cap.square().mean() + status.square().mean()).backward()
+        for parameter in (model.label_queries, model.label_gates, model.encoder.embeddings.word_embeddings.weight):
+            self.assertTrue(torch.isfinite(parameter.grad).all())
+            self.assertGreater(float(parameter.grad.abs().sum()), 0)
+
+    def test_focal_disabled_matches_existing_objective(self):
+        cap = torch.randn(3, 2, 3, requires_grad=True)
+        status = torch.randn(3, 4, requires_grad=True)
+        targets = torch.tensor([[0, 1], [1, 2], [2, 0]])
+        statuses = torch.tensor([0, 1, 3])
+        cw, _ = balanced_weights(targets, 3)
+        iw, _ = balanced_weights(statuses, 4)
+        old = objective(cap, status, targets, statuses, cw, iw)
+        new = focal_objective(cap, status, targets, statuses, cw, iw, gamma=0, smoothing=0)
+        torch.testing.assert_close(old, new, rtol=0, atol=0)
+
+    def test_padding_trim_keeps_final_content_and_separator(self):
+        batch = {"input_ids": torch.tensor([[2, 5, 3, 0, 0, 0], [2, 5, 6, 7, 3, 0]]),
+                 "attention_mask": torch.tensor([[1, 1, 1, 0, 0, 0], [1, 1, 1, 1, 1, 0]])}
+        trimmed = trim_padding(batch)
+        self.assertEqual(trimmed["input_ids"].shape, (2, 5))
+        self.assertEqual(trimmed["input_ids"][1].tolist(), [2, 5, 6, 7, 3])
+        self.assertEqual(trimmed["attention_mask"].sum().item(), batch["attention_mask"].sum().item())
 
     def test_run_split_covers_statuses_and_never_moves_test(self):
         import json

@@ -22,8 +22,12 @@ class PermissionIntentModel(nn.Module):
         self.encoder = BertModel(config)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.head_type = getattr(config, "permission_intent_head", "pooled")
-        if self.head_type == "pooled":
+        if self.head_type in ("pooled", "pooled_label_attention"):
             self.capability_classifier = nn.Linear(config.hidden_size, capability_count * len(STATES))
+            if self.head_type == "pooled_label_attention":
+                self.label_queries = nn.Parameter(torch.empty(capability_count, config.hidden_size))
+                nn.init.normal_(self.label_queries, std=config.initializer_range)
+                self.label_gates = nn.Parameter(torch.full((capability_count,), -2.0))
         elif self.head_type == "label_attention":
             self.label_queries = nn.Parameter(torch.empty(capability_count, config.hidden_size))
             nn.init.normal_(self.label_queries, std=config.initializer_range)
@@ -46,6 +50,21 @@ class PermissionIntentModel(nn.Module):
         pooled = self.dropout(encoded[1])
         if self.head_type == "pooled":
             capabilities = self.capability_classifier(pooled).reshape(-1, self.capability_count, len(STATES))
+        elif self.head_type == "pooled_label_attention":
+            tokens = encoded[0]
+            # Scaled dot product keeps the exported path to ordinary matmuls,
+            # softmax and elementwise operations. No label strings at inference.
+            scores = torch.matmul(tokens, self.label_queries.transpose(0, 1)).transpose(1, 2)
+            scores = scores / (tokens.shape[-1] ** 0.5)
+            valid = self._content_mask(input_ids, attention_mask)
+            attention = scores.masked_fill(~valid[:, None, :], -10000.0).softmax(-1)
+            context = torch.matmul(attention, tokens)
+            context = self.dropout(torch.tanh(self.encoder.pooler.dense(context)))
+            gate = self.label_gates.sigmoid()[None, :, None]
+            features = pooled[:, None, :] * (1 - gate) + context * gate
+            weight = self.capability_classifier.weight.reshape(self.capability_count, len(STATES), -1)
+            bias = self.capability_classifier.bias.reshape(self.capability_count, len(STATES))
+            capabilities = (features[:, :, None, :] * weight[None, :, :, :]).sum(-1) + bias
         else:
             tokens = encoded[0]
             query = F.normalize(self.label_queries, dim=-1)
@@ -65,8 +84,14 @@ class PermissionIntentModel(nn.Module):
             capabilities = self.capability_classifier(self.dropout(features))
         return capabilities, self.intent_classifier(pooled)
 
+    def _content_mask(self, input_ids, attention_mask):
+        cls_id = getattr(self.encoder.config, "cls_token_id", None)
+        sep_id = getattr(self.encoder.config, "sep_token_id", None)
+        return (attention_mask.bool() & (input_ids != (101 if cls_id is None else cls_id))
+                & (input_ids != (102 if sep_id is None else sep_id)))
+
     def initialize_label_queries(self, tokenizer, descriptions):
-        if self.head_type != "label_attention":
+        if self.head_type not in ("label_attention", "pooled_label_attention"):
             return
         self.encoder.eval()
         encoded = tokenizer(descriptions, padding=True, truncation=False, return_tensors="pt",
@@ -78,6 +103,8 @@ class PermissionIntentModel(nn.Module):
             valid = encoded["attention_mask"].bool() & (encoded["input_ids"] != tokenizer.cls_token_id)
             valid &= encoded["input_ids"] != tokenizer.sep_token_id
             mean = (tokens * valid[:, :, None]).sum(dim=1) / valid.sum(dim=1, keepdim=True).clamp_min(1)
+            if self.head_type == "pooled_label_attention":
+                mean = F.normalize(mean, dim=-1) * (mean.shape[-1] ** 0.5)
             self.label_queries.copy_(mean)
 
 

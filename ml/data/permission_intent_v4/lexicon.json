@@ -1,0 +1,235 @@
+{
+  "schema_version": "0.4",
+  "review": {
+    "semantic_ai": "reviewed",
+    "cross_review": "reviewed",
+    "human_review": "pending"
+  },
+  "purpose": "Finite, auditable training-only atomic actions. Not an independent benchmark.",
+  "capabilities": {
+    "media.photo.pick_one": {
+      "positive": [
+        "让我在系统选图界面挑一张照片",
+        "打开系统照片选择面板让我单选一张图"
+      ],
+      "negative": "用系统选图面板取得照片"
+    },
+    "media.photo.read_library": {
+      "positive": [
+        "遍历手机可访问的照片库找旧照片",
+        "直接查询手机图库里的照片列表"
+      ],
+      "negative": "查询或遍历手机照片库"
+    },
+    "media.photo.add": {
+      "positive": [
+        "把应用里的这张新图片添加到公共相册",
+        "把刚生成的图片另存为手机相册的新照片"
+      ],
+      "negative": "向手机公共相册添加新照片"
+    },
+    "files.pick_one": {
+      "positive": [
+        "让我在系统文件面板选一个文档并读取它",
+        "打开文件选择窗口让我挑一个文件后读取"
+      ],
+      "negative": "通过系统文件面板选择并读取文件"
+    },
+    "files.save_user_selected": {
+      "positive": [
+        "让我在系统保存窗口选位置再存出应用已有报告",
+        "用系统保存窗口把应用已备好的内容存到我选的位置"
+      ],
+      "negative": "通过系统保存界面导出文件"
+    },
+    "contacts.pick_one": {
+      "positive": [
+        "让我在系统联系人面板挑一个人的电话",
+        "打开系统联系人选择界面由我选一位联系人"
+      ],
+      "negative": "通过系统联系人选择面板取得联系人"
+    },
+    "contacts.read": {
+      "positive": [
+        "直接查询手机通讯录里的联系人",
+        "搜索手机通讯录中姓名含张的记录"
+      ],
+      "negative": "直接查询或读取手机通讯录"
+    },
+    "contacts.write": {
+      "positive": [
+        "在手机通讯录新建小林电话13800138021的记录",
+        "把已选手机联系人的备注改为工作伙伴"
+      ],
+      "negative": "新增修改或删除手机联系人"
+    },
+    "calendar.read": {
+      "positive": [
+        "读取手机默认日历里下周的日程",
+        "查询手机可访问日历中明天的安排"
+      ],
+      "negative": "读取手机日历中的日程"
+    },
+    "calendar.write": {
+      "positive": [
+        "在手机默认日历新增明天下午两点的会议",
+        "把已选手机日历事件的标题改成周会"
+      ],
+      "negative": "新增修改或删除手机日历事件"
+    },
+    "notifications.publish": {
+      "positive": [
+        "在手机通知栏发布本应用的完成通知",
+        "马上向系统通知中心发送本应用的一条消息"
+      ],
+      "negative": "发布本应用的系统通知"
+    },
+    "notifications.open_settings": {
+      "positive": [
+        "打开本应用的系统通知设置页面",
+        "带我去手机系统里这个应用的通知开关页面"
+      ],
+      "negative": "打开本应用的系统通知设置页面"
+    },
+    "reminders.schedule_local": {
+      "positive": [
+        "安排二十分钟后的普通本地休息提醒允许稍有延迟",
+        "设个明天下午三点的普通本地提醒不要求精确准时"
+      ],
+      "negative": "设置允许延迟的普通本地提醒"
+    },
+    "reminders.schedule_exact": {
+      "positive": [
+        "设置明早七点整必须准时响的本地闹钟",
+        "安排五分钟后精确准点触发的本地闹钟"
+      ],
+      "negative": "安排任何要求精确准时的本地闹钟或提醒"
+    },
+    "bluetooth.scan": {
+      "positive": [
+        "扫描附近可以被发现的蓝牙设备",
+        "找找周围正在广播的蓝牙设备名字"
+      ],
+      "negative": "扫描发现附近的蓝牙设备"
+    },
+    "bluetooth.connect": {
+      "positive": [
+        "连接我已经配对过的蓝牙耳机",
+        "跟刚选好的蓝牙音箱建立连接"
+      ],
+      "negative": "连接或配对蓝牙设备"
+    },
+    "wlan.scan": {
+      "positive": [
+        "列出手机附近的无线网络热点",
+        "查看手机最近扫描到的周边WiFi名单"
+      ],
+      "negative": "查看或扫描附近的WiFi热点"
+    },
+    "wlan.connect": {
+      "positive": [
+        "连接手机里已保存密码的HomeNet网络",
+        "连上已经保存好配置的家中无线网络"
+      ],
+      "negative": "请求连接无线网络"
+    },
+    "nfc.read_tag": {
+      "positive": [
+        "读出我贴近手机的NFC标签里的文本",
+        "读取当前贴近手机的普通NFC标签内容"
+      ],
+      "negative": "读取手机旁的NFC标签"
+    },
+    "nfc.write_tag": {
+      "positive": [
+        "把你好写进已贴近手机的空白可写NFC标签",
+        "给当前兼容可写的NFC标签写入欢迎参观"
+      ],
+      "negative": "向NFC标签写入内容"
+    },
+    "motion.read_steps": {
+      "positive": [
+        "读取手机计步器当前累计的步数",
+        "看看本机计步传感器刚数出的步数"
+      ],
+      "negative": "读取手机计步传感器的数据"
+    },
+    "motion.recognize_activity": {
+      "positive": [
+        "用手机运动传感器判断我现在是步行还是乘车",
+        "识别我当前处于走路跑步还是静止状态"
+      ],
+      "negative": "用设备传感器识别我的运动状态"
+    },
+    "biometric.authenticate": {
+      "positive": [
+        "弹出系统指纹验证来确认我本人",
+        "通过系统人脸认证界面验证当前用户"
+      ],
+      "negative": "发起任何系统生物身份认证"
+    },
+    "clipboard.paste_user_initiated": {
+      "positive": [
+        "让我点系统粘贴按钮把内容填入输入框",
+        "等我选择系统粘贴菜单后再填入剪贴板内容"
+      ],
+      "negative": "通过用户点击系统按钮或菜单来粘贴"
+    },
+    "clipboard.read": {
+      "positive": [
+        "让应用直接读取当前系统剪贴板的内容",
+        "由应用自动取出剪贴板里现在的文字"
+      ],
+      "negative": "由应用直接读取系统剪贴板"
+    },
+    "clipboard.write": {
+      "positive": [
+        "把应用里已选中的句子复制进系统剪贴板",
+        "把本应用页面上已显示的一行文字写入剪贴板"
+      ],
+      "negative": "向系统剪贴板写入任何内容"
+    },
+    "camera.capture_photo": {
+      "positive": [
+        "打开相机为面前的物体拍一张新照片",
+        "用手机摄像头现在拍张静态照片"
+      ],
+      "negative": "使用相机拍摄新的静态照片"
+    },
+    "camera.record_video": {
+      "positive": [
+        "用手机摄像头录制面前的实时视频画面",
+        "打开相机开始录一段现场视频画面"
+      ],
+      "negative": "使用相机录制新的视频画面"
+    },
+    "microphone.record_audio": {
+      "positive": [
+        "用手机麦克风录下接下来现场说的话",
+        "开启麦克风采集现在的声音并录音"
+      ],
+      "negative": "使用麦克风采集任何现场声音"
+    },
+    "location.coarse.foreground_once": {
+      "positive": [
+        "在前台获取一次当前的大概设备位置",
+        "本应用显示在前台时只查一次粗略位置"
+      ],
+      "negative": "获取前台单次粗略设备位置"
+    },
+    "location.precise.foreground_once": {
+      "positive": [
+        "在前台精确获取一次当前设备坐标",
+        "本应用显示在前台时查询一次当前的精确经纬度"
+      ],
+      "negative": "获取前台单次精确设备位置"
+    },
+    "location.background": {
+      "positive": [
+        "切到别的应用后继续精确记录本次跑步位置半小时",
+        "应用退到后台仍持续记录本次通勤的大概位置半小时"
+      ],
+      "negative": "在应用退到后台后继续获取设备位置"
+    }
+  }
+}

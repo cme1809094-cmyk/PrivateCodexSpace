@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "errors": [],
+  "rows": {
+    "train": 1248,
+    "validation": 224
+  },
+  "source_sha256": {
+    "train.jsonl": "ccc4f13f213c8f311dfc887fdb5e17f0d473b7cc110d678c4b0ca5aa954f8644",
+    "validation.jsonl": "295ee4ae2d0181a6e0debd0753ae00da09ed8f0b484d01a445d845868bd43f0e"
+  },
+  "max_tokens_with_special": 53,
+  "reserved_prompts_read": false,
+  "human_review": "pending"
+}

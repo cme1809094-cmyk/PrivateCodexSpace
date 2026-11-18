@@ -1,0 +1,1147 @@
+{
+  "schema_version": "0.4.0",
+  "stage": "independent_validation_for_ai_cross_review",
+  "split": "validation",
+  "row_count": 224,
+  "family_count": 112,
+  "family_size": 2,
+  "status_rows": {
+    "in_scope": 128,
+    "ambiguous": 32,
+    "no_device_capability": 32,
+    "out_of_scope": 32
+  },
+  "status_families": {
+    "in_scope": 64,
+    "ambiguous": 16,
+    "no_device_capability": 16,
+    "out_of_scope": 16
+  },
+  "ambiguity_families": {
+    "conflict": 4,
+    "source": 4,
+    "target": 4,
+    "scope": 4
+  },
+  "style_families": {
+    "short": 56,
+    "conditional": 56
+  },
+  "style_rows": {
+    "short": 112,
+    "conditional": 112
+  },
+  "positive_family_coverage": {
+    "biometric.authenticate": [
+      "v4_val_f045",
+      "v4_val_f046"
+    ],
+    "bluetooth.connect": [
+      "v4_val_f031",
+      "v4_val_f032"
+    ],
+    "bluetooth.scan": [
+      "v4_val_f029",
+      "v4_val_f030"
+    ],
+    "calendar.read": [
+      "v4_val_f017",
+      "v4_val_f018"
+    ],
+    "calendar.write": [
+      "v4_val_f019",
+      "v4_val_f020"
+    ],
+    "camera.capture_photo": [
+      "v4_val_f053",
+      "v4_val_f054"
+    ],
+    "camera.record_video": [
+      "v4_val_f055",
+      "v4_val_f056"
+    ],
+    "clipboard.paste_user_initiated": [
+      "v4_val_f047",
+      "v4_val_f048"
+    ],
+    "clipboard.read": [
+      "v4_val_f049",
+      "v4_val_f050"
+    ],
+    "clipboard.write": [
+      "v4_val_f051",
+      "v4_val_f052"
+    ],
+    "contacts.pick_one": [
+      "v4_val_f011",
+      "v4_val_f012"
+    ],
+    "contacts.read": [
+      "v4_val_f013",
+      "v4_val_f014"
+    ],
+    "contacts.write": [
+      "v4_val_f015",
+      "v4_val_f016"
+    ],
+    "files.pick_one": [
+      "v4_val_f007",
+      "v4_val_f008"
+    ],
+    "files.save_user_selected": [
+      "v4_val_f009",
+      "v4_val_f010"
+    ],
+    "location.background": [
+      "v4_val_f063",
+      "v4_val_f064"
+    ],
+    "location.coarse.foreground_once": [
+      "v4_val_f059",
+      "v4_val_f060"
+    ],
+    "location.precise.foreground_once": [
+      "v4_val_f061",
+      "v4_val_f062"
+    ],
+    "media.photo.add": [
+      "v4_val_f005",
+      "v4_val_f006"
+    ],
+    "media.photo.pick_one": [
+      "v4_val_f001",
+      "v4_val_f002"
+    ],
+    "media.photo.read_library": [
+      "v4_val_f003",
+      "v4_val_f004"
+    ],
+    "microphone.record_audio": [
+      "v4_val_f056",
+      "v4_val_f057",
+      "v4_val_f058"
+    ],
+    "motion.read_steps": [
+      "v4_val_f041",
+      "v4_val_f042"
+    ],
+    "motion.recognize_activity": [
+      "v4_val_f043",
+      "v4_val_f044"
+    ],
+    "nfc.read_tag": [
+      "v4_val_f037",
+      "v4_val_f038"
+    ],
+    "nfc.write_tag": [
+      "v4_val_f039",
+      "v4_val_f040",
+      "v4_val_f045"
+    ],
+    "notifications.open_settings": [
+      "v4_val_f023",
+      "v4_val_f024"
+    ],
+    "notifications.publish": [
+      "v4_val_f021",
+      "v4_val_f022"
+    ],
+    "reminders.schedule_exact": [
+      "v4_val_f027",
+      "v4_val_f028"
+    ],
+    "reminders.schedule_local": [
+      "v4_val_f025",
+      "v4_val_f026"
+    ],
+    "wlan.connect": [
+      "v4_val_f035",
+      "v4_val_f036"
+    ],
+    "wlan.scan": [
+      "v4_val_f033",
+      "v4_val_f034"
+    ]
+  },
+  "anchor_family_counts": {
+    "media.photo.pick_one": 2,
+    "media.photo.read_library": 2,
+    "media.photo.add": 2,
+    "files.pick_one": 2,
+    "files.save_user_selected": 2,
+    "contacts.pick_one": 2,
+    "contacts.read": 2,
+    "contacts.write": 2,
+    "calendar.read": 2,
+    "calendar.write": 2,
+    "notifications.publish": 2,
+    "notifications.open_settings": 2,
+    "reminders.schedule_local": 2,
+    "reminders.schedule_exact": 2,
+    "bluetooth.scan": 2,
+    "bluetooth.connect": 2,
+    "wlan.scan": 2,
+    "wlan.connect": 2,
+    "nfc.read_tag": 2,
+    "nfc.write_tag": 2,
+    "motion.read_steps": 2,
+    "motion.recognize_activity": 2,
+    "biometric.authenticate": 2,
+    "clipboard.paste_user_initiated": 2,
+    "clipboard.read": 2,
+    "clipboard.write": 2,
+    "camera.capture_photo": 2,
+    "camera.record_video": 2,
+    "microphone.record_audio": 2,
+    "location.coarse.foreground_once": 2,
+    "location.precise.foreground_once": 2,
+    "location.background": 2
+  },
+  "exact_deduplication": {
+    "normalization": "NFKC + casefold + retain alphanumeric characters",
+    "historical_rows": 2900,
+    "historical_exact_matches": 0,
+    "within_validation_exact_duplicates": 0,
+    "sources": [
+      {
+        "path": "ml/data/permission_intent_v2/expansion/all_instructions.jsonl",
+        "rows": 1500,
+        "sha256": "ad3e33a410801fb8817b29159ee6670890c2a2311154b2903994268c5eea8931"
+      },
+      {
+        "path": "ml/data/permission_intent_v3/development.jsonl",
+        "rows": 1120,
+        "sha256": "54bb0236545d6a317d997a0b5c86aadb3cd171a61f27bc3a5d8b884c45c03fbc"
+      },
+      {
+        "path": "ml/data/permission_intent_v3/reserved_test.jsonl",
+        "rows": 280,
+        "sha256": "ba025f9f2d7bb110e20fbf3dc719ee067b6483aacb89ee4ed863387c28615a6a"
+      }
+    ]
+  },
+  "token_lengths": {
+    "rows": 224,
+    "max_tokens_including_cls_sep": 39,
+    "too_long_ids": [],
+    "tokenizer_source": "entry/src/main/ets/model/WordPiece.ets",
+    "tokenizer_source_sha256": "5c12c32d691a9d2390814d1253d0f883711f78bd47847089734101f586daa751",
+    "tinybert_vocab": "entry/src/main/resources/rawfile/models/tinybert4l/vocab.txt",
+    "tinybert_vocab_sha256": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a"
+  },
+  "catalog": {
+    "path": "ml/data/permission_intent_v2/capability_catalog.json",
+    "sha256": "31e1a1fca962d7827ad43a6c9df1402f35d0bf439e864bcad32ec4b2952658a9",
+    "capability_count": 32
+  },
+  "data_file": "validation.jsonl",
+  "data_sha256": "295ee4ae2d0181a6e0debd0753ae00da09ed8f0b484d01a445d845868bd43f0e",
+  "source": {
+    "type": "agent_generated",
+    "agent": "instruction_preview"
+  },
+  "review": {
+    "semantic_ai": "reviewed",
+    "cross_review": "reviewed",
+    "human_review": "pending"
+  },
+  "model_execution_performed": false,
+  "families": [
+    {
+      "family_id": "v4_val_f001",
+      "scenario_summary": "重新选择单图，取消后保留空位",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "media.photo.pick_one"
+    },
+    {
+      "family_id": "v4_val_f002",
+      "scenario_summary": "确认替换后选图，取消保留旧图",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "media.photo.pick_one"
+    },
+    {
+      "family_id": "v4_val_f003",
+      "scenario_summary": "直接按拍摄小时对照片库分组",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "media.photo.read_library"
+    },
+    {
+      "family_id": "v4_val_f004",
+      "scenario_summary": "从照片元数据筛选位置照片，不取设备新位置",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "media.photo.read_library"
+    },
+    {
+      "family_id": "v4_val_f005",
+      "scenario_summary": "应用拼接长图作为新照片加入相册",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "media.photo.add"
+    },
+    {
+      "family_id": "v4_val_f006",
+      "scenario_summary": "确认图表导出成图后新增媒体",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "media.photo.add"
+    },
+    {
+      "family_id": "v4_val_f007",
+      "scenario_summary": "系统文件面板选字幕，只预览不改原文",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "files.pick_one"
+    },
+    {
+      "family_id": "v4_val_f008",
+      "scenario_summary": "恢复前选择单个备份，取消则不恢复",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "files.pick_one"
+    },
+    {
+      "family_id": "v4_val_f009",
+      "scenario_summary": "已在应用内的逐字稿导出用户所选文本文件",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "files.save_user_selected"
+    },
+    {
+      "family_id": "v4_val_f010",
+      "scenario_summary": "长清单满足条件后导出到用户所选文件",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "files.save_user_selected"
+    },
+    {
+      "family_id": "v4_val_f011",
+      "scenario_summary": "系统联系人选取邮箱作为收件人",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "contacts.pick_one"
+    },
+    {
+      "family_id": "v4_val_f012",
+      "scenario_summary": "分享确认后选单个联系人，仅用返回字段",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "contacts.pick_one"
+    },
+    {
+      "family_id": "v4_val_f013",
+      "scenario_summary": "查找缺少邮箱记录但禁止所有联系人写入",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "contacts.read"
+    },
+    {
+      "family_id": "v4_val_f014",
+      "scenario_summary": "用户触发请柬准备后按邮寄地址筛选",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "contacts.read"
+    },
+    {
+      "family_id": "v4_val_f015",
+      "scenario_summary": "合并已选且内容已载入的重复名片，保留两号码",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "contacts.write"
+    },
+    {
+      "family_id": "v4_val_f016",
+      "scenario_summary": "确认后批量新建应用已有名片，不覆盖同名记录",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "contacts.write"
+    },
+    {
+      "family_id": "v4_val_f017",
+      "scenario_summary": "默认日历过滤下个全天事件",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "calendar.read"
+    },
+    {
+      "family_id": "v4_val_f018",
+      "scenario_summary": "日期确认后读取跨午夜安排",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "calendar.read"
+    },
+    {
+      "family_id": "v4_val_f019",
+      "scenario_summary": "已选事件只提前结束时间",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "calendar.write"
+    },
+    {
+      "family_id": "v4_val_f020",
+      "scenario_summary": "确认后创建每月末检查事件，不查询其他日历",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "calendar.write"
+    },
+    {
+      "family_id": "v4_val_f021",
+      "scenario_summary": "同一条上传进度通知持续更新",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "notifications.publish"
+    },
+    {
+      "family_id": "v4_val_f022",
+      "scenario_summary": "后台压缩完成才通知且隐藏文件名",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "notifications.publish"
+    },
+    {
+      "family_id": "v4_val_f023",
+      "scenario_summary": "查看本应用通知类别设置",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "notifications.open_settings"
+    },
+    {
+      "family_id": "v4_val_f024",
+      "scenario_summary": "退出播放页之后再打开本应用通知设置",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "notifications.open_settings"
+    },
+    {
+      "family_id": "v4_val_f025",
+      "scenario_summary": "隔日有限次数普通提醒",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "reminders.schedule_local"
+    },
+    {
+      "family_id": "v4_val_f026",
+      "scenario_summary": "待办截止前未完成才安排次日普通提醒",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "reminders.schedule_local"
+    },
+    {
+      "family_id": "v4_val_f027",
+      "scenario_summary": "根据已填航班时刻提前准时提醒",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "reminders.schedule_exact"
+    },
+    {
+      "family_id": "v4_val_f028",
+      "scenario_summary": "确认后同日两个精确时刻分别触发",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "reminders.schedule_exact"
+    },
+    {
+      "family_id": "v4_val_f029",
+      "scenario_summary": "蓝牙扫描按心率服务筛选但禁止连接",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "bluetooth.scan"
+    },
+    {
+      "family_id": "v4_val_f030",
+      "scenario_summary": "发现设备就停，重扫须用户重新触发",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "bluetooth.scan"
+    },
+    {
+      "family_id": "v4_val_f031",
+      "scenario_summary": "断连键盘依据已存配对信息重连",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "bluetooth.connect"
+    },
+    {
+      "family_id": "v4_val_f032",
+      "scenario_summary": "核对配对码匹配且用户确认才继续连接",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "bluetooth.connect"
+    },
+    {
+      "family_id": "v4_val_f033",
+      "scenario_summary": "仅系统已有结果中统计强信号热点",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "wlan.scan"
+    },
+    {
+      "family_id": "v4_val_f034",
+      "scenario_summary": "开放网络场景下用户触发新扫描只列加密热点",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "wlan.scan"
+    },
+    {
+      "family_id": "v4_val_f035",
+      "scenario_summary": "完整上网网络配置经用户确认保存接入",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "wlan.connect"
+    },
+    {
+      "family_id": "v4_val_f036",
+      "scenario_summary": "用户断开当前网络后才连接备用配置",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "wlan.connect"
+    },
+    {
+      "family_id": "v4_val_f037",
+      "scenario_summary": "查看多记录标签的类型而不执行内容",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "nfc.read_tag"
+    },
+    {
+      "family_id": "v4_val_f038",
+      "scenario_summary": "贴近标签后只取文本便签，不自动打开网址",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "nfc.read_tag"
+    },
+    {
+      "family_id": "v4_val_f039",
+      "scenario_summary": "给可写标签写文字且不锁定",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "nfc.write_tag"
+    },
+    {
+      "family_id": "v4_val_f040",
+      "scenario_summary": "容量足够才写，不通过删记录腾空间",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "nfc.write_tag"
+    },
+    {
+      "family_id": "v4_val_f041",
+      "scenario_summary": "手动划分连续两段步行并比较计步增量",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "motion.read_steps"
+    },
+    {
+      "family_id": "v4_val_f042",
+      "scenario_summary": "用户开始结束两次取数计算步行增量",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "motion.read_steps"
+    },
+    {
+      "family_id": "v4_val_f043",
+      "scenario_summary": "检测步行转为静止的活动变化，不用位置推断",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "motion.recognize_activity"
+    },
+    {
+      "family_id": "v4_val_f044",
+      "scenario_summary": "用户触发步行乘车分类，禁止以定位猜测",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "motion.recognize_activity"
+    },
+    {
+      "family_id": "v4_val_f045",
+      "scenario_summary": "系统生物认证门控应用已有文字写入普通NFC标签",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "biometric.authenticate"
+    },
+    {
+      "family_id": "v4_val_f046",
+      "scenario_summary": "启动系统认证并分别处理取消和成功",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "biometric.authenticate"
+    },
+    {
+      "family_id": "v4_val_f047",
+      "scenario_summary": "用户在首格系统粘贴后把验证码分填多格",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "clipboard.paste_user_initiated"
+    },
+    {
+      "family_id": "v4_val_f048",
+      "scenario_summary": "粘贴取消留空，重试也由用户主动操作",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "clipboard.paste_user_initiated"
+    },
+    {
+      "family_id": "v4_val_f049",
+      "scenario_summary": "读取链接检查追踪参数而不打开",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "clipboard.read"
+    },
+    {
+      "family_id": "v4_val_f050",
+      "scenario_summary": "用户触发后读取电话号码列表统计重复，禁止写回",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "clipboard.read"
+    },
+    {
+      "family_id": "v4_val_f051",
+      "scenario_summary": "已选网页段落去除样式和链接后复制纯文字",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "clipboard.write"
+    },
+    {
+      "family_id": "v4_val_f052",
+      "scenario_summary": "按用户选择的导出选项复制标题金额排除备注",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "clipboard.write"
+    },
+    {
+      "family_id": "v4_val_f053",
+      "scenario_summary": "后摄新拍证件仅应用内预览",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "camera.capture_photo"
+    },
+    {
+      "family_id": "v4_val_f054",
+      "scenario_summary": "用户快门触发单拍，模糊时报告而不连拍",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "camera.capture_photo"
+    },
+    {
+      "family_id": "v4_val_f055",
+      "scenario_summary": "新慢动作视频只要求最终静音",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "camera.record_video"
+    },
+    {
+      "family_id": "v4_val_f056",
+      "scenario_summary": "录机器画面同时采声音测音量但输出静音视频",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "camera.record_video"
+    },
+    {
+      "family_id": "v4_val_f057",
+      "scenario_summary": "收节拍分析间隔但不保存音频",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "microphone.record_audio"
+    },
+    {
+      "family_id": "v4_val_f058",
+      "scenario_summary": "用户自行接好耳机后开始录音，不代为配对",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "microphone.record_audio"
+    },
+    {
+      "family_id": "v4_val_f059",
+      "scenario_summary": "单次粗略位置用于选择本地频道后停止",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "location.coarse.foreground_once"
+    },
+    {
+      "family_id": "v4_val_f060",
+      "scenario_summary": "仅自动切城市分支前台一次粗略定位",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "location.coarse.foreground_once"
+    },
+    {
+      "family_id": "v4_val_f061",
+      "scenario_summary": "单次精确位置检查已画区域内外",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "location.precise.foreground_once"
+    },
+    {
+      "family_id": "v4_val_f062",
+      "scenario_summary": "确认地图目标后新取坐标测距",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "location.precise.foreground_once"
+    },
+    {
+      "family_id": "v4_val_f063",
+      "scenario_summary": "仅本次骑行后台粗略路线直到用户结束",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": "location.background"
+    },
+    {
+      "family_id": "v4_val_f064",
+      "scenario_summary": "启动后后台精确记录有限时长",
+      "intent_status": "in_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": "location.background"
+    },
+    {
+      "family_id": "v4_val_f065",
+      "scenario_summary": "完整禁麦克风却要求现场口哨控制游戏",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "conflict",
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f066",
+      "scenario_summary": "完整禁读联系人却要求自动查询全部邮箱",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "conflict",
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f067",
+      "scenario_summary": "确认触发后仍同时禁止写入和要求复制",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "conflict",
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f068",
+      "scenario_summary": "确认后既禁止任何镜头又要求新拍合照",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "conflict",
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f069",
+      "scenario_summary": "配背景音的来源尚未确定",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "source",
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f070",
+      "scenario_summary": "证明图的获取来源未定",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "source",
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f071",
+      "scenario_summary": "开始配字幕时稿件来源未定",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "source",
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f072",
+      "scenario_summary": "触发填号码时来源未定且明确禁止联系人写入",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "source",
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f073",
+      "scenario_summary": "复制结果去向尚未选定",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "target",
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f074",
+      "scenario_summary": "已选日程换目标日历保存，目标日历未定且禁蓝牙扫描",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "target",
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f075",
+      "scenario_summary": "确认后批量读取某相册，目标相册名称未定",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "target",
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f076",
+      "scenario_summary": "保存后改备注但联系人目标尚未指定",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "target",
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f077",
+      "scenario_summary": "联系人查询范围在家庭组和全库间未定",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "scope",
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f078",
+      "scenario_summary": "剪贴板读取内容类型范围未定",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "scope",
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f079",
+      "scenario_summary": "触发定位时精度范围未定",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "scope",
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f080",
+      "scenario_summary": "开始精确记录后是否继续到后台未定",
+      "intent_status": "ambiguous",
+      "ambiguity_type": "scope",
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f081",
+      "scenario_summary": "处理已导入图片的宽高比例",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f082",
+      "scenario_summary": "处理已有步数记录的趋势",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f083",
+      "scenario_summary": "应用现有联系人按公司分组",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f084",
+      "scenario_summary": "已有录音标记长停顿",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f085",
+      "scenario_summary": "手打歌词的重复句高亮",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f086",
+      "scenario_summary": "手填收支与待支付金额计算差额",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f087",
+      "scenario_summary": "已载入地图截图连接用户已有标记",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f088",
+      "scenario_summary": "已有通知草稿改写为三条短句",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f089",
+      "scenario_summary": "确认后给已载入图加水印且不存相册",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f090",
+      "scenario_summary": "已有表格删除空行，禁止打开文件选择器",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f091",
+      "scenario_summary": "确认后校对已有字幕，禁止麦克风",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f092",
+      "scenario_summary": "两份应用缓存蓝牙列表比较，不新扫描",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f093",
+      "scenario_summary": "已粘贴地址分栏，禁止新读剪贴板",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f094",
+      "scenario_summary": "仅合并已有清单显示行，禁止系统日历写入",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f095",
+      "scenario_summary": "完成后隐藏已有提示而不写剪贴板",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f096",
+      "scenario_summary": "旧视频仅旋转播放显示，不另存",
+      "intent_status": "no_device_capability",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f097",
+      "scenario_summary": "更换系统默认输入法",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f098",
+      "scenario_summary": "删除短信发送记录",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f099",
+      "scenario_summary": "调整桌面小组件尺寸",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f100",
+      "scenario_summary": "关闭系统自动旋转",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f101",
+      "scenario_summary": "公交卡余额跨卡转移",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f102",
+      "scenario_summary": "读取浏览器下载历史",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f103",
+      "scenario_summary": "替换系统默认来电铃声",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f104",
+      "scenario_summary": "聊天群消息策略变更",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "short",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f105",
+      "scenario_summary": "未接来电后查询通话记录号码",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f106",
+      "scenario_summary": "付款后向对方发送短信",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f107",
+      "scenario_summary": "低电量触发系统省电模式",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f108",
+      "scenario_summary": "确认后更改手机热点名称",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f109",
+      "scenario_summary": "发现版本后通过商店更新应用",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f110",
+      "scenario_summary": "发送聊天框已有图片到群",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f111",
+      "scenario_summary": "再次来电后添加拦截名单",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    },
+    {
+      "family_id": "v4_val_f112",
+      "scenario_summary": "确认后转赠电子门票",
+      "intent_status": "out_of_scope",
+      "ambiguity_type": null,
+      "utterance_style": "conditional",
+      "anchor_capability": null
+    }
+  ]
+}

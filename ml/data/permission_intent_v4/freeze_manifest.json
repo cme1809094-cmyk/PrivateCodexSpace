@@ -1,0 +1,15 @@
+{
+  "frozen_before_training": true,
+  "frozen_at_utc": "2026-11-18T12:12:32.802247+00:00",
+  "source_sha256": {
+    "lexicon.json": "04cfeda05dc49691c3de16796217937436e40c8b0e7d8d84254837762d7c433d",
+    "train.jsonl": "ccc4f13f213c8f311dfc887fdb5e17f0d473b7cc110d678c4b0ca5aa954f8644",
+    "validation.jsonl": "295ee4ae2d0181a6e0debd0753ae00da09ed8f0b484d01a445d845868bd43f0e",
+    "reserved_test.jsonl": "b68e4701df793c0eeee6fbe342a28d22774a175fc2a637b3a177125f37353fd0",
+    "generate_intent_v4.py": "d038896347faee2cd3f03f57f5470c368fd9d7452f2b615241e91201ac429b88"
+  },
+  "audit_sha256": "507bfb3a8a7fcc2ba1a1d72b17cbc9d4974c54c1ea278cefd8cefd63ac653e53",
+  "plan_sha256": "cd658704d1fea291d480ff9f932bba8add4dd17c49ad95e98865e82acf8880f3",
+  "root_read_reserved_before_selection": false,
+  "human_review": "pending"
+}

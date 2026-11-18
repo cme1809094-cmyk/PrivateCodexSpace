@@ -1,0 +1,17 @@
+{
+  "rows": 1248,
+  "groups": 368,
+  "status_counts": {
+    "in_scope": 832,
+    "no_device_capability": 64,
+    "ambiguous": 304,
+    "out_of_scope": 48
+  },
+  "skipped_groups": {},
+  "sha256": "ccc4f13f213c8f311dfc887fdb5e17f0d473b7cc110d678c4b0ca5aa954f8644",
+  "lexicon_sha256": "04cfeda05dc49691c3de16796217937436e40c8b0e7d8d84254837762d7c433d",
+  "max_tokens_including_special": 53,
+  "review_method": "Finite atom/template review and programmatic validation; not a per-row human audit",
+  "human_review": "pending",
+  "template_review": "passed"
+}

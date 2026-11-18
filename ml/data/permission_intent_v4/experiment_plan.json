@@ -1,0 +1,26 @@
+{
+  "stage": "v4 controlled-composition and capability-evidence experiment",
+  "model_outputs": "Unchanged 32x3 capability states and 4 intent classes; OS mapping remains separate",
+  "initial_checkpoint": "v3 selected continuation epoch23, unchanged before v4 training",
+  "fresh_validation": {"rows":224,"families":112},
+  "fresh_reserved_test": {"rows":320,"families":160},
+  "previous_v3_280_policy": "Previously observed regression only. Not added to train or validation; no model selection on it.",
+  "methods": {
+    "pooled": "Data-only continuation control: existing pooled head, inverse class weights, ordinary CE",
+    "focal_evidence": "Same data/initial source, gated per-capability token attention retaining old classifiers, sqrt capability weights, focal gamma1.5 + smoothing0.03"
+  },
+  "selection_budget": {
+    "probes": "Both methods six epochs, same seed, encoder LR2e-5 / heads LR2e-4 / dropout0.1",
+    "refinement": "Best validation probe continued for at most ten epochs, encoder LR1e-5 / heads LR1e-4; minimum6/patience4",
+    "final_weights": "Highest validation optimization score among both probes and refinement",
+    "semantic_thresholds": "Grid .30,.40,.50,.60,.70,.80,.90,.95,.99; prefer required recall>=.5, then score",
+    "score": "0.40 required F1 +0.30 forbidden F1 +0.30 intent macro F1 -0.20 explicit prohibition violation rate"
+  },
+  "prospective_targets": {
+    "required_f1_min":0.75,"forbidden_f1_min":0.70,"ambiguous_recall_min":0.70,
+    "no_device_recall_min":0.70,"out_of_scope_recall_min":0.70,
+    "policy_violation_rate_max":0.02,"policy_overrequest_rate_max":0.10,
+    "policy_in_scope_coverage_min":0.50,"policy_required_recall_min":0.50
+  },
+  "test_rules": ["Freeze new validation/test and audited training templates before updating weights", "Training reads only train/validation text; only hashes of reserved bytes", "Lock weights, config, vocabulary, thresholds and policy before reserved evaluation", "Compare v3 original and v3 validation-recalibrated with v4 on the same fresh320", "No tuning on fresh-test outputs", "All human reviews pending; finite template audit is not a per-row human or AI review"]
+}
