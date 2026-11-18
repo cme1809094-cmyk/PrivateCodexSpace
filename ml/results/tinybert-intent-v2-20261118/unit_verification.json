@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "tests": 9,
+  "command": "python -m unittest discover -s tests -p test_intent_training.py -v",
+  "source_commit": "65eef351112e8c987ad3fa5b3931ae56b7a76c11",
+  "test_source_sha256": "42e8ebd4472c24da1ef5f3ec292c393ec22ed40f529bcaa524f1c50fe3e70df1",
+  "scope": "Label states, class balancing, calibration, gradients, serialization, length rejection and split isolation; not semantic accuracy approval"
+}

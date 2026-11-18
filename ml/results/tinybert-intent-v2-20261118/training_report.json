@@ -1,0 +1,2428 @@
+{
+  "schema_version": 2,
+  "stage": "experimental_text_only_retraining",
+  "model_id": "huawei-noah/TinyBERT_4L_zh",
+  "revision": "152bf15d86715b41dd89c1e03cf5664963d9b005",
+  "selected_epoch": 43,
+  "epochs_run": 55,
+  "thresholds": {
+    "required": 0.8,
+    "forbidden": 0.75
+  },
+  "max_length": 64,
+  "splits": {
+    "train": 705,
+    "validation": 180,
+    "test": 295
+  },
+  "metrics": {
+    "train": {
+      "samples": 705,
+      "required": {
+        "precision": 0.8447488584474886,
+        "recall": 1.0,
+        "f1": 0.9158415841584159,
+        "tp": 555,
+        "fp": 102,
+        "fn": 0
+      },
+      "forbidden": {
+        "precision": 0.7889908256880734,
+        "recall": 1.0,
+        "f1": 0.882051282051282,
+        "tp": 430,
+        "fp": 115,
+        "fn": 0
+      },
+      "required_set_exact": 607,
+      "required_set_exact_rate": 0.8609929078014185,
+      "all_capability_states_exact": 530,
+      "all_capability_states_exact_rate": 0.75177304964539,
+      "joint_states_and_intent_exact": 530,
+      "joint_states_and_intent_exact_rate": 0.75177304964539,
+      "intent_accuracy": 1.0,
+      "intent_macro_f1": 1.0,
+      "intent_per_class": {
+        "in_scope": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 580,
+          "fp": 0,
+          "fn": 0
+        },
+        "ambiguous": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 50,
+          "fp": 0,
+          "fn": 0
+        },
+        "no_device_capability": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 55,
+          "fp": 0,
+          "fn": 0
+        },
+        "out_of_scope": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 20,
+          "fp": 0,
+          "fn": 0
+        }
+      },
+      "overrequested_samples": 98,
+      "overrequested_sample_rate": 0.13900709219858157,
+      "explicit_prohibition_violation_samples": 0,
+      "explicit_prohibition_violation_rate": 0.0,
+      "clarification": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "tp": 50,
+        "fp": 0,
+        "fn": 0
+      },
+      "intent_confusion_matrix": [
+        [
+          580,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          50,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          55,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          20
+        ]
+      ],
+      "families": 141,
+      "families_all_paraphrases_correct": 94,
+      "mean_family_joint_accuracy": 0.75177304964539,
+      "raw_without_status_gate": {
+        "samples": 705,
+        "required": {
+          "precision": 0.8447488584474886,
+          "recall": 1.0,
+          "f1": 0.9158415841584159,
+          "tp": 555,
+          "fp": 102,
+          "fn": 0
+        },
+        "forbidden": {
+          "precision": 0.7889908256880734,
+          "recall": 1.0,
+          "f1": 0.882051282051282,
+          "tp": 430,
+          "fp": 115,
+          "fn": 0
+        },
+        "required_set_exact": 607,
+        "required_set_exact_rate": 0.8609929078014185,
+        "all_capability_states_exact": 530,
+        "all_capability_states_exact_rate": 0.75177304964539,
+        "joint_states_and_intent_exact": 530,
+        "joint_states_and_intent_exact_rate": 0.75177304964539,
+        "intent_accuracy": 1.0,
+        "intent_macro_f1": 1.0,
+        "intent_per_class": {
+          "in_scope": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 580,
+            "fp": 0,
+            "fn": 0
+          },
+          "ambiguous": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 50,
+            "fp": 0,
+            "fn": 0
+          },
+          "no_device_capability": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 55,
+            "fp": 0,
+            "fn": 0
+          },
+          "out_of_scope": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 20,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "overrequested_samples": 98,
+        "overrequested_sample_rate": 0.13900709219858157,
+        "explicit_prohibition_violation_samples": 0,
+        "explicit_prohibition_violation_rate": 0.0,
+        "clarification": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 50,
+          "fp": 0,
+          "fn": 0
+        },
+        "intent_confusion_matrix": [
+          [
+            580,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            50,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            55,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            20
+          ]
+        ],
+        "families": 141,
+        "families_all_paraphrases_correct": 94,
+        "mean_family_joint_accuracy": 0.75177304964539
+      },
+      "per_capability": {
+        "media.photo.pick_one": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.7894736842105263,
+            "recall": 1.0,
+            "f1": 0.8823529411764706,
+            "tp": 15,
+            "fp": 4,
+            "fn": 0
+          }
+        },
+        "media.photo.read_library": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.9523809523809523,
+            "recall": 1.0,
+            "f1": 0.975609756097561,
+            "tp": 20,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "media.photo.add": {
+          "required": {
+            "precision": 0.5263157894736842,
+            "recall": 1.0,
+            "f1": 0.6896551724137931,
+            "tp": 10,
+            "fp": 9,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 5,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "files.pick_one": {
+          "required": {
+            "precision": 0.8928571428571429,
+            "recall": 1.0,
+            "f1": 0.9433962264150944,
+            "tp": 25,
+            "fp": 3,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.75,
+            "recall": 1.0,
+            "f1": 0.8571428571428571,
+            "tp": 15,
+            "fp": 5,
+            "fn": 0
+          }
+        },
+        "files.save_user_selected": {
+          "required": {
+            "precision": 0.7142857142857143,
+            "recall": 1.0,
+            "f1": 0.8333333333333334,
+            "tp": 25,
+            "fp": 10,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8,
+            "tp": 10,
+            "fp": 5,
+            "fn": 0
+          }
+        },
+        "contacts.pick_one": {
+          "required": {
+            "precision": 0.7142857142857143,
+            "recall": 1.0,
+            "f1": 0.8333333333333334,
+            "tp": 10,
+            "fp": 4,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "contacts.read": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.8823529411764706,
+            "recall": 1.0,
+            "f1": 0.9375,
+            "tp": 30,
+            "fp": 4,
+            "fn": 0
+          }
+        },
+        "contacts.write": {
+          "required": {
+            "precision": 0.8,
+            "recall": 1.0,
+            "f1": 0.8888888888888888,
+            "tp": 20,
+            "fp": 5,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "calendar.read": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "calendar.write": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 25,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.75,
+            "recall": 1.0,
+            "f1": 0.8571428571428571,
+            "tp": 15,
+            "fp": 5,
+            "fn": 0
+          }
+        },
+        "notifications.publish": {
+          "required": {
+            "precision": 0.9459459459459459,
+            "recall": 1.0,
+            "f1": 0.9722222222222222,
+            "tp": 35,
+            "fp": 2,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8,
+            "tp": 10,
+            "fp": 5,
+            "fn": 0
+          }
+        },
+        "notifications.open_settings": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 5,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.3333333333333333,
+            "recall": 1.0,
+            "f1": 0.5,
+            "tp": 5,
+            "fp": 10,
+            "fn": 0
+          }
+        },
+        "reminders.schedule_local": {
+          "required": {
+            "precision": 0.967741935483871,
+            "recall": 1.0,
+            "f1": 0.9836065573770492,
+            "tp": 30,
+            "fp": 1,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "reminders.schedule_exact": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "bluetooth.scan": {
+          "required": {
+            "precision": 0.75,
+            "recall": 1.0,
+            "f1": 0.8571428571428571,
+            "tp": 15,
+            "fp": 5,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "bluetooth.connect": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 20,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.9090909090909091,
+            "recall": 1.0,
+            "f1": 0.9523809523809523,
+            "tp": 10,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "wlan.scan": {
+          "required": {
+            "precision": 0.8620689655172413,
+            "recall": 1.0,
+            "f1": 0.9259259259259259,
+            "tp": 25,
+            "fp": 4,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "wlan.connect": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.7142857142857143,
+            "recall": 1.0,
+            "f1": 0.8333333333333334,
+            "tp": 10,
+            "fp": 4,
+            "fn": 0
+          }
+        },
+        "nfc.read_tag": {
+          "required": {
+            "precision": 0.8620689655172413,
+            "recall": 1.0,
+            "f1": 0.9259259259259259,
+            "tp": 25,
+            "fp": 4,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6666666666666666,
+            "tp": 5,
+            "fp": 5,
+            "fn": 0
+          }
+        },
+        "nfc.write_tag": {
+          "required": {
+            "precision": 0.8333333333333334,
+            "recall": 1.0,
+            "f1": 0.9090909090909091,
+            "tp": 15,
+            "fp": 3,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.5263157894736842,
+            "recall": 1.0,
+            "f1": 0.6896551724137931,
+            "tp": 10,
+            "fp": 9,
+            "fn": 0
+          }
+        },
+        "motion.read_steps": {
+          "required": {
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8,
+            "tp": 20,
+            "fp": 10,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6666666666666666,
+            "tp": 5,
+            "fp": 5,
+            "fn": 0
+          }
+        },
+        "motion.recognize_activity": {
+          "required": {
+            "precision": 0.6521739130434783,
+            "recall": 1.0,
+            "f1": 0.7894736842105263,
+            "tp": 15,
+            "fp": 8,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6666666666666666,
+            "tp": 5,
+            "fp": 5,
+            "fn": 0
+          }
+        },
+        "biometric.authenticate": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 35,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.45454545454545453,
+            "recall": 1.0,
+            "f1": 0.625,
+            "tp": 5,
+            "fp": 6,
+            "fn": 0
+          }
+        },
+        "clipboard.paste_user_initiated": {
+          "required": {
+            "precision": 0.9090909090909091,
+            "recall": 1.0,
+            "f1": 0.9523809523809523,
+            "tp": 10,
+            "fp": 1,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.8333333333333334,
+            "recall": 1.0,
+            "f1": 0.9090909090909091,
+            "tp": 5,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "clipboard.read": {
+          "required": {
+            "precision": 0.8823529411764706,
+            "recall": 1.0,
+            "f1": 0.9375,
+            "tp": 15,
+            "fp": 2,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 25,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "clipboard.write": {
+          "required": {
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8,
+            "tp": 30,
+            "fp": 15,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6666666666666666,
+            "tp": 5,
+            "fp": 5,
+            "fn": 0
+          }
+        },
+        "camera.capture_photo": {
+          "required": {
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8,
+            "tp": 10,
+            "fp": 5,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.8571428571428571,
+            "recall": 1.0,
+            "f1": 0.9230769230769231,
+            "tp": 30,
+            "fp": 5,
+            "fn": 0
+          }
+        },
+        "camera.record_video": {
+          "required": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6666666666666666,
+            "tp": 10,
+            "fp": 10,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.8571428571428571,
+            "recall": 1.0,
+            "f1": 0.9230769230769231,
+            "tp": 30,
+            "fp": 5,
+            "fn": 0
+          }
+        },
+        "microphone.record_audio": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 20,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8,
+            "tp": 20,
+            "fp": 10,
+            "fn": 0
+          }
+        },
+        "location.coarse.foreground_once": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.9375,
+            "recall": 1.0,
+            "f1": 0.967741935483871,
+            "tp": 15,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "location.precise.foreground_once": {
+          "required": {
+            "precision": 0.9090909090909091,
+            "recall": 1.0,
+            "f1": 0.9523809523809523,
+            "tp": 10,
+            "fp": 1,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.7692307692307693,
+            "recall": 1.0,
+            "f1": 0.8695652173913043,
+            "tp": 20,
+            "fp": 6,
+            "fn": 0
+          }
+        },
+        "location.background": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 10,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.7575757575757576,
+            "recall": 1.0,
+            "f1": 0.8620689655172413,
+            "tp": 25,
+            "fp": 8,
+            "fn": 0
+          }
+        }
+      }
+    },
+    "validation": {
+      "samples": 180,
+      "required": {
+        "precision": 0.521978021978022,
+        "recall": 0.5588235294117647,
+        "f1": 0.5397727272727273,
+        "tp": 95,
+        "fp": 87,
+        "fn": 75
+      },
+      "forbidden": {
+        "precision": 0.373134328358209,
+        "recall": 0.35714285714285715,
+        "f1": 0.36496350364963503,
+        "tp": 25,
+        "fp": 42,
+        "fn": 45
+      },
+      "required_set_exact": 75,
+      "required_set_exact_rate": 0.4166666666666667,
+      "all_capability_states_exact": 55,
+      "all_capability_states_exact_rate": 0.3055555555555556,
+      "joint_states_and_intent_exact": 51,
+      "joint_states_and_intent_exact_rate": 0.2833333333333333,
+      "intent_accuracy": 0.9055555555555556,
+      "intent_macro_f1": 0.5883333333333334,
+      "intent_per_class": {
+        "in_scope": {
+          "precision": 0.9225806451612903,
+          "recall": 0.9862068965517241,
+          "f1": 0.9533333333333334,
+          "tp": 143,
+          "fp": 12,
+          "fn": 2
+        },
+        "ambiguous": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 15,
+          "fp": 0,
+          "fn": 0
+        },
+        "no_device_capability": {
+          "precision": 0.5,
+          "recall": 0.3333333333333333,
+          "f1": 0.4,
+          "tp": 5,
+          "fp": 5,
+          "fn": 10
+        },
+        "out_of_scope": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 5
+        }
+      },
+      "overrequested_samples": 68,
+      "overrequested_sample_rate": 0.37777777777777777,
+      "explicit_prohibition_violation_samples": 20,
+      "explicit_prohibition_violation_rate": 0.1111111111111111,
+      "clarification": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "tp": 15,
+        "fp": 0,
+        "fn": 0
+      },
+      "intent_confusion_matrix": [
+        [
+          143,
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          15,
+          0,
+          0
+        ],
+        [
+          10,
+          0,
+          5,
+          0
+        ],
+        [
+          2,
+          0,
+          3,
+          0
+        ]
+      ],
+      "families": 36,
+      "families_all_paraphrases_correct": 4,
+      "mean_family_joint_accuracy": 0.2833333333333334,
+      "raw_without_status_gate": {
+        "samples": 180,
+        "required": {
+          "precision": 0.521978021978022,
+          "recall": 0.5588235294117647,
+          "f1": 0.5397727272727273,
+          "tp": 95,
+          "fp": 87,
+          "fn": 75
+        },
+        "forbidden": {
+          "precision": 0.373134328358209,
+          "recall": 0.35714285714285715,
+          "f1": 0.36496350364963503,
+          "tp": 25,
+          "fp": 42,
+          "fn": 45
+        },
+        "required_set_exact": 75,
+        "required_set_exact_rate": 0.4166666666666667,
+        "all_capability_states_exact": 55,
+        "all_capability_states_exact_rate": 0.3055555555555556,
+        "joint_states_and_intent_exact": 51,
+        "joint_states_and_intent_exact_rate": 0.2833333333333333,
+        "intent_accuracy": 0.9055555555555556,
+        "intent_macro_f1": 0.5883333333333334,
+        "intent_per_class": {
+          "in_scope": {
+            "precision": 0.9225806451612903,
+            "recall": 0.9862068965517241,
+            "f1": 0.9533333333333334,
+            "tp": 143,
+            "fp": 12,
+            "fn": 2
+          },
+          "ambiguous": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          },
+          "no_device_capability": {
+            "precision": 0.5,
+            "recall": 0.3333333333333333,
+            "f1": 0.4,
+            "tp": 5,
+            "fp": 5,
+            "fn": 10
+          },
+          "out_of_scope": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          }
+        },
+        "overrequested_samples": 68,
+        "overrequested_sample_rate": 0.37777777777777777,
+        "explicit_prohibition_violation_samples": 20,
+        "explicit_prohibition_violation_rate": 0.1111111111111111,
+        "clarification": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "tp": 15,
+          "fp": 0,
+          "fn": 0
+        },
+        "intent_confusion_matrix": [
+          [
+            143,
+            0,
+            2,
+            0
+          ],
+          [
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            10,
+            0,
+            5,
+            0
+          ],
+          [
+            2,
+            0,
+            3,
+            0
+          ]
+        ],
+        "families": 36,
+        "families_all_paraphrases_correct": 4,
+        "mean_family_joint_accuracy": 0.2833333333333334
+      },
+      "per_capability": {
+        "media.photo.pick_one": {
+          "required": {
+            "precision": 0.5,
+            "recall": 0.8,
+            "f1": 0.6153846153846154,
+            "tp": 4,
+            "fp": 4,
+            "fn": 1
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "media.photo.read_library": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 6,
+            "fn": 0
+          }
+        },
+        "media.photo.add": {
+          "required": {
+            "precision": 0.3333333333333333,
+            "recall": 0.2,
+            "f1": 0.25,
+            "tp": 1,
+            "fp": 2,
+            "fn": 4
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "files.pick_one": {
+          "required": {
+            "precision": 0.4444444444444444,
+            "recall": 0.8,
+            "f1": 0.5714285714285714,
+            "tp": 4,
+            "fp": 5,
+            "fn": 1
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "files.save_user_selected": {
+          "required": {
+            "precision": 0.09090909090909091,
+            "recall": 0.2,
+            "f1": 0.125,
+            "tp": 1,
+            "fp": 10,
+            "fn": 4
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "contacts.pick_one": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 2,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 2,
+            "fn": 0
+          }
+        },
+        "contacts.read": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 3,
+            "fn": 0
+          }
+        },
+        "contacts.write": {
+          "required": {
+            "precision": 0.375,
+            "recall": 0.6,
+            "f1": 0.46153846153846156,
+            "tp": 3,
+            "fp": 5,
+            "fn": 2
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          }
+        },
+        "calendar.read": {
+          "required": {
+            "precision": 0.8333333333333334,
+            "recall": 1.0,
+            "f1": 0.9090909090909091,
+            "tp": 10,
+            "fp": 2,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 4,
+            "fn": 0
+          }
+        },
+        "calendar.write": {
+          "required": {
+            "precision": 0.625,
+            "recall": 1.0,
+            "f1": 0.7692307692307693,
+            "tp": 5,
+            "fp": 3,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.6666666666666666,
+            "recall": 0.8,
+            "f1": 0.7272727272727273,
+            "tp": 4,
+            "fp": 2,
+            "fn": 1
+          }
+        },
+        "notifications.publish": {
+          "required": {
+            "precision": 1.0,
+            "recall": 0.4,
+            "f1": 0.5714285714285714,
+            "tp": 2,
+            "fp": 0,
+            "fn": 3
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 1,
+            "fn": 5
+          }
+        },
+        "notifications.open_settings": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 0.4,
+            "f1": 0.5714285714285714,
+            "tp": 2,
+            "fp": 0,
+            "fn": 3
+          }
+        },
+        "reminders.schedule_local": {
+          "required": {
+            "precision": 0.5555555555555556,
+            "recall": 1.0,
+            "f1": 0.7142857142857143,
+            "tp": 5,
+            "fp": 4,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "reminders.schedule_exact": {
+          "required": {
+            "precision": 0.6666666666666666,
+            "recall": 0.8,
+            "f1": 0.7272727272727273,
+            "tp": 4,
+            "fp": 2,
+            "fn": 1
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "bluetooth.scan": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 5,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 6,
+            "fn": 0
+          }
+        },
+        "bluetooth.connect": {
+          "required": {
+            "precision": 0.7142857142857143,
+            "recall": 1.0,
+            "f1": 0.8333333333333334,
+            "tp": 5,
+            "fp": 2,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "wlan.scan": {
+          "required": {
+            "precision": 0.2857142857142857,
+            "recall": 0.4,
+            "f1": 0.3333333333333333,
+            "tp": 2,
+            "fp": 5,
+            "fn": 3
+          },
+          "forbidden": {
+            "precision": 0.8,
+            "recall": 0.8,
+            "f1": 0.8,
+            "tp": 4,
+            "fp": 1,
+            "fn": 1
+          }
+        },
+        "wlan.connect": {
+          "required": {
+            "precision": 0.42857142857142855,
+            "recall": 0.6,
+            "f1": 0.5,
+            "tp": 3,
+            "fp": 4,
+            "fn": 2
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "nfc.read_tag": {
+          "required": {
+            "precision": 0.625,
+            "recall": 1.0,
+            "f1": 0.7692307692307693,
+            "tp": 5,
+            "fp": 3,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 0.6,
+            "f1": 0.75,
+            "tp": 3,
+            "fp": 0,
+            "fn": 2
+          }
+        },
+        "nfc.write_tag": {
+          "required": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 5,
+            "fp": 0,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.8333333333333334,
+            "recall": 1.0,
+            "f1": 0.9090909090909091,
+            "tp": 5,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "motion.read_steps": {
+          "required": {
+            "precision": 0.7142857142857143,
+            "recall": 1.0,
+            "f1": 0.8333333333333334,
+            "tp": 5,
+            "fp": 2,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 10
+          }
+        },
+        "motion.recognize_activity": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 1,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "biometric.authenticate": {
+          "required": {
+            "precision": 1.0,
+            "recall": 0.8,
+            "f1": 0.8888888888888888,
+            "tp": 8,
+            "fp": 0,
+            "fn": 2
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "clipboard.paste_user_initiated": {
+          "required": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6666666666666666,
+            "tp": 5,
+            "fp": 5,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "clipboard.read": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.2857142857142857,
+            "recall": 0.4,
+            "f1": 0.3333333333333333,
+            "tp": 2,
+            "fp": 5,
+            "fn": 3
+          }
+        },
+        "clipboard.write": {
+          "required": {
+            "precision": 0.45454545454545453,
+            "recall": 1.0,
+            "f1": 0.625,
+            "tp": 5,
+            "fp": 6,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          }
+        },
+        "camera.capture_photo": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 3,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.8333333333333334,
+            "recall": 1.0,
+            "f1": 0.9090909090909091,
+            "tp": 5,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "camera.record_video": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 5,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 3,
+            "fn": 0
+          }
+        },
+        "microphone.record_audio": {
+          "required": {
+            "precision": 0.5,
+            "recall": 1.0,
+            "f1": 0.6666666666666666,
+            "tp": 5,
+            "fp": 5,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          }
+        },
+        "location.coarse.foreground_once": {
+          "required": {
+            "precision": 0.75,
+            "recall": 0.6,
+            "f1": 0.6666666666666666,
+            "tp": 3,
+            "fp": 1,
+            "fn": 2
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "location.precise.foreground_once": {
+          "required": {
+            "precision": 0.8333333333333334,
+            "recall": 1.0,
+            "f1": 0.9090909090909091,
+            "tp": 5,
+            "fp": 1,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 2,
+            "fn": 5
+          }
+        },
+        "location.background": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 3,
+            "fn": 0
+          }
+        }
+      }
+    },
+    "test": {
+      "samples": 295,
+      "required": {
+        "precision": 0.3951367781155015,
+        "recall": 0.5,
+        "f1": 0.44142614601018676,
+        "tp": 130,
+        "fp": 199,
+        "fn": 130
+      },
+      "forbidden": {
+        "precision": 0.5753424657534246,
+        "recall": 0.525,
+        "f1": 0.5490196078431373,
+        "tp": 126,
+        "fp": 93,
+        "fn": 114
+      },
+      "required_set_exact": 90,
+      "required_set_exact_rate": 0.3050847457627119,
+      "all_capability_states_exact": 54,
+      "all_capability_states_exact_rate": 0.18305084745762712,
+      "joint_states_and_intent_exact": 44,
+      "joint_states_and_intent_exact_rate": 0.14915254237288136,
+      "intent_accuracy": 0.6745762711864407,
+      "intent_macro_f1": 0.36707988980716255,
+      "intent_per_class": {
+        "in_scope": {
+          "precision": 0.671280276816609,
+          "recall": 0.9948717948717949,
+          "f1": 0.8016528925619835,
+          "tp": 194,
+          "fp": 95,
+          "fn": 1
+        },
+        "ambiguous": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "tp": 5,
+          "fp": 0,
+          "fn": 5
+        },
+        "no_device_capability": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 1,
+          "fn": 40
+        },
+        "out_of_scope": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "tp": 0,
+          "fp": 0,
+          "fn": 50
+        }
+      },
+      "overrequested_samples": 152,
+      "overrequested_sample_rate": 0.5152542372881356,
+      "explicit_prohibition_violation_samples": 41,
+      "explicit_prohibition_violation_rate": 0.13898305084745763,
+      "clarification": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6666666666666666,
+        "tp": 5,
+        "fp": 0,
+        "fn": 5
+      },
+      "intent_confusion_matrix": [
+        [
+          194,
+          0,
+          1,
+          0
+        ],
+        [
+          5,
+          5,
+          0,
+          0
+        ],
+        [
+          40,
+          0,
+          0,
+          0
+        ],
+        [
+          50,
+          0,
+          0,
+          0
+        ]
+      ],
+      "families": 59,
+      "families_all_paraphrases_correct": 2,
+      "mean_family_joint_accuracy": 0.14915254237288136,
+      "raw_without_status_gate": {
+        "samples": 295,
+        "required": {
+          "precision": 0.3939393939393939,
+          "recall": 0.5,
+          "f1": 0.4406779661016949,
+          "tp": 130,
+          "fp": 200,
+          "fn": 130
+        },
+        "forbidden": {
+          "precision": 0.5753424657534246,
+          "recall": 0.525,
+          "f1": 0.5490196078431373,
+          "tp": 126,
+          "fp": 93,
+          "fn": 114
+        },
+        "required_set_exact": 89,
+        "required_set_exact_rate": 0.3016949152542373,
+        "all_capability_states_exact": 53,
+        "all_capability_states_exact_rate": 0.17966101694915254,
+        "joint_states_and_intent_exact": 44,
+        "joint_states_and_intent_exact_rate": 0.14915254237288136,
+        "intent_accuracy": 0.6745762711864407,
+        "intent_macro_f1": 0.36707988980716255,
+        "intent_per_class": {
+          "in_scope": {
+            "precision": 0.671280276816609,
+            "recall": 0.9948717948717949,
+            "f1": 0.8016528925619835,
+            "tp": 194,
+            "fp": 95,
+            "fn": 1
+          },
+          "ambiguous": {
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.6666666666666666,
+            "tp": 5,
+            "fp": 0,
+            "fn": 5
+          },
+          "no_device_capability": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 1,
+            "fn": 40
+          },
+          "out_of_scope": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 50
+          }
+        },
+        "overrequested_samples": 153,
+        "overrequested_sample_rate": 0.5186440677966102,
+        "explicit_prohibition_violation_samples": 41,
+        "explicit_prohibition_violation_rate": 0.13898305084745763,
+        "clarification": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "tp": 5,
+          "fp": 0,
+          "fn": 5
+        },
+        "intent_confusion_matrix": [
+          [
+            194,
+            0,
+            1,
+            0
+          ],
+          [
+            5,
+            5,
+            0,
+            0
+          ],
+          [
+            40,
+            0,
+            0,
+            0
+          ],
+          [
+            50,
+            0,
+            0,
+            0
+          ]
+        ],
+        "families": 59,
+        "families_all_paraphrases_correct": 2,
+        "mean_family_joint_accuracy": 0.14915254237288136
+      },
+      "per_capability": {
+        "media.photo.pick_one": {
+          "required": {
+            "precision": 0.42857142857142855,
+            "recall": 0.9,
+            "f1": 0.5806451612903226,
+            "tp": 9,
+            "fp": 12,
+            "fn": 1
+          },
+          "forbidden": {
+            "precision": 0.8333333333333334,
+            "recall": 1.0,
+            "f1": 0.9090909090909091,
+            "tp": 5,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "media.photo.read_library": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 4,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.45,
+            "recall": 0.6,
+            "f1": 0.5142857142857142,
+            "tp": 9,
+            "fp": 11,
+            "fn": 6
+          }
+        },
+        "media.photo.add": {
+          "required": {
+            "precision": 0.1875,
+            "recall": 0.6,
+            "f1": 0.2857142857142857,
+            "tp": 3,
+            "fp": 13,
+            "fn": 2
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "files.pick_one": {
+          "required": {
+            "precision": 0.09090909090909091,
+            "recall": 0.2,
+            "f1": 0.125,
+            "tp": 1,
+            "fp": 10,
+            "fn": 4
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 9,
+            "fn": 0
+          }
+        },
+        "files.save_user_selected": {
+          "required": {
+            "precision": 0.3076923076923077,
+            "recall": 0.8,
+            "f1": 0.4444444444444444,
+            "tp": 8,
+            "fp": 18,
+            "fn": 2
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "contacts.pick_one": {
+          "required": {
+            "precision": 0.35714285714285715,
+            "recall": 1.0,
+            "f1": 0.5263157894736842,
+            "tp": 5,
+            "fp": 9,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "contacts.read": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 2,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.8695652173913043,
+            "recall": 1.0,
+            "f1": 0.9302325581395349,
+            "tp": 20,
+            "fp": 3,
+            "fn": 0
+          }
+        },
+        "contacts.write": {
+          "required": {
+            "precision": 0.6666666666666666,
+            "recall": 0.4,
+            "f1": 0.5,
+            "tp": 4,
+            "fp": 2,
+            "fn": 6
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 1,
+            "fn": 5
+          }
+        },
+        "calendar.read": {
+          "required": {
+            "precision": 0.6666666666666666,
+            "recall": 0.8,
+            "f1": 0.7272727272727273,
+            "tp": 8,
+            "fp": 4,
+            "fn": 2
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 2,
+            "fn": 0
+          }
+        },
+        "calendar.write": {
+          "required": {
+            "precision": 0.2857142857142857,
+            "recall": 0.8,
+            "f1": 0.42105263157894735,
+            "tp": 4,
+            "fp": 10,
+            "fn": 1
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 10,
+            "fn": 0
+          }
+        },
+        "notifications.publish": {
+          "required": {
+            "precision": 0.75,
+            "recall": 0.3,
+            "f1": 0.42857142857142855,
+            "tp": 6,
+            "fp": 2,
+            "fn": 14
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 4,
+            "fn": 0
+          }
+        },
+        "notifications.open_settings": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 4,
+            "fn": 0
+          }
+        },
+        "reminders.schedule_local": {
+          "required": {
+            "precision": 0.6666666666666666,
+            "recall": 1.0,
+            "f1": 0.8,
+            "tp": 10,
+            "fp": 5,
+            "fn": 0
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          }
+        },
+        "reminders.schedule_exact": {
+          "required": {
+            "precision": 0.5,
+            "recall": 0.4,
+            "f1": 0.4444444444444444,
+            "tp": 2,
+            "fp": 2,
+            "fn": 3
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 2,
+            "fn": 5
+          }
+        },
+        "bluetooth.scan": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 0.4,
+            "f1": 0.5714285714285714,
+            "tp": 4,
+            "fp": 0,
+            "fn": 6
+          }
+        },
+        "bluetooth.connect": {
+          "required": {
+            "precision": 0.6,
+            "recall": 0.3,
+            "f1": 0.4,
+            "tp": 3,
+            "fp": 2,
+            "fn": 7
+          },
+          "forbidden": {
+            "precision": 1.0,
+            "recall": 0.2,
+            "f1": 0.3333333333333333,
+            "tp": 1,
+            "fp": 0,
+            "fn": 4
+          }
+        },
+        "wlan.scan": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 3,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.6,
+            "recall": 0.9,
+            "f1": 0.72,
+            "tp": 9,
+            "fp": 6,
+            "fn": 1
+          }
+        },
+        "wlan.connect": {
+          "required": {
+            "precision": 0.23529411764705882,
+            "recall": 0.8,
+            "f1": 0.36363636363636365,
+            "tp": 4,
+            "fp": 13,
+            "fn": 1
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 10
+          }
+        },
+        "nfc.read_tag": {
+          "required": {
+            "precision": 1.0,
+            "recall": 0.5333333333333333,
+            "f1": 0.6956521739130435,
+            "tp": 8,
+            "fp": 0,
+            "fn": 7
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "nfc.write_tag": {
+          "required": {
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.6666666666666666,
+            "tp": 10,
+            "fp": 0,
+            "fn": 10
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 1,
+            "fn": 0
+          }
+        },
+        "motion.read_steps": {
+          "required": {
+            "precision": 0.25,
+            "recall": 0.8,
+            "f1": 0.38095238095238093,
+            "tp": 4,
+            "fp": 12,
+            "fn": 1
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 5
+          }
+        },
+        "motion.recognize_activity": {
+          "required": {
+            "precision": 0.25,
+            "recall": 0.4,
+            "f1": 0.3076923076923077,
+            "tp": 2,
+            "fp": 6,
+            "fn": 3
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "biometric.authenticate": {
+          "required": {
+            "precision": 0.38461538461538464,
+            "recall": 0.6666666666666666,
+            "f1": 0.4878048780487805,
+            "tp": 10,
+            "fp": 16,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 15
+          }
+        },
+        "clipboard.paste_user_initiated": {
+          "required": {
+            "precision": 0.3,
+            "recall": 0.6,
+            "f1": 0.4,
+            "tp": 3,
+            "fp": 7,
+            "fn": 2
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "clipboard.read": {
+          "required": {
+            "precision": 0.7142857142857143,
+            "recall": 0.5,
+            "f1": 0.5882352941176471,
+            "tp": 5,
+            "fp": 2,
+            "fn": 5
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 8,
+            "fn": 0
+          }
+        },
+        "clipboard.write": {
+          "required": {
+            "precision": 0.2,
+            "recall": 0.4,
+            "f1": 0.26666666666666666,
+            "tp": 2,
+            "fp": 8,
+            "fn": 3
+          },
+          "forbidden": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "camera.capture_photo": {
+          "required": {
+            "precision": 0.75,
+            "recall": 0.6,
+            "f1": 0.6666666666666666,
+            "tp": 3,
+            "fp": 1,
+            "fn": 2
+          },
+          "forbidden": {
+            "precision": 0.7857142857142857,
+            "recall": 0.55,
+            "f1": 0.6470588235294118,
+            "tp": 11,
+            "fp": 3,
+            "fn": 9
+          }
+        },
+        "camera.record_video": {
+          "required": {
+            "precision": 0.6666666666666666,
+            "recall": 0.8,
+            "f1": 0.7272727272727273,
+            "tp": 4,
+            "fp": 2,
+            "fn": 1
+          },
+          "forbidden": {
+            "precision": 0.5714285714285714,
+            "recall": 0.8,
+            "f1": 0.6666666666666666,
+            "tp": 8,
+            "fp": 6,
+            "fn": 2
+          }
+        },
+        "microphone.record_audio": {
+          "required": {
+            "precision": 0.25,
+            "recall": 0.6,
+            "f1": 0.35294117647058826,
+            "tp": 3,
+            "fp": 9,
+            "fn": 2
+          },
+          "forbidden": {
+            "precision": 0.5,
+            "recall": 0.1,
+            "f1": 0.16666666666666666,
+            "tp": 2,
+            "fp": 2,
+            "fn": 18
+          }
+        },
+        "location.coarse.foreground_once": {
+          "required": {
+            "precision": 0.3103448275862069,
+            "recall": 0.9,
+            "f1": 0.46153846153846156,
+            "tp": 9,
+            "fp": 20,
+            "fn": 1
+          },
+          "forbidden": {
+            "precision": 0.8888888888888888,
+            "recall": 0.4,
+            "f1": 0.5517241379310345,
+            "tp": 8,
+            "fp": 1,
+            "fn": 12
+          }
+        },
+        "location.precise.foreground_once": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 5,
+            "fn": 10
+          },
+          "forbidden": {
+            "precision": 0.7096774193548387,
+            "recall": 0.7333333333333333,
+            "f1": 0.7213114754098361,
+            "tp": 22,
+            "fp": 9,
+            "fn": 8
+          }
+        },
+        "location.background": {
+          "required": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 10
+          },
+          "forbidden": {
+            "precision": 0.7714285714285715,
+            "recall": 0.9,
+            "f1": 0.8307692307692308,
+            "tp": 27,
+            "fp": 8,
+            "fn": 3
+          }
+        }
+      }
+    }
+  },
+  "checkpoint_roundtrip_exact": true,
+  "human_review": "pending",
+  "test_is_frozen_independent_benchmark": false,
+  "model_selected_using_test": false,
+  "old_five_label_app_updated": false,
+  "omc_compiled": false,
+  "phone_npu_verified": false,
+  "scope_constraints_or_question_generation_evaluated": false,
+  "limitations": [
+    "Synthetic data, human review pending; internal candidate evaluation only",
+    "Candidate test has incomplete explicit prohibition coverage",
+    "Newly held-out development families are not a separately human-verified benchmark",
+    "No target/slot/sequence or free-text clarification generation is trained"
+  ],
+  "elapsed_seconds_before_export": 625.6599435806274,
+  "onnx_verification": {
+    "16": {
+      "path": "onnx/permission_intent_16.onnx",
+      "bytes": 45865512,
+      "sha256": "bfcc3c037511d9f4885d15bf26854eb9bcc34674fc76b8f4362346573fccf09c",
+      "checked_rows": 5,
+      "capability_max_abs_logit_error": 3.814697265625e-06,
+      "intent_max_abs_logit_error": 4.157423973083496e-06,
+      "decoded_mismatch_ids": [],
+      "scope": "PyTorch versus ONNX Runtime CPU; not OMC or NPU"
+    },
+    "32": {
+      "path": "onnx/permission_intent_32.onnx",
+      "bytes": 45865708,
+      "sha256": "bda149d963ae2c36265faa6aaec1323c65d4bb3ca4ee54a760154c2766c993cf",
+      "checked_rows": 60,
+      "capability_max_abs_logit_error": 6.67572021484375e-06,
+      "intent_max_abs_logit_error": 7.62939453125e-06,
+      "decoded_mismatch_ids": [],
+      "scope": "PyTorch versus ONNX Runtime CPU; not OMC or NPU"
+    },
+    "64": {
+      "path": "onnx/permission_intent_64.onnx",
+      "bytes": 45866092,
+      "sha256": "9a5243f6ac0df375028fd8f7ca725b7e34ebd875e81dc4359ad2de6160007106",
+      "checked_rows": 295,
+      "capability_max_abs_logit_error": 8.58306884765625e-06,
+      "intent_max_abs_logit_error": 9.5367431640625e-06,
+      "decoded_mismatch_ids": [],
+      "scope": "PyTorch versus ONNX Runtime CPU; not OMC or NPU"
+    }
+  },
+  "elapsed_seconds": 718.8783550262451,
+  "tokenizer_verification": {
+    "rows": 1500,
+    "mismatch_ids": [],
+    "passed": true,
+    "scope": "Actual app WordPiece versus saved HF tokenizer; no NPU execution",
+    "node_version": "v24.22.1",
+    "input_sha256": "ad3e33a410801fb8817b29159ee6670890c2a2311154b2903994268c5eea8931",
+    "app_source_sha256": "5c12c32d691a9d2390814d1253d0f883711f78bd47847089734101f586daa751",
+    "vocab_sha256": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a"
+  },
+  "code_commit": "65eef351112e8c987ad3fa5b3931ae56b7a76c11",
+  "candidate_test_previously_observed_in_development": true,
+  "evaluation_policy": "Internal synthetic development candidate; validation selected weights and thresholds. Earlier run2 also evaluated this candidate. Not a fresh blind acceptance test.",
+  "quality_status": "Experimental baseline with substantial overrequest and explicit-prohibition errors; not integrated into the application"
+}

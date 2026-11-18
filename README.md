@@ -14,7 +14,7 @@ TinyBERT手机日志已进入数值自检阶段：16档26/27、32／64档30/33�
 
 下一阶段的[首批能力字典与代表性指令](ml/data/permission_intent_v2/README.md)覆盖 12 个新增能力组，加上已有相机、麦克风和定位，共 32 项能力及 300 条种子指令。字典分别记录 HarmonyOS API 12 与 Android 的授权路线、版本条件和待核实限制；语料区分任务所需、明确禁止、未提及以及需要追问的情况。材料经 AI 交叉复核，人工审核仍待完成，尚未用于重新训练或扩展应用当前的五标签输出。可用 `python3 ml/validate_permission_intent_v2.py --render` 复查并生成两份人审 CSV。
 
-[扩充版](ml/data/permission_intent_v2/expansion/README.md)再加入 1200 条，合计 1500 条。新增部分按 240 个场景族组织为 750 条训练候选、150 条验证候选和 300 条测试候选，同一场景的五种改写留在同一集合；旧 300 条只作参考。本轮仍是待人工审核的候选数据，未训练、未冻结测试集，也未测量新模型准确率。[测试集的通俗解释](docs/permission-intent-test-design.md)说明题目结构、避免漏题的原理、上下文题及评分方式。
+[扩充版](ml/data/permission_intent_v2/expansion/README.md)再加入 1200 条，合计 1500 条。新增部分按 240 个场景族组织为 750 条训练候选、150 条验证候选和 300 条测试候选，同一场景的五种改写留在同一集合；旧 300 条只作参考。2026-11-18已完成[实验性TinyBERT三态微调](ml/results/tinybert-intent-v2-20261118/README.md)：排除上下文题并补齐验证意图类别后，使用705/180/295条，选第43轮；内部测试需要F1为44.1%、禁止F1为54.9%，全状态和意图同时正确44/295，泛化不足，未接入五标签应用。三档标准ONNX的CPU数值对照和1500条分词一致性通过；未编译新OMC或执行手机验收。人工审核与独立基准冻结仍待完成。[测试集的通俗解释](docs/permission-intent-test-design.md)和[训练复现](docs/tinybert-intent-v2-training.md)分别说明数据与训练流程。
 
 `ml/metrics.json` 记录的训练集是 99 条合成中文样本，验证集为 31 条、完全匹配 30 条，测试集为 33 条、完全匹配 24 条（约 72.7%），其中 4 条存在多预测标签。这是既有训练报告，本次没有重新训练或独立复评。标签是 camera、microphone、coarse_location、fine_location 和 out_of_scope。
 

@@ -1,0 +1,20 @@
+{
+  "files": [
+    {
+      "name": "TinyBERT-intent-v2-model-and-64-20261118.zip",
+      "bytes": 86894417,
+      "sha256": "f023ac5821902e2150bcb5c50bb20281e34595e9dc6f8901ab93902b6e571a41",
+      "files": 107,
+      "google_drive_url": "https://drive.google.com/file/d/1LoC0yhKytiP9JF93Vh_qSvBgmuo8COF2/view?usp=drivesdk"
+    },
+    {
+      "name": "TinyBERT-intent-v2-onnx-16-32-20261118.zip",
+      "bytes": 85235580,
+      "sha256": "f82bff0d6159fc4492df32e93fe5a685c7bb13684c47ac96c4c149676a22a212",
+      "files": 10,
+      "google_drive_url": "https://drive.google.com/file/d/1KnPcbL94Xepb4sZecpyjWfT5s9pvkfT1/view?usp=drivesdk"
+    }
+  ],
+  "usage": "Main package is independently usable for CPU prediction and 64-token ONNX. Extract the optional 16/32 package into the same root. No binary concatenation.",
+  "quality": "Experimental baseline; not integrated into the application"
+}

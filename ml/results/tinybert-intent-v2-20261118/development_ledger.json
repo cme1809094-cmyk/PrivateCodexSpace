@@ -1,0 +1,46 @@
+{
+  "earlier_trials": [
+    {
+      "run": "20261118-run1",
+      "completed_epochs": 19,
+      "test_evaluated": false,
+      "stopped": {
+        "reason": "Validation required F1 remained zero through epoch 15; strengthen capability class balancing before test evaluation.",
+        "test_evaluated": false,
+        "code_snapshot": "code_snapshot",
+        "stopped_pid": 1652
+      },
+      "selected_epoch": null,
+      "validation_required_f1": null,
+      "last_epoch_required_f1": 0.04371584699453552,
+      "accepted_as_final": false
+    },
+    {
+      "run": "20261118-run2",
+      "completed_epochs": 15,
+      "test_evaluated": true,
+      "stopped": null,
+      "selected_epoch": 7,
+      "validation_required_f1": 0.0,
+      "last_epoch_required_f1": 0.09296920395119117,
+      "accepted_as_final": false
+    },
+    {
+      "run": "20261118-run3",
+      "completed_epochs": 25,
+      "test_evaluated": true,
+      "stopped": {
+        "reason": "Validation loss favored early epoch 4 despite validation required F1 growing above 0.32 in later epochs. Select using capability-focused validation F1 instead.",
+        "test_evaluated": false,
+        "code_snapshot": "code_snapshot"
+      },
+      "selected_epoch": 4,
+      "validation_required_f1": 0.0685496667724532,
+      "last_epoch_required_f1": 0.3665594855305466,
+      "accepted_as_final": false
+    }
+  ],
+  "candidate_test_previously_observed": true,
+  "not_a_blind_benchmark": true,
+  "decisions_basis": "training and validation diagnostics; final candidate not selected by test score"
+}
