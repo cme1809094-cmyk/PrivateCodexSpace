@@ -5,13 +5,13 @@ import json
 from pathlib import Path
 import time
 
-import numpy as np
 import torch
 from torch.nn import functional as F
 from safetensors.torch import save_file
 
 from intent_contrast import calibrate_policy
-from intent_optimization import calibrate_v4, optimization_score
+from intent_optimization import (add_training_device_argument, calibrate_v4, optimization_score,
+                                 resolve_training_device, training_runtime)
 from permission_intent_model import balanced_weights, encode, labels, load_checkpoint, probabilities, save_checkpoint
 from train_intent_contrast import ROOT, read_json, sha256, write_json
 from train_intent_v4 import DATA, load_development
@@ -20,11 +20,12 @@ from train_permission_teacher import cache_teacher, load_teacher
 
 def extract_features(model, tokenizer, rows):
     encoded = encode(tokenizer, rows, 64)
+    device = next(model.parameters()).device
     cap_chunks, intent_chunks = [], []
     model.eval()
     with torch.inference_mode():
         for start in range(0, len(rows), 16):
-            batch = {k: v[start:start + 16] for k, v in encoded.items()}
+            batch = {k: v[start:start + 16].to(device) for k, v in encoded.items()}
             output = model.encoder(**batch, token_type_ids=torch.zeros_like(batch["input_ids"]), return_dict=False)
             pooled = output[1]
             if model.head_type == "pooled":
@@ -39,9 +40,9 @@ def extract_features(model, tokenizer, rows):
                 feature = pooled[:, None, :] * (1 - gate) + context * gate
             else:
                 raise ValueError("Head refit requires linear per-capability classifiers")
-            cap_chunks.append(feature.numpy())
-            intent_chunks.append(pooled.numpy())
-    return torch.from_numpy(np.concatenate(cap_chunks)), torch.from_numpy(np.concatenate(intent_chunks))
+            cap_chunks.append(feature)
+            intent_chunks.append(pooled)
+    return torch.cat(cap_chunks), torch.cat(intent_chunks)
 
 
 def cap_linear(feature, weight, bias):
@@ -70,7 +71,11 @@ def main():
     parser.add_argument("--initial", type=Path, required=True)
     parser.add_argument("--base", type=Path)
     parser.add_argument("--output", type=Path, required=True)
+    add_training_device_argument(parser)
     args = parser.parse_args()
+    device = resolve_training_device(args.device)
+    if args.kind == "teacher" and args.base is None:
+        parser.error("--base is required for --kind teacher")
     if args.output.exists() and any(args.output.iterdir()):
         raise ValueError("Use a new empty head-refit directory")
     args.output.mkdir(parents=True, exist_ok=True)
@@ -85,10 +90,14 @@ def main():
     else:
         model, tokenizer, protocol = load_checkpoint(args.initial)
         parent = read_json(args.initial.parent / "training_report.json")
+    model.to(device)
     features = {s: extract_features(model, tokenizer, rows) for s, rows in splits.items()}
     gold = {s: labels(rows, caps) for s, rows in splits.items()}
     cw, _ = balanced_weights(gold["train"][0], 3, power=0.5)
     iw, _ = balanced_weights(gold["train"][1], 4, power=1.0)
+    cw, iw = cw.to(device), iw.to(device)
+    targets, statuses = (value.to(device) for value in gold["train"])
+    sample_weights = cw[torch.arange(len(caps), device=device), targets]
     cm = features["train"][0].mean(0)
     cs = features["train"][0].std(0).clamp_min(0.02)
     im = features["train"][1].mean(0)
@@ -107,12 +116,13 @@ def main():
     thresholds, baseline = calibrate_v4(old_cp, old_ip, gold["validation"][0].numpy(), gold["validation"][1].numpy())
     best = optimization_score(baseline), 0, None, None, thresholds, baseline
     config = {"kind": args.kind, "initial": str(args.initial), "data_hashes": hashes,
+              "runtime": training_runtime(device),
               "head_plan_sha256": sha256(DATA / "head_refit_plan.json"), "steps": 100, "regularization": [0.01, 0.1],
               "mean_std_fit_on": "training only", "source_sha256": sha256(Path(__file__)),
               "fresh_reserved_read": False, "mobile_parameters_unchanged": True, "human_review": "pending"}
     write_json(args.output / "training_config.json", config)
     (args.output / "refit_permission_heads.py").write_bytes(Path(__file__).read_bytes())
-    print({"event": "head_refit_start", "kind": args.kind, "baseline_score": best[0]}, flush=True)
+    print({"event": "head_refit_start", "kind": args.kind, "baseline_score": best[0], "runtime": config["runtime"]}, flush=True)
     for regularization in (0.01, 0.1):
         with torch.no_grad():
             for p, value in zip(weights, initial):
@@ -122,9 +132,8 @@ def main():
         for step in range(1, 101):
             logits = cap_linear(normalized["train"][0], weights[0], weights[1])
             intents = F.linear(normalized["train"][1], weights[2], weights[3])
-            targets, statuses = gold["train"]
             loss = (F.cross_entropy(logits.flatten(0, 1), targets.flatten(), reduction="none").reshape_as(targets)
-                    * cw[torch.arange(len(caps)), targets]).mean()
+                    * sample_weights).mean()
             loss = loss + 0.5 * F.cross_entropy(intents, statuses, weight=iw)
             loss = loss + regularization * (weights[0].square().sum() / len(caps) + weights[2].square().sum() / 4)
             optimizer.zero_grad(set_to_none=True)
@@ -132,8 +141,8 @@ def main():
             optimizer.step()
             if step % 5 == 0:
                 with torch.inference_mode():
-                    cp = cap_linear(normalized["validation"][0], weights[0], weights[1]).softmax(-1).numpy()
-                    ip = F.linear(normalized["validation"][1], weights[2], weights[3]).softmax(-1).numpy()
+                    cp = cap_linear(normalized["validation"][0], weights[0], weights[1]).softmax(-1).cpu().numpy()
+                    ip = F.linear(normalized["validation"][1], weights[2], weights[3]).softmax(-1).cpu().numpy()
                 threshold, result = calibrate_v4(cp, ip, gold["validation"][0].numpy(), gold["validation"][1].numpy())
                 score = optimization_score(result)
                 if score > best[0] + 1e-5:
@@ -175,7 +184,7 @@ def main():
     protocol.update(thresholds=threshold, head_refitted=True, normalization_folded_into_linear=True)
     protocol["policy"], report["validation_policy"] = calibrate_policy(cp, ip, gold["validation"][0].numpy(), gold["validation"][1].numpy(), splits["validation"], threshold)
     if args.kind == "teacher":
-        save_file({n: p.detach().contiguous() for n, p in model.named_parameters() if p.requires_grad}, str(args.output / "teacher_delta.safetensors"))
+        save_file({n: p.detach().cpu().contiguous() for n, p in model.named_parameters() if p.requires_grad}, str(args.output / "teacher_delta.safetensors"))
         write_json(args.output / "protocol.json", protocol)
         write_json(args.output / "teacher_lock.json", {"delta_sha256": sha256(args.output / "teacher_delta.safetensors"),
                    "source_manifest_sha256": sha256(args.base / "source-manifest.json"), "fresh_reserved_opened": False})

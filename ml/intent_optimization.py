@@ -1,4 +1,6 @@
 """V4 development-only objectives and calibration; no evaluation data readers."""
+import os
+
 import numpy as np
 import torch
 from torch.nn import functional as F
@@ -6,11 +8,36 @@ from torch.nn import functional as F
 from permission_intent_model import decode, metrics
 
 
+def add_training_device_argument(parser):
+    parser.add_argument("--device", default=os.environ.get("TINYBERT_TRAINING_DEVICE", "cpu"),
+                        help="Training device: cpu, cuda, or cuda:<index>")
+
+
+def resolve_training_device(value):
+    device = torch.device(value)
+    if device == torch.device("cpu"):
+        return device
+    if device.type != "cuda":
+        raise ValueError("--device must be cpu, cuda, or cuda:<index>")
+    if not torch.cuda.is_available():
+        raise RuntimeError("CUDA requested but unavailable. Check the NVIDIA driver and Docker --gpus option, or select --device cpu.")
+    index = device.index if device.index is not None else torch.cuda.current_device()
+    if index >= torch.cuda.device_count():
+        raise ValueError(f"CUDA device {index} is not visible to PyTorch")
+    return torch.device("cuda", index)
+
+
+def training_runtime(device):
+    return {"device": str(device), "torch_version": str(torch.__version__),
+            "cuda_version": torch.version.cuda,
+            "gpu_name": torch.cuda.get_device_name(device) if device.type == "cuda" else None}
+
+
 def focal_objective(cap_logits, intent_logits, targets, statuses, cap_weights, intent_weights,
                     gamma=1.5, smoothing=0.03):
     hard = F.cross_entropy(cap_logits.flatten(0, 1), targets.flatten(), reduction="none").reshape_as(targets)
     pt = cap_logits.softmax(-1).gather(-1, targets[:, :, None]).squeeze(-1)
-    weight = cap_weights[torch.arange(targets.shape[1]), targets]
+    weight = cap_weights[torch.arange(targets.shape[1], device=targets.device), targets]
     focal = (hard * (1 - pt).pow(gamma) * weight).mean()
     # An unsuppressed smoothing term also regularizes already easy predictions.
     smooth = -cap_logits.log_softmax(-1).mean(-1).mean()

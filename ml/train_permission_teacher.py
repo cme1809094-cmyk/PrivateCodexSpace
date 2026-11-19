@@ -12,7 +12,8 @@ from safetensors.torch import load_file, save_file
 from transformers import BertConfig, BertModel, BertTokenizerFast, get_linear_schedule_with_warmup
 
 from intent_contrast import calibrate_policy, packed_group_batches, pair_margin_loss
-from intent_optimization import calibrate_v4, focal_objective, optimization_score, trim_padding
+from intent_optimization import (add_training_device_argument, calibrate_v4, focal_objective, optimization_score,
+                                 resolve_training_device, training_runtime, trim_padding)
 from permission_intent_model import PermissionIntentModel, balanced_weights, encode, labels, probabilities
 from train_intent_contrast import ROOT, read_json, sha256, write_json
 from train_intent_v4 import DATA, load_development
@@ -57,22 +58,25 @@ def load_teacher(base, cap_ids, delta_dir=None):
 
 def cache_teacher(model, tokenizer, rows, output, batch_size=16):
     encoded = encode(tokenizer, rows, 64)
+    device = next(model.parameters()).device
     capabilities, intents, features = [], [], []
     model.eval()
     with torch.inference_mode():
         for start in range(0, len(rows), batch_size):
             batch = trim_padding({k: v[start:start + batch_size] for k, v in encoded.items()})
+            batch = {k: v.to(device) for k, v in batch.items()}
             output_encoder = model.encoder(**batch, token_type_ids=torch.zeros_like(batch["input_ids"]), return_dict=False)
             pooled = output_encoder[1]
-            capabilities.append(model.capability_classifier(pooled).reshape(-1, model.capability_count, 3).numpy())
-            intents.append(model.intent_classifier(pooled).numpy())
-            features.append(pooled.to(torch.float16).numpy())
+            capabilities.append(model.capability_classifier(pooled).reshape(-1, model.capability_count, 3).cpu().numpy())
+            intents.append(model.intent_classifier(pooled).cpu().numpy())
+            features.append(pooled.to(device="cpu", dtype=torch.float16).numpy())
     np.savez_compressed(output, ids=np.asarray([r["id"] for r in rows]),
                         capability_logits=np.concatenate(capabilities), intent_logits=np.concatenate(intents),
                         pooled_features=np.concatenate(features))
 
 
 def train(args):
+    device = resolve_training_device(args.device)
     if args.output.exists() and any(args.output.iterdir()):
         raise ValueError("Use a new empty teacher output directory")
     args.output.mkdir(parents=True, exist_ok=True)
@@ -84,12 +88,16 @@ def train(args):
     random.seed(20261118)
     splits, caps, hashes = load_development()
     model, tokenizer = load_teacher(args.base, caps)
+    model.to(device)
     encoded = {s: encode(tokenizer, rows, 64) for s, rows in splits.items()}
     gold = {s: labels(rows, caps) for s, rows in splits.items()}
     cw, _ = balanced_weights(gold["train"][0], 3, power=1.0)
     iw, _ = balanced_weights(gold["train"][1], 4, power=1.0)
+    cw, iw = cw.to(device), iw.to(device)
+    train_targets, train_statuses = (value.to(device) for value in gold["train"])
     trainable = {n: p for n, p in model.named_parameters() if p.requires_grad}
     config = {"teacher_source": read_json(args.base / "source-manifest.json"), "data_hashes": hashes,
+              "runtime": training_runtime(device),
               "extension_plan_sha256": sha256(DATA / "extension_plan.json"),
               "rows": {s: len(rows) for s, rows in splits.items()}, "epochs": args.epochs,
               "trainable_parameters": sum(p.numel() for p in trainable.values()),
@@ -105,7 +113,7 @@ def train(args):
     steps = len(list(packed_group_batches(splits["train"], 16, torch.Generator().manual_seed(20261118))))
     scheduler = get_linear_schedule_with_warmup(optimizer, max(1, int(steps * args.epochs * 0.1)), steps * args.epochs)
     best = None
-    print(json.dumps({"event": "teacher_start", "rows": config["rows"], "trainable_parameters": config["trainable_parameters"],
+    print(json.dumps({"event": "teacher_start", "rows": config["rows"], "runtime": config["runtime"], "trainable_parameters": config["trainable_parameters"],
                       "parameters": config["total_parameters"]}), flush=True)
     for epoch in range(1, args.epochs + 1):
         epoch_start = time.time()
@@ -116,8 +124,8 @@ def train(args):
         losses = []
         for step, indices in enumerate(packed_group_batches(splits["train"], 16, generator), 1):
             batch = trim_padding({k: v[indices] for k, v in encoded["train"].items()})
-            cap, intent = model(**batch)
-            target, status = gold["train"][0][indices], gold["train"][1][indices]
+            cap, intent = model(**{k: v.to(device) for k, v in batch.items()})
+            target, status = train_targets[indices], train_statuses[indices]
             loss = focal_objective(cap, intent, target, status, cw, iw, gamma=0, smoothing=0.03)
             loss = loss + 0.1 * pair_margin_loss(cap, intent, target, status, [splits["train"][i] for i in indices.tolist()])
             if not torch.isfinite(loss):
@@ -144,7 +152,7 @@ def train(args):
                           "required_f1": round(result["required"]["f1"], 4), "forbidden_f1": round(result["forbidden"]["f1"], 4),
                           "intent_macro_f1": round(result["intent_macro_f1"], 4), "seconds": round(entry["seconds"])}), flush=True)
     model.load_state_dict(best[2], strict=False)
-    save_file({n: p.contiguous() for n, p in best[2].items()}, str(args.output / "teacher_delta.safetensors"))
+    save_file({n: p.cpu().contiguous() for n, p in best[2].items()}, str(args.output / "teacher_delta.safetensors"))
     cp, ip = probabilities(model, encoded["validation"], 16)
     policy, guarded = calibrate_policy(cp, ip, gold["validation"][0].numpy(), gold["validation"][1].numpy(), splits["validation"], best[3])
     write_json(args.output / "protocol.json", {"capability_ids": caps, "thresholds": best[3], "policy": policy,
@@ -166,4 +174,5 @@ if __name__ == "__main__":
     parser.add_argument("--base", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--epochs", type=int, default=3)
+    add_training_device_argument(parser)
     train(parser.parse_args())

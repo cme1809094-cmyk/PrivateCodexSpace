@@ -64,7 +64,7 @@ def pair_margin_loss(cap_logits, intent_logits, targets, statuses, rows, margin=
         a, b = cap_logits[ia].mean(0), cap_logits[ib].mean(0)
         changed = ya != yb
         if changed.any():
-            indices = torch.arange(targets.shape[1])[changed]
+            indices = torch.arange(targets.shape[1], device=targets.device)[changed]
             separation = ((a[indices, ya[changed]] - a[indices, yb[changed]])
                           + (b[indices, yb[changed]] - b[indices, ya[changed]])) * 0.5
             losses.append(F.relu(margin - separation).mean())

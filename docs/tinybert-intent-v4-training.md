@@ -25,6 +25,8 @@ v3 在独立题中漏掉了矛盾请求、来源／目标／范围未定的歧�
 
 依赖见 `ml/requirements-training-cpu.txt`。固定 v3 初始权重可从[上一轮主包](https://drive.google.com/file/d/1MCWkosDEW5DRMhmzndbtckr7cVqX_079/view?usp=drivesdk)取得。
 
+本地 NVIDIA GPU 的镜像构建、启动检查和完整复跑命令见 [Docker 训练指南](tinybert-local-training.md)。
+
 ```sh
 python3 ml/prepare_intent_v4.py --require-review
 python3 -m unittest discover -s tests -p test_intent_training.py -v

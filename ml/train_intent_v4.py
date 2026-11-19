@@ -14,7 +14,8 @@ import torch
 from transformers import get_linear_schedule_with_warmup
 
 from intent_contrast import calibrate_policy, packed_group_batches, pair_margin_loss
-from intent_optimization import calibrate_v4, focal_objective, optimization_score, trim_padding
+from intent_optimization import (add_training_device_argument, calibrate_v4, focal_objective, optimization_score,
+                                 resolve_training_device, training_runtime, trim_padding)
 from permission_intent_model import (PermissionIntentModel, balanced_weights, decode, encode, labels,
                                     load_checkpoint, metrics, objective, probabilities, save_checkpoint)
 from train_intent_contrast import ROOT, development_data, read_json, read_rows, sha256, write_json
@@ -92,6 +93,7 @@ def initialize(initial, variant, tokenizer, cap_ids):
 
 
 def train(args):
+    device = resolve_training_device(args.device)
     if args.output.exists() and any(args.output.iterdir()):
         raise ValueError("Use a new empty output directory")
     args.output.mkdir(parents=True, exist_ok=True)
@@ -111,6 +113,9 @@ def train(args):
     if not torch.all(cap_counts > 0) or not torch.all(intent_counts > 0):
         raise ValueError("Missing capability-state or intent training support")
     model, protocol = initialize(args.initial, args.variant, tokenizer, cap_ids)
+    model.to(device)
+    cap_weights, intent_weights = cap_weights.to(device), intent_weights.to(device)
+    train_targets, train_statuses = (value.to(device) for value in gold["train"])
     protocol = copy.deepcopy(protocol)
     protocol.pop("policy", None)
     protocol.update(schema_version=4, task="permission_intent_v4_text_only", head_type=model.head_type,
@@ -118,6 +123,7 @@ def train(args):
                     v4_variant=args.variant, old280_is_known_regression=True)
     source_names = ["train_intent_v4.py", "intent_optimization.py", "permission_intent_model.py", "intent_contrast.py"]
     config = {**{k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()},
+              "runtime": training_runtime(device),
               "rows": {k: len(v) for k, v in splits.items()}, "data_hashes": data_hashes,
               "initial_files_sha256": {p.name: sha256(p) for p in args.initial.iterdir() if p.is_file()},
               "source_sha256": {n: sha256(ROOT / "ml" / n) for n in source_names},
@@ -142,7 +148,7 @@ def train(args):
     steps = len(list(packed_group_batches(splits["train"], args.batch_size, torch.Generator().manual_seed(args.seed))))
     scheduler = get_linear_schedule_with_warmup(optimizer, max(1, int(steps * args.epochs * 0.05)), steps * args.epochs)
     best, bad = None, 0
-    print(json.dumps({"event": "start", "variant": args.variant, "rows": config["rows"],
+    print(json.dumps({"event": "start", "variant": args.variant, "rows": config["rows"], "runtime": config["runtime"],
                       "parameters": sum(p.numel() for p in model.parameters())}), flush=True)
     for epoch in range(1, args.epochs + 1):
         epoch_start = time.time()
@@ -150,8 +156,8 @@ def train(args):
         losses = []
         for indices in packed_group_batches(splits["train"], args.batch_size, generator):
             batch = trim_padding({k: v[indices] for k, v in encoded["train"].items()})
-            cap_logits, intent_logits = model(**batch)
-            targets, statuses = gold["train"][0][indices], gold["train"][1][indices]
+            cap_logits, intent_logits = model(**{k: v.to(device) for k, v in batch.items()})
+            targets, statuses = train_targets[indices], train_statuses[indices]
             if args.variant == "pooled":
                 loss = objective(cap_logits, intent_logits, targets, statuses, cap_weights, intent_weights)
             else:
@@ -205,7 +211,7 @@ def train(args):
     restored, _, _ = load_checkpoint(checkpoint)
     with torch.inference_mode():
         sample = {k: v[:2] for k, v in encoded["validation"].items()}
-        model.eval()
+        model.cpu().eval()
         for a, b in zip(model(**sample), restored(**sample)):
             torch.testing.assert_close(a, b, rtol=0, atol=0)
     report["checkpoint_roundtrip_exact"] = True
@@ -233,6 +239,7 @@ def main():
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--seed", type=int, default=20261118)
+    add_training_device_argument(parser)
     train(parser.parse_args())
 
 

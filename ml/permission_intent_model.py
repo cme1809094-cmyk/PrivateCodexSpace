@@ -146,7 +146,7 @@ def balanced_weights(targets, class_count, power=0.5):
 
 def objective(capability_logits, intent_logits, targets, intents, capability_weights, intent_weights):
     losses = F.cross_entropy(capability_logits.reshape(-1, len(STATES)), targets.reshape(-1), reduction="none")
-    sample_weights = capability_weights[torch.arange(targets.shape[1]), targets]
+    sample_weights = capability_weights[torch.arange(targets.shape[1], device=targets.device), targets]
     cap_loss = (losses.reshape_as(targets) * sample_weights).mean()
     status_loss = F.cross_entropy(intent_logits, intents, weight=intent_weights)
     return cap_loss + 0.5 * status_loss
@@ -154,13 +154,14 @@ def objective(capability_logits, intent_logits, targets, intents, capability_wei
 
 def probabilities(model, encoded, batch_size=32):
     model.eval()
+    device = next(model.parameters()).device
     caps, intents = [], []
     with torch.inference_mode():
         for start in range(0, len(encoded["input_ids"]), batch_size):
-            batch = {key: value[start:start + batch_size] for key, value in encoded.items()}
+            batch = {key: value[start:start + batch_size].to(device) for key, value in encoded.items()}
             cap_logits, intent_logits = model(**batch)
-            caps.append(cap_logits.softmax(-1).numpy())
-            intents.append(intent_logits.softmax(-1).numpy())
+            caps.append(cap_logits.softmax(-1).cpu().numpy())
+            intents.append(intent_logits.softmax(-1).cpu().numpy())
     return np.concatenate(caps), np.concatenate(intents)
 
 
@@ -243,7 +244,7 @@ def save_checkpoint(model, tokenizer, directory, protocol):
     directory.mkdir(parents=True, exist_ok=True)
     model.encoder.config.save_pretrained(directory)
     tokenizer.save_pretrained(directory)
-    save_file({k: v.detach().contiguous() for k, v in model.state_dict().items()}, str(directory / "model.safetensors"))
+    save_file({k: v.detach().cpu().contiguous() for k, v in model.state_dict().items()}, str(directory / "model.safetensors"))
     (directory / "protocol.json").write_text(json.dumps(protocol, ensure_ascii=False, indent=2) + "\n")
 
 
