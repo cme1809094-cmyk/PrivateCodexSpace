@@ -1,0 +1,16 @@
+{
+  "checkpoint_files_sha256": {
+    "config.json": "5bd3b79a985df3a5235fd8a112084019babcffcce6290722d2fc649463c8f2dd",
+    "model.safetensors": "64e968a7703e653327724a061dca043cf4c84528c0c48685fd2144716d809e55",
+    "protocol.json": "1159c237f76a3b7bd0e1042bd31d32ff18655bc7056c5109adefccbe2bb6d330",
+    "special_tokens_map.json": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a",
+    "tokenizer.json": "9b1a5e20e1adad4080627aaeecbdd7b82e65df9eec06a1f2142a2263d1e729e8",
+    "tokenizer_config.json": "1e6850f09bf217ed3b3af40742a9fd3ee75d1db1fcb0e3b567ec53c248684c95",
+    "vocab.txt": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a"
+  },
+  "weights_sha256": "64e968a7703e653327724a061dca043cf4c84528c0c48685fd2144716d809e55",
+  "protocol_sha256": "1159c237f76a3b7bd0e1042bd31d32ff18655bc7056c5109adefccbe2bb6d330",
+  "v5_reserved_sha256": "7b5ef43fdde5e95b4bf5437a6f00be4999bfdda4da5a91dc4d6db8d63f4648fa",
+  "utc": "2026-11-19T02:28:20.709362+00:00",
+  "reserved_prompts_read": false
+}

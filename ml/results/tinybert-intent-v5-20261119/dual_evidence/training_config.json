@@ -1,0 +1,132 @@
+{
+  "variant": "dual_evidence",
+  "initial": "/workspace/work/tinybert-intent-v4/full-specialist-distilled/checkpoint",
+  "output": "/workspace/work/tinybert-intent-v5/dual_evidence",
+  "epochs": 4,
+  "batch_size": 32,
+  "threads": 4,
+  "seed": 20261119,
+  "device": "cpu",
+  "runtime": {
+    "device": "cpu",
+    "torch_version": "2.8.0+cpu",
+    "cuda_version": null,
+    "gpu_name": null
+  },
+  "rows": {
+    "train": 3233,
+    "validation": 659,
+    "new_train": 384,
+    "focused_validation": 36
+  },
+  "v5_data": {
+    "files_sha256": {
+      "train.jsonl": "0f448191c6660d48b23a87eddb1dc93f4f30706c8c3067d1c2d684720755d4b3",
+      "validation.jsonl": "2322b0af52d77551cc246582ab32bea701c8ceac040d99219faa9f167cc9ca71",
+      "reserved_test.jsonl": "7b5ef43fdde5e95b4bf5437a6f00be4999bfdda4da5a91dc4d6db8d63f4648fa",
+      "development_cases.txt": "b98067a5d03a82a89f0ffb79eb474cc98e159e4e0976e03a6f7cbd57fa260090",
+      "reserved_cases.txt": "315c0e8bcdf733915e9ef2ccc6d60631b7fe279cb857faf8e0a10e28ec0e5811",
+      "experiment_plan.json": "01d2f1394aa0a3d9addde76dbcce3dbee7021d30e08bfab458f6ed082bc204e2"
+    },
+    "generator_sha256": "38938d76b4a2946041a7f74daf0f6be4f713156f1c14008fc474cef708d189c0",
+    "summary": {
+      "train": {
+        "rows": 384,
+        "kinds": {
+          "overlap": 176,
+          "distinct": 128,
+          "disjoint": 48,
+          "revision": 32
+        },
+        "groups": 192,
+        "at_most_16_tokens": 0,
+        "skipped_train_groups": 0
+      },
+      "validation": {
+        "rows": 36,
+        "kinds": {
+          "overlap": 12,
+          "distinct": 12,
+          "disjoint": 8,
+          "revision": 4
+        },
+        "groups": 12,
+        "at_most_16_tokens": 0,
+        "skipped_train_groups": 0
+      },
+      "reserved_test": {
+        "rows": 64,
+        "kinds": {
+          "overlap": 32,
+          "distinct": 16,
+          "disjoint": 10,
+          "revision": 6
+        },
+        "groups": 16,
+        "at_most_16_tokens": 4,
+        "skipped_train_groups": 0
+      }
+    },
+    "authoring": "Assistant-authored validation and reserved cases; human review pending",
+    "test_rules": "Reserved texts are authored and checked before training; only file hashes are used during training."
+  },
+  "v4_data": {
+    "v4_freeze": {
+      "frozen_before_training": true,
+      "frozen_at_utc": "2026-11-18T12:12:32.802247+00:00",
+      "source_sha256": {
+        "lexicon.json": "04cfeda05dc49691c3de16796217937436e40c8b0e7d8d84254837762d7c433d",
+        "train.jsonl": "ccc4f13f213c8f311dfc887fdb5e17f0d473b7cc110d678c4b0ca5aa954f8644",
+        "validation.jsonl": "295ee4ae2d0181a6e0debd0753ae00da09ed8f0b484d01a445d845868bd43f0e",
+        "reserved_test.jsonl": "b68e4701df793c0eeee6fbe342a28d22774a175fc2a637b3a177125f37353fd0",
+        "generate_intent_v4.py": "d038896347faee2cd3f03f57f5470c368fd9d7452f2b615241e91201ac429b88"
+      },
+      "audit_sha256": "507bfb3a8a7fcc2ba1a1d72b17cbc9d4974c54c1ea278cefd8cefd63ac653e53",
+      "plan_sha256": "cd658704d1fea291d480ff9f932bba8add4dd17c49ad95e98865e82acf8880f3",
+      "root_read_reserved_before_selection": false,
+      "human_review": "pending"
+    },
+    "legacy": {
+      "v2_all_sha256": "ad3e33a410801fb8817b29159ee6670890c2a2311154b2903994268c5eea8931",
+      "v2_run_manifest_sha256": "d8e5e09e5f83884feca10f0cd1382ad45f84003b7ca5b0d01f216bf8b1b87766",
+      "legacy_exclusions": {
+        "train_family_ids": [],
+        "validation_family_ids": [
+          "exp_a_photos_12"
+        ],
+        "validation_ids": [
+          "exp_a_photos_12_1",
+          "exp_a_photos_12_2",
+          "exp_a_photos_12_3",
+          "exp_a_photos_12_4",
+          "exp_a_photos_12_5"
+        ],
+        "new_training_group_ids": [
+          "v3_a_photo_library_10"
+        ],
+        "policy": "Remove the full old validation family from current model selection; preserve its immutable original source for legacy regression. Do not modify old data files.",
+        "actual_legacy_manifest": "ml/results/tinybert-intent-v2-20261118/data_manifest.json",
+        "actual_legacy_manifest_sha256": "d8e5e09e5f83884feca10f0cd1382ad45f84003b7ca5b0d01f216bf8b1b87766",
+        "new_train_old_validation_conflict_resolved_by_exclusion": true,
+        "new_validation_old_training_confirmed_conflicts_remaining": 0
+      },
+      "a_photos_contacts.jsonl": "5c8bfc92482bc7a69808dc9c06b2c95f6251e767d11e1e29bdb9abc68fd1f3b6",
+      "b_clipboard_recording.jsonl": "ae0f7c634877e5ec0c32554827d291ba7ec280cb02bed392ce2c639e57ea8948",
+      "c_status_contrasts.jsonl": "462c4074c2688d56db18318d6d98608506f6a3a6504f0b8a885f529c9dac49e9",
+      "audit_sha256": "e86817da8437daf4af2d9329702bdf26b0140c02e67ca54dbdbdd25d05cd8250",
+      "freeze_sha256": "c8f8d972de9c9b49799b01cb09bd35a518e63bb512e494b0916f56cf37e50251",
+      "reserved_test_sha256": "ba025f9f2d7bb110e20fbf3dc719ee067b6483aacb89ee4ed863387c28615a6a"
+    }
+  },
+  "initial_weights_sha256": "d33b72e1c2670474e6fea369928be976ff00117fb86a0731319225a8b6cee400",
+  "source_sha256": {
+    "train_intent_v5.py": "a8758aea3430769a609e0369828e456e7af71279e94df0e9a493132035be906d",
+    "permission_evidence.py": "33016c7fd555a8bb4aba8bdcf3f218c3f09448288cd2f50fe7c0445a2af9ef8c",
+    "permission_intent_model.py": "c018fb520c17fa3820f52dc5cb722528f429ae75dce5f58ef0e4ac5fa2fe08fa",
+    "intent_optimization.py": "6b6e1abe5747dcbf1f920abf791783a43ed4a6b4b76646da49f1d730e8482add",
+    "intent_contrast.py": "e144455360216afa1c6a94869ad48775514aea79e4b06e0b1c405891f19115bf",
+    "prepare_intent_v5.py": "38938d76b4a2946041a7f74daf0f6be4f713156f1c14008fc474cef708d189c0"
+  },
+  "parameters": 11460636,
+  "reserved_prompts_read": false
+}

@@ -1,0 +1,12 @@
+{
+  "local_path": "/workspace/work/tinybert-intent-v5/TinyBERT-v5-dual-evidence-checkpoint-onnx64.zip",
+  "bytes": 86953293,
+  "sha256": "840b26ce1ac3a0323a63b2680dc611c7ed2472e0be250240922f7b39ffdc221f",
+  "zip_crc_passed": true,
+  "manifest_files_verified": 148,
+  "source_git_commit": "e814a12f834616d7ec85ebed3bf0bb242ea00c59",
+  "drive_file_id": "1L37xP565LO9P3eE8HWQ50LGsCha8jI8n",
+  "drive_url": "https://drive.google.com/file/d/1L37xP565LO9P3eE8HWQ50LGsCha8jI8n/view?usp=drivesdk",
+  "drive_size_verified": true,
+  "drive_sha256_verified": false
+}

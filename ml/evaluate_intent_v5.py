@@ -1,6 +1,6 @@
 """Compare locked v4 and v5 models on the same focused holdout and old regression."""
 import argparse
-from collections import Counter, defaultdict
+from collections import defaultdict
 import csv
 import json
 from pathlib import Path
@@ -10,7 +10,7 @@ import torch
 
 from permission_evidence import EVIDENCE_CHANNELS, decode_profile, evidence_targets, infer, load_profile
 from permission_intent_model import INTENTS, binary_metrics, encode, labels, metrics
-from train_intent_contrast import read_json, read_rows, sha256, write_json
+from train_intent_contrast import read_json, read_rows, write_json
 from train_intent_v4 import DATA as V4, load_development
 from train_intent_v5 import DATA, validation_result, verify_data, verify_profile
 
@@ -149,7 +149,7 @@ def main():
     report['original_v4_reproduced'] = True
     write_json(args.output / 'comparison_report.json', report)
     with (args.output / 'new64_review.csv').open('w', encoding='utf-8-sig', newline='') as file:
-        writer = csv.writer(file)
+        writer = csv.writer(file, lineterminator='\n')
         writer.writerow(['id', 'text', 'kind', 'expected_requested', 'expected_prohibited', 'expected_decision',
                          'v4_decision', 'data_only_decision', 'dual_decision', 'dual_requested', 'dual_prohibited',
                          'dual_overlap', 'dual_disjoint', 'human_review', 'review_notes'])

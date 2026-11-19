@@ -1,0 +1,6 @@
+{"event": "start", "variant": "dual_evidence", "rows": {"train": 3233, "validation": 659, "new_train": 384, "focused_validation": 36}, "runtime": {"device": "cpu", "torch_version": "2.8.0+cpu", "cuda_version": null, "gpu_name": null}}
+{"epoch": 1, "score": 0.4339, "old_required_f1": 0.6058, "conflict_f1": 0.1429, "seconds": 39.83}
+{"epoch": 2, "score": 0.4852, "old_required_f1": 0.6059, "conflict_f1": 0.4, "seconds": 36.35}
+{"epoch": 3, "score": 0.5163, "old_required_f1": 0.6019, "conflict_f1": 0.4545, "seconds": 36.02}
+{"epoch": 4, "score": 0.5238, "old_required_f1": 0.6137, "conflict_f1": 0.5185, "seconds": 39.58}
+{"event": "complete", "variant": "dual_evidence", "selected_epoch": 4, "validation_score": 0.5237981471279868}

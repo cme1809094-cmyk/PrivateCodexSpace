@@ -1,0 +1,18 @@
+{
+  "tokens": 64,
+  "onnx": "permission_evidence_64.onnx",
+  "bytes": 46298604,
+  "sha256": "87585b4f77402f4af1f05020b77cf618f2e032c8c266618fd5ca687364c981b6",
+  "heldout_reference_rows": 64,
+  "logit_max_absolute_errors": [
+    9.059906005859375e-06,
+    6.4373016357421875e-06
+  ],
+  "decision_mismatches": 0,
+  "capability_logit_channels": [
+    "requested",
+    "prohibited",
+    "scope_overlap"
+  ],
+  "scope": "PyTorch to ONNX Runtime CPU"
+}
