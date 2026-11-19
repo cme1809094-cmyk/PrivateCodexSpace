@@ -1,0 +1,194 @@
+{
+  "initial": "/workspace/work/tinybert-intent-v5/dual_evidence/checkpoint",
+  "output": "/workspace/work/tinybert-intent-v6/run",
+  "epochs": 4,
+  "batch_size": 32,
+  "threads": 4,
+  "seed": 20261119,
+  "device": "cpu",
+  "runtime": {
+    "device": "cpu",
+    "torch_version": "2.8.0+cpu",
+    "cuda_version": null,
+    "gpu_name": null
+  },
+  "rows": {
+    "train": 3609,
+    "v6_validation": 58,
+    "v5_validation": 36
+  },
+  "initial_weights_sha256": "64e968a7703e653327724a061dca043cf4c84528c0c48685fd2144716d809e55",
+  "frozen_data": {
+    "v6": {
+      "files_sha256": {
+        "actions.txt": "a94f51296c96cd310a26797ff3569beee7276b332dd9d02ebbbe7e9d92c71756",
+        "development.txt": "9f9b29086690925b3870f8c1350f15df9fc1ab8f1de7b788eef837e5d436f40b",
+        "reserved.txt": "20ecf5b5cf174d0876a6324407f914139d0b30f2ed16de7353ed85be4b905886",
+        "experiment_plan.json": "b277907a22de88759044860b3a034be9b525e30f084a21e6790e6ef7263ecc10",
+        "train.jsonl": "ea5ca42d7136baa70895e29489095952c2a30c58da1c92f4e8259eb87785c27d",
+        "validation.jsonl": "02252d68cbc53d292d860b09aa2f5d2953c6000d8ab7aacb0408cb22e07f77bb",
+        "reserved_test.jsonl": "796898086ffb7ed760603299e31b8b51b9f88e827b2a87405789448884a774af"
+      },
+      "generator_sha256": "52f423a1024bf8114b68845599ba3738cf91d876ce393431fe12f0227bdd3a61",
+      "summary": {
+        "validation": {
+          "rows": 58,
+          "groups": 19,
+          "by_kind": {
+            "mixed": 39,
+            "neither": 7,
+            "prohibition_only": 8,
+            "request_only": 4
+          },
+          "caps_covered": {
+            "requested_evidence": 32,
+            "prohibited_evidence": 32
+          },
+          "max_tokens": 31,
+          "discarded_groups": 0
+        },
+        "reserved_test": {
+          "rows": 80,
+          "groups": 20,
+          "by_kind": {
+            "mixed": 40,
+            "request_only": 20,
+            "prohibition_only": 13,
+            "neither": 7
+          },
+          "caps_covered": {
+            "requested_evidence": 32,
+            "prohibited_evidence": 32
+          },
+          "max_tokens": 41,
+          "discarded_groups": 0
+        },
+        "train": {
+          "rows": 376,
+          "groups": 140,
+          "by_kind": {
+            "mixed": 144,
+            "request_only": 100,
+            "prohibition_only": 100,
+            "neither": 32
+          },
+          "caps_covered": {
+            "requested_evidence": 32,
+            "prohibited_evidence": 32
+          },
+          "max_tokens": 58,
+          "discarded_groups": 0
+        }
+      },
+      "human_review": "pending"
+    },
+    "v5": {
+      "files_sha256": {
+        "train.jsonl": "0f448191c6660d48b23a87eddb1dc93f4f30706c8c3067d1c2d684720755d4b3",
+        "validation.jsonl": "2322b0af52d77551cc246582ab32bea701c8ceac040d99219faa9f167cc9ca71",
+        "reserved_test.jsonl": "7b5ef43fdde5e95b4bf5437a6f00be4999bfdda4da5a91dc4d6db8d63f4648fa",
+        "development_cases.txt": "b98067a5d03a82a89f0ffb79eb474cc98e159e4e0976e03a6f7cbd57fa260090",
+        "reserved_cases.txt": "315c0e8bcdf733915e9ef2ccc6d60631b7fe279cb857faf8e0a10e28ec0e5811",
+        "experiment_plan.json": "01d2f1394aa0a3d9addde76dbcce3dbee7021d30e08bfab458f6ed082bc204e2"
+      },
+      "generator_sha256": "38938d76b4a2946041a7f74daf0f6be4f713156f1c14008fc474cef708d189c0",
+      "summary": {
+        "train": {
+          "rows": 384,
+          "kinds": {
+            "overlap": 176,
+            "distinct": 128,
+            "disjoint": 48,
+            "revision": 32
+          },
+          "groups": 192,
+          "at_most_16_tokens": 0,
+          "skipped_train_groups": 0
+        },
+        "validation": {
+          "rows": 36,
+          "kinds": {
+            "overlap": 12,
+            "distinct": 12,
+            "disjoint": 8,
+            "revision": 4
+          },
+          "groups": 12,
+          "at_most_16_tokens": 0,
+          "skipped_train_groups": 0
+        },
+        "reserved_test": {
+          "rows": 64,
+          "kinds": {
+            "overlap": 32,
+            "distinct": 16,
+            "disjoint": 10,
+            "revision": 6
+          },
+          "groups": 16,
+          "at_most_16_tokens": 4,
+          "skipped_train_groups": 0
+        }
+      },
+      "authoring": "Assistant-authored validation and reserved cases; human review pending",
+      "test_rules": "Reserved texts are authored and checked before training; only file hashes are used during training."
+    },
+    "legacy": {
+      "v4_freeze": {
+        "frozen_before_training": true,
+        "frozen_at_utc": "2026-11-18T12:12:32.802247+00:00",
+        "source_sha256": {
+          "lexicon.json": "04cfeda05dc49691c3de16796217937436e40c8b0e7d8d84254837762d7c433d",
+          "train.jsonl": "ccc4f13f213c8f311dfc887fdb5e17f0d473b7cc110d678c4b0ca5aa954f8644",
+          "validation.jsonl": "295ee4ae2d0181a6e0debd0753ae00da09ed8f0b484d01a445d845868bd43f0e",
+          "reserved_test.jsonl": "b68e4701df793c0eeee6fbe342a28d22774a175fc2a637b3a177125f37353fd0",
+          "generate_intent_v4.py": "d038896347faee2cd3f03f57f5470c368fd9d7452f2b615241e91201ac429b88"
+        },
+        "audit_sha256": "507bfb3a8a7fcc2ba1a1d72b17cbc9d4974c54c1ea278cefd8cefd63ac653e53",
+        "plan_sha256": "cd658704d1fea291d480ff9f932bba8add4dd17c49ad95e98865e82acf8880f3",
+        "root_read_reserved_before_selection": false,
+        "human_review": "pending"
+      },
+      "legacy": {
+        "v2_all_sha256": "ad3e33a410801fb8817b29159ee6670890c2a2311154b2903994268c5eea8931",
+        "v2_run_manifest_sha256": "d8e5e09e5f83884feca10f0cd1382ad45f84003b7ca5b0d01f216bf8b1b87766",
+        "legacy_exclusions": {
+          "train_family_ids": [],
+          "validation_family_ids": [
+            "exp_a_photos_12"
+          ],
+          "validation_ids": [
+            "exp_a_photos_12_1",
+            "exp_a_photos_12_2",
+            "exp_a_photos_12_3",
+            "exp_a_photos_12_4",
+            "exp_a_photos_12_5"
+          ],
+          "new_training_group_ids": [
+            "v3_a_photo_library_10"
+          ],
+          "policy": "Remove the full old validation family from current model selection; preserve its immutable original source for legacy regression. Do not modify old data files.",
+          "actual_legacy_manifest": "ml/results/tinybert-intent-v2-20261118/data_manifest.json",
+          "actual_legacy_manifest_sha256": "d8e5e09e5f83884feca10f0cd1382ad45f84003b7ca5b0d01f216bf8b1b87766",
+          "new_train_old_validation_conflict_resolved_by_exclusion": true,
+          "new_validation_old_training_confirmed_conflicts_remaining": 0
+        },
+        "a_photos_contacts.jsonl": "5c8bfc92482bc7a69808dc9c06b2c95f6251e767d11e1e29bdb9abc68fd1f3b6",
+        "b_clipboard_recording.jsonl": "ae0f7c634877e5ec0c32554827d291ba7ec280cb02bed392ce2c639e57ea8948",
+        "c_status_contrasts.jsonl": "462c4074c2688d56db18318d6d98608506f6a3a6504f0b8a885f529c9dac49e9",
+        "audit_sha256": "e86817da8437daf4af2d9329702bdf26b0140c02e67ca54dbdbdd25d05cd8250",
+        "freeze_sha256": "c8f8d972de9c9b49799b01cb09bd35a518e63bb512e494b0916f56cf37e50251",
+        "reserved_test_sha256": "ba025f9f2d7bb110e20fbf3dc719ee067b6483aacb89ee4ed863387c28615a6a"
+      }
+    }
+  },
+  "source_sha256": {
+    "train_intent_v6.py": "e5126bec97b6f8800c5453594f57d049af9a6a4b824e6cd63e14055ddfedf5fe",
+    "prepare_intent_v6.py": "52f423a1024bf8114b68845599ba3738cf91d876ce393431fe12f0227bdd3a61",
+    "permission_evidence.py": "33016c7fd555a8bb4aba8bdcf3f218c3f09448288cd2f50fe7c0445a2af9ef8c",
+    "permission_intent_model.py": "c018fb520c17fa3820f52dc5cb722528f429ae75dce5f58ef0e4ac5fa2fe08fa",
+    "intent_contrast.py": "e144455360216afa1c6a94869ad48775514aea79e4b06e0b1c405891f19115bf",
+    "intent_optimization.py": "6b6e1abe5747dcbf1f920abf791783a43ed4a6b4b76646da49f1d730e8482add"
+  },
+  "reserved_prompts_read": false
+}

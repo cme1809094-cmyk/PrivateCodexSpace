@@ -1,0 +1,12 @@
+{
+  "local_path": "/workspace/work/tinybert-intent-v6/TinyBERT-v6-request-avoid-experiment.zip",
+  "bytes": 43803834,
+  "sha256": "922024b03f40a3c6b254618cd263bdd4d6ad907c02cfd301cb981e7483439305",
+  "zip_crc_passed": true,
+  "manifest_files_verified": 148,
+  "source_git_commit": "6a31646dcdf3ff29074033cd529b8294a6d4405b",
+  "drive_file_id": "1LvMtzbxGCv3ES3Zq9oVhG7mHPruVZRhq",
+  "drive_url": "https://drive.google.com/file/d/1LvMtzbxGCv3ES3Zq9oVhG7mHPruVZRhq/view?usp=drivesdk",
+  "drive_size_verified": true,
+  "drive_sha256_verified": false
+}

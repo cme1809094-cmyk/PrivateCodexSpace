@@ -1,0 +1,6 @@
+{"event": "start", "runtime": {"device": "cpu", "torch_version": "2.8.0+cpu", "cuda_version": null, "gpu_name": null}, "rows": {"train": 3609, "v6_validation": 58, "v5_validation": 36}, "base_original_score": 0.39355041564187443, "base_calibrated_score": 0.44519351868710677}
+{"epoch": 1, "score": 0.4716027596208543, "request_f1": 0.6666666666666666, "avoid_f1": 0.5052631578947369, "both_exact": 17, "seconds": 41.19}
+{"epoch": 2, "score": 0.46668542774900806, "request_f1": 0.6730769230769231, "avoid_f1": 0.4878048780487805, "both_exact": 16, "seconds": 40.75}
+{"epoch": 3, "score": 0.49659049214524864, "request_f1": 0.6732673267326733, "avoid_f1": 0.5360824742268041, "both_exact": 20, "seconds": 45.47}
+{"epoch": 4, "score": 0.5017241241201427, "request_f1": 0.6923076923076923, "avoid_f1": 0.5360824742268041, "both_exact": 20, "seconds": 39.21}
+{"event": "complete", "selected": "v6_trained", "epoch": 4, "development_score": 0.5017241241201427}

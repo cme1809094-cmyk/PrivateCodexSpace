@@ -1,0 +1,1054 @@
+{
+  "selection": {
+    "scores": {
+      "v5_original": 0.39355041564187443,
+      "v5_recalibrated": 0.44519351868710677,
+      "v6_trained": 0.5017241241201427
+    },
+    "selected_on_validation": "v6_trained",
+    "new_reserved_read_when_selected": false,
+    "reserved_sha256": "796898086ffb7ed760603299e31b8b51b9f88e827b2a87405789448884a774af",
+    "checkpoint": {
+      "checkpoint_files_sha256": {
+        "config.json": "5bd3b79a985df3a5235fd8a112084019babcffcce6290722d2fc649463c8f2dd",
+        "model.safetensors": "fdfa65c1a8c8b0e15ac4a30a6162c8c09c508dbb27b0d73ccdd6af6f939e68de",
+        "protocol.json": "cf14ae8448a23c4a140c71f349105df3bbf8cca3b3d375146b74eb1844a6a8a6",
+        "special_tokens_map.json": "5d5b662e421ea9fac075174bb0688ee0d9431699900b90662acd44b2a350503a",
+        "tokenizer.json": "9b1a5e20e1adad4080627aaeecbdd7b82e65df9eec06a1f2142a2263d1e729e8",
+        "tokenizer_config.json": "1e6850f09bf217ed3b3af40742a9fd3ee75d1db1fcb0e3b567ec53c248684c95",
+        "vocab.txt": "366fe2b1318c774fd28bdea58dbcfbd6d6aeae313fdcd9063d170cdc602fd51a"
+      },
+      "weights_sha256": "fdfa65c1a8c8b0e15ac4a30a6162c8c09c508dbb27b0d73ccdd6af6f939e68de",
+      "protocol_sha256": "cf14ae8448a23c4a140c71f349105df3bbf8cca3b3d375146b74eb1844a6a8a6",
+      "reserved_sha256": "796898086ffb7ed760603299e31b8b51b9f88e827b2a87405789448884a774af",
+      "reserved_prompts_read": false
+    },
+    "v5_recalibrated_thresholds": {
+      "requested": 0.7,
+      "prohibited": 0.65,
+      "scope_overlap": 0.55,
+      "scope_disjoint": 0.25
+    }
+  },
+  "human_review": "pending",
+  "acceptance_scope": "Assistant-authored data; exact request and avoid lists before policy",
+  "known_v5_64_scope": "Previously observed regression only",
+  "holdout_used_to_tune": false,
+  "candidates": {
+    "v5_original": {
+      "new80": {
+        "lists": {
+          "rows": 80,
+          "requested": {
+            "precision": 0.4583333333333333,
+            "recall": 0.6984126984126984,
+            "f1": 0.5534591194968553,
+            "tp": 44,
+            "fp": 52,
+            "fn": 19
+          },
+          "prohibited": {
+            "precision": 0.5789473684210527,
+            "recall": 0.4074074074074074,
+            "f1": 0.4782608695652174,
+            "tp": 22,
+            "fp": 16,
+            "fn": 32
+          },
+          "requested_exact": 31,
+          "prohibited_exact": 41,
+          "both_exact": 20,
+          "both_exact_rate": 0.25,
+          "extra_request_rows": 44,
+          "extra_prohibition_rows": 16,
+          "explicit_prohibition_in_request_rows": 25,
+          "missed_prohibition_rows": 32,
+          "mention_only_rows": 7,
+          "mention_only_false_request_rows": 2,
+          "mention_only_false_prohibition_rows": 2
+        },
+        "policy": {
+          "normal_request_rows": 60,
+          "normal_accepted_rows": 5,
+          "normal_acceptance_rate": 0.08333333333333333,
+          "required_recall": 0.06349206349206349,
+          "required_f1": 0.1111111111111111,
+          "overrequested_rows": 4,
+          "contains_prohibition_rows": 53,
+          "prohibited_issued_rows": 1,
+          "conflict_rows": 0,
+          "conflicts_classified": 0,
+          "conflicts_clarified": 0,
+          "conflicts_with_prohibited_issued": 0
+        },
+        "by_kind": {
+          "mixed": {
+            "rows": 40,
+            "requested": {
+              "precision": 0.4918032786885246,
+              "recall": 0.6976744186046512,
+              "f1": 0.5769230769230769,
+              "tp": 30,
+              "fp": 31,
+              "fn": 13
+            },
+            "prohibited": {
+              "precision": 0.5666666666666667,
+              "recall": 0.4146341463414634,
+              "f1": 0.4788732394366197,
+              "tp": 17,
+              "fp": 13,
+              "fn": 24
+            },
+            "requested_exact": 11,
+            "prohibited_exact": 12,
+            "both_exact": 3,
+            "both_exact_rate": 0.075,
+            "extra_request_rows": 27,
+            "extra_prohibition_rows": 13,
+            "explicit_prohibition_in_request_rows": 19,
+            "missed_prohibition_rows": 24,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "request_only": {
+            "rows": 20,
+            "requested": {
+              "precision": 0.6086956521739131,
+              "recall": 0.7,
+              "f1": 0.6511627906976745,
+              "tp": 14,
+              "fp": 9,
+              "fn": 6
+            },
+            "prohibited": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "requested_exact": 10,
+            "prohibited_exact": 19,
+            "both_exact": 10,
+            "both_exact_rate": 0.5,
+            "extra_request_rows": 7,
+            "extra_prohibition_rows": 1,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 0,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "prohibition_only": {
+            "rows": 13,
+            "requested": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 10,
+              "fn": 0
+            },
+            "prohibited": {
+              "precision": 1.0,
+              "recall": 0.38461538461538464,
+              "f1": 0.5555555555555556,
+              "tp": 5,
+              "fp": 0,
+              "fn": 8
+            },
+            "requested_exact": 5,
+            "prohibited_exact": 5,
+            "both_exact": 3,
+            "both_exact_rate": 0.23076923076923078,
+            "extra_request_rows": 8,
+            "extra_prohibition_rows": 0,
+            "explicit_prohibition_in_request_rows": 6,
+            "missed_prohibition_rows": 8,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "neither": {
+            "rows": 7,
+            "requested": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 2,
+              "fn": 0
+            },
+            "prohibited": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 2,
+              "fn": 0
+            },
+            "requested_exact": 5,
+            "prohibited_exact": 5,
+            "both_exact": 4,
+            "both_exact_rate": 0.5714285714285714,
+            "extra_request_rows": 2,
+            "extra_prohibition_rows": 2,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 0,
+            "mention_only_rows": 7,
+            "mention_only_false_request_rows": 2,
+            "mention_only_false_prohibition_rows": 2
+          }
+        }
+      },
+      "known_v5_64": {
+        "lists": {
+          "rows": 64,
+          "requested": {
+            "precision": 0.5263157894736842,
+            "recall": 0.8064516129032258,
+            "f1": 0.6369426751592356,
+            "tp": 50,
+            "fp": 45,
+            "fn": 12
+          },
+          "prohibited": {
+            "precision": 0.5333333333333333,
+            "recall": 0.5333333333333333,
+            "f1": 0.5333333333333333,
+            "tp": 32,
+            "fp": 28,
+            "fn": 28
+          },
+          "requested_exact": 20,
+          "prohibited_exact": 21,
+          "both_exact": 7,
+          "both_exact_rate": 0.109375,
+          "extra_request_rows": 37,
+          "extra_prohibition_rows": 27,
+          "explicit_prohibition_in_request_rows": 13,
+          "missed_prohibition_rows": 28,
+          "mention_only_rows": 0,
+          "mention_only_false_request_rows": 0,
+          "mention_only_false_prohibition_rows": 0
+        },
+        "policy": {
+          "normal_request_rows": 20,
+          "normal_accepted_rows": 3,
+          "normal_acceptance_rate": 0.15,
+          "required_recall": 0.15,
+          "required_f1": 0.1875,
+          "overrequested_rows": 5,
+          "contains_prohibition_rows": 60,
+          "prohibited_issued_rows": 5,
+          "conflict_rows": 32,
+          "conflicts_classified": 19,
+          "conflicts_clarified": 29,
+          "conflicts_with_prohibited_issued": 2
+        },
+        "by_kind": {
+          "overlap": {
+            "rows": 32,
+            "requested": {
+              "precision": 0.5434782608695652,
+              "recall": 0.78125,
+              "f1": 0.6410256410256411,
+              "tp": 25,
+              "fp": 21,
+              "fn": 7
+            },
+            "prohibited": {
+              "precision": 0.5806451612903226,
+              "recall": 0.5625,
+              "f1": 0.5714285714285714,
+              "tp": 18,
+              "fp": 13,
+              "fn": 14
+            },
+            "requested_exact": 10,
+            "prohibited_exact": 11,
+            "both_exact": 2,
+            "both_exact_rate": 0.0625,
+            "extra_request_rows": 18,
+            "extra_prohibition_rows": 13,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 14,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "distinct": {
+            "rows": 16,
+            "requested": {
+              "precision": 0.5357142857142857,
+              "recall": 0.9375,
+              "f1": 0.6818181818181818,
+              "tp": 15,
+              "fp": 13,
+              "fn": 1
+            },
+            "prohibited": {
+              "precision": 0.47058823529411764,
+              "recall": 0.5,
+              "f1": 0.48484848484848486,
+              "tp": 8,
+              "fp": 9,
+              "fn": 8
+            },
+            "requested_exact": 5,
+            "prohibited_exact": 5,
+            "both_exact": 3,
+            "both_exact_rate": 0.1875,
+            "extra_request_rows": 11,
+            "extra_prohibition_rows": 8,
+            "explicit_prohibition_in_request_rows": 11,
+            "missed_prohibition_rows": 8,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "disjoint": {
+            "rows": 10,
+            "requested": {
+              "precision": 0.6153846153846154,
+              "recall": 0.8,
+              "f1": 0.6956521739130435,
+              "tp": 8,
+              "fp": 5,
+              "fn": 2
+            },
+            "prohibited": {
+              "precision": 0.6666666666666666,
+              "recall": 0.4,
+              "f1": 0.5,
+              "tp": 4,
+              "fp": 2,
+              "fn": 6
+            },
+            "requested_exact": 4,
+            "prohibited_exact": 3,
+            "both_exact": 1,
+            "both_exact_rate": 0.1,
+            "extra_request_rows": 4,
+            "extra_prohibition_rows": 2,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 6,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "revision": {
+            "rows": 6,
+            "requested": {
+              "precision": 0.25,
+              "recall": 0.5,
+              "f1": 0.3333333333333333,
+              "tp": 2,
+              "fp": 6,
+              "fn": 2
+            },
+            "prohibited": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "f1": 0.5,
+              "tp": 2,
+              "fp": 4,
+              "fn": 0
+            },
+            "requested_exact": 1,
+            "prohibited_exact": 2,
+            "both_exact": 1,
+            "both_exact_rate": 0.16666666666666666,
+            "extra_request_rows": 4,
+            "extra_prohibition_rows": 4,
+            "explicit_prohibition_in_request_rows": 2,
+            "missed_prohibition_rows": 0,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          }
+        }
+      }
+    },
+    "v5_recalibrated": {
+      "new80": {
+        "lists": {
+          "rows": 80,
+          "requested": {
+            "precision": 0.5119047619047619,
+            "recall": 0.6825396825396826,
+            "f1": 0.5850340136054422,
+            "tp": 43,
+            "fp": 41,
+            "fn": 20
+          },
+          "prohibited": {
+            "precision": 0.5178571428571429,
+            "recall": 0.5370370370370371,
+            "f1": 0.5272727272727272,
+            "tp": 29,
+            "fp": 27,
+            "fn": 25
+          },
+          "requested_exact": 35,
+          "prohibited_exact": 40,
+          "both_exact": 19,
+          "both_exact_rate": 0.2375,
+          "extra_request_rows": 37,
+          "extra_prohibition_rows": 24,
+          "explicit_prohibition_in_request_rows": 22,
+          "missed_prohibition_rows": 25,
+          "mention_only_rows": 7,
+          "mention_only_false_request_rows": 1,
+          "mention_only_false_prohibition_rows": 2
+        },
+        "policy": {
+          "normal_request_rows": 60,
+          "normal_accepted_rows": 4,
+          "normal_acceptance_rate": 0.06666666666666667,
+          "required_recall": 0.047619047619047616,
+          "required_f1": 0.08695652173913043,
+          "overrequested_rows": 3,
+          "contains_prohibition_rows": 53,
+          "prohibited_issued_rows": 1,
+          "conflict_rows": 0,
+          "conflicts_classified": 0,
+          "conflicts_clarified": 0,
+          "conflicts_with_prohibited_issued": 0
+        },
+        "by_kind": {
+          "mixed": {
+            "rows": 40,
+            "requested": {
+              "precision": 0.5454545454545454,
+              "recall": 0.6976744186046512,
+              "f1": 0.6122448979591837,
+              "tp": 30,
+              "fp": 25,
+              "fn": 13
+            },
+            "prohibited": {
+              "precision": 0.5238095238095238,
+              "recall": 0.5365853658536586,
+              "f1": 0.5301204819277109,
+              "tp": 22,
+              "fp": 20,
+              "fn": 19
+            },
+            "requested_exact": 12,
+            "prohibited_exact": 11,
+            "both_exact": 2,
+            "both_exact_rate": 0.05,
+            "extra_request_rows": 24,
+            "extra_prohibition_rows": 18,
+            "explicit_prohibition_in_request_rows": 17,
+            "missed_prohibition_rows": 19,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "request_only": {
+            "rows": 20,
+            "requested": {
+              "precision": 0.6842105263157895,
+              "recall": 0.65,
+              "f1": 0.6666666666666666,
+              "tp": 13,
+              "fp": 6,
+              "fn": 7
+            },
+            "prohibited": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 3,
+              "fn": 0
+            },
+            "requested_exact": 11,
+            "prohibited_exact": 18,
+            "both_exact": 10,
+            "both_exact_rate": 0.5,
+            "extra_request_rows": 5,
+            "extra_prohibition_rows": 2,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 0,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "prohibition_only": {
+            "rows": 13,
+            "requested": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 9,
+              "fn": 0
+            },
+            "prohibited": {
+              "precision": 0.7777777777777778,
+              "recall": 0.5384615384615384,
+              "f1": 0.6363636363636364,
+              "tp": 7,
+              "fp": 2,
+              "fn": 6
+            },
+            "requested_exact": 6,
+            "prohibited_exact": 6,
+            "both_exact": 3,
+            "both_exact_rate": 0.23076923076923078,
+            "extra_request_rows": 7,
+            "extra_prohibition_rows": 2,
+            "explicit_prohibition_in_request_rows": 5,
+            "missed_prohibition_rows": 6,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "neither": {
+            "rows": 7,
+            "requested": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 1,
+              "fn": 0
+            },
+            "prohibited": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 2,
+              "fn": 0
+            },
+            "requested_exact": 6,
+            "prohibited_exact": 5,
+            "both_exact": 4,
+            "both_exact_rate": 0.5714285714285714,
+            "extra_request_rows": 1,
+            "extra_prohibition_rows": 2,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 0,
+            "mention_only_rows": 7,
+            "mention_only_false_request_rows": 1,
+            "mention_only_false_prohibition_rows": 2
+          }
+        }
+      },
+      "known_v5_64": {
+        "lists": {
+          "rows": 64,
+          "requested": {
+            "precision": 0.6,
+            "recall": 0.7741935483870968,
+            "f1": 0.676056338028169,
+            "tp": 48,
+            "fp": 32,
+            "fn": 14
+          },
+          "prohibited": {
+            "precision": 0.5125,
+            "recall": 0.6833333333333333,
+            "f1": 0.5857142857142857,
+            "tp": 41,
+            "fp": 39,
+            "fn": 19
+          },
+          "requested_exact": 27,
+          "prohibited_exact": 22,
+          "both_exact": 9,
+          "both_exact_rate": 0.140625,
+          "extra_request_rows": 28,
+          "extra_prohibition_rows": 34,
+          "explicit_prohibition_in_request_rows": 12,
+          "missed_prohibition_rows": 19,
+          "mention_only_rows": 0,
+          "mention_only_false_request_rows": 0,
+          "mention_only_false_prohibition_rows": 0
+        },
+        "policy": {
+          "normal_request_rows": 20,
+          "normal_accepted_rows": 2,
+          "normal_acceptance_rate": 0.1,
+          "required_recall": 0.1,
+          "required_f1": 0.13333333333333333,
+          "overrequested_rows": 4,
+          "contains_prohibition_rows": 60,
+          "prohibited_issued_rows": 4,
+          "conflict_rows": 32,
+          "conflicts_classified": 22,
+          "conflicts_clarified": 29,
+          "conflicts_with_prohibited_issued": 2
+        },
+        "by_kind": {
+          "overlap": {
+            "rows": 32,
+            "requested": {
+              "precision": 0.6944444444444444,
+              "recall": 0.78125,
+              "f1": 0.7352941176470589,
+              "tp": 25,
+              "fp": 11,
+              "fn": 7
+            },
+            "prohibited": {
+              "precision": 0.5853658536585366,
+              "recall": 0.75,
+              "f1": 0.6575342465753424,
+              "tp": 24,
+              "fp": 17,
+              "fn": 8
+            },
+            "requested_exact": 18,
+            "prohibited_exact": 13,
+            "both_exact": 6,
+            "both_exact_rate": 0.1875,
+            "extra_request_rows": 10,
+            "extra_prohibition_rows": 15,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 8,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "distinct": {
+            "rows": 16,
+            "requested": {
+              "precision": 0.5384615384615384,
+              "recall": 0.875,
+              "f1": 0.6666666666666666,
+              "tp": 14,
+              "fp": 12,
+              "fn": 2
+            },
+            "prohibited": {
+              "precision": 0.47619047619047616,
+              "recall": 0.625,
+              "f1": 0.5405405405405406,
+              "tp": 10,
+              "fp": 11,
+              "fn": 6
+            },
+            "requested_exact": 4,
+            "prohibited_exact": 5,
+            "both_exact": 2,
+            "both_exact_rate": 0.125,
+            "extra_request_rows": 11,
+            "extra_prohibition_rows": 10,
+            "explicit_prohibition_in_request_rows": 10,
+            "missed_prohibition_rows": 6,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "disjoint": {
+            "rows": 10,
+            "requested": {
+              "precision": 0.6153846153846154,
+              "recall": 0.8,
+              "f1": 0.6956521739130435,
+              "tp": 8,
+              "fp": 5,
+              "fn": 2
+            },
+            "prohibited": {
+              "precision": 0.5,
+              "recall": 0.5,
+              "f1": 0.5,
+              "tp": 5,
+              "fp": 5,
+              "fn": 5
+            },
+            "requested_exact": 4,
+            "prohibited_exact": 2,
+            "both_exact": 0,
+            "both_exact_rate": 0.0,
+            "extra_request_rows": 4,
+            "extra_prohibition_rows": 5,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 5,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "revision": {
+            "rows": 6,
+            "requested": {
+              "precision": 0.2,
+              "recall": 0.25,
+              "f1": 0.2222222222222222,
+              "tp": 1,
+              "fp": 4,
+              "fn": 3
+            },
+            "prohibited": {
+              "precision": 0.25,
+              "recall": 1.0,
+              "f1": 0.4,
+              "tp": 2,
+              "fp": 6,
+              "fn": 0
+            },
+            "requested_exact": 1,
+            "prohibited_exact": 2,
+            "both_exact": 1,
+            "both_exact_rate": 0.16666666666666666,
+            "extra_request_rows": 3,
+            "extra_prohibition_rows": 4,
+            "explicit_prohibition_in_request_rows": 2,
+            "missed_prohibition_rows": 0,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          }
+        }
+      }
+    },
+    "v6_trained": {
+      "new80": {
+        "lists": {
+          "rows": 80,
+          "requested": {
+            "precision": 0.4868421052631579,
+            "recall": 0.5873015873015873,
+            "f1": 0.5323741007194245,
+            "tp": 37,
+            "fp": 39,
+            "fn": 26
+          },
+          "prohibited": {
+            "precision": 0.4936708860759494,
+            "recall": 0.7222222222222222,
+            "f1": 0.5864661654135338,
+            "tp": 39,
+            "fp": 40,
+            "fn": 15
+          },
+          "requested_exact": 35,
+          "prohibited_exact": 37,
+          "both_exact": 18,
+          "both_exact_rate": 0.225,
+          "extra_request_rows": 30,
+          "extra_prohibition_rows": 33,
+          "explicit_prohibition_in_request_rows": 21,
+          "missed_prohibition_rows": 15,
+          "mention_only_rows": 7,
+          "mention_only_false_request_rows": 0,
+          "mention_only_false_prohibition_rows": 2
+        },
+        "policy": {
+          "normal_request_rows": 60,
+          "normal_accepted_rows": 4,
+          "normal_acceptance_rate": 0.06666666666666667,
+          "required_recall": 0.031746031746031744,
+          "required_f1": 0.057971014492753624,
+          "overrequested_rows": 3,
+          "contains_prohibition_rows": 53,
+          "prohibited_issued_rows": 0,
+          "conflict_rows": 0,
+          "conflicts_classified": 0,
+          "conflicts_clarified": 0,
+          "conflicts_with_prohibited_issued": 0
+        },
+        "by_kind": {
+          "mixed": {
+            "rows": 40,
+            "requested": {
+              "precision": 0.4827586206896552,
+              "recall": 0.6511627906976745,
+              "f1": 0.5544554455445545,
+              "tp": 28,
+              "fp": 30,
+              "fn": 15
+            },
+            "prohibited": {
+              "precision": 0.49206349206349204,
+              "recall": 0.7560975609756098,
+              "f1": 0.5961538461538461,
+              "tp": 31,
+              "fp": 32,
+              "fn": 10
+            },
+            "requested_exact": 10,
+            "prohibited_exact": 8,
+            "both_exact": 1,
+            "both_exact_rate": 0.025,
+            "extra_request_rows": 23,
+            "extra_prohibition_rows": 26,
+            "explicit_prohibition_in_request_rows": 19,
+            "missed_prohibition_rows": 10,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "request_only": {
+            "rows": 20,
+            "requested": {
+              "precision": 0.6428571428571429,
+              "recall": 0.45,
+              "f1": 0.5294117647058824,
+              "tp": 9,
+              "fp": 5,
+              "fn": 11
+            },
+            "prohibited": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 3,
+              "fn": 0
+            },
+            "requested_exact": 8,
+            "prohibited_exact": 18,
+            "both_exact": 7,
+            "both_exact_rate": 0.35,
+            "extra_request_rows": 4,
+            "extra_prohibition_rows": 2,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 0,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "prohibition_only": {
+            "rows": 13,
+            "requested": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 4,
+              "fn": 0
+            },
+            "prohibited": {
+              "precision": 0.7272727272727273,
+              "recall": 0.6153846153846154,
+              "f1": 0.6666666666666666,
+              "tp": 8,
+              "fp": 3,
+              "fn": 5
+            },
+            "requested_exact": 10,
+            "prohibited_exact": 6,
+            "both_exact": 5,
+            "both_exact_rate": 0.38461538461538464,
+            "extra_request_rows": 3,
+            "extra_prohibition_rows": 3,
+            "explicit_prohibition_in_request_rows": 2,
+            "missed_prohibition_rows": 5,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "neither": {
+            "rows": 7,
+            "requested": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 0,
+              "fn": 0
+            },
+            "prohibited": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "fp": 2,
+              "fn": 0
+            },
+            "requested_exact": 7,
+            "prohibited_exact": 5,
+            "both_exact": 5,
+            "both_exact_rate": 0.7142857142857143,
+            "extra_request_rows": 0,
+            "extra_prohibition_rows": 2,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 0,
+            "mention_only_rows": 7,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 2
+          }
+        }
+      },
+      "known_v5_64": {
+        "lists": {
+          "rows": 64,
+          "requested": {
+            "precision": 0.6125,
+            "recall": 0.7903225806451613,
+            "f1": 0.6901408450704225,
+            "tp": 49,
+            "fp": 31,
+            "fn": 13
+          },
+          "prohibited": {
+            "precision": 0.5,
+            "recall": 0.8,
+            "f1": 0.6153846153846154,
+            "tp": 48,
+            "fp": 48,
+            "fn": 12
+          },
+          "requested_exact": 27,
+          "prohibited_exact": 19,
+          "both_exact": 8,
+          "both_exact_rate": 0.125,
+          "extra_request_rows": 26,
+          "extra_prohibition_rows": 41,
+          "explicit_prohibition_in_request_rows": 13,
+          "missed_prohibition_rows": 12,
+          "mention_only_rows": 0,
+          "mention_only_false_request_rows": 0,
+          "mention_only_false_prohibition_rows": 0
+        },
+        "policy": {
+          "normal_request_rows": 20,
+          "normal_accepted_rows": 1,
+          "normal_acceptance_rate": 0.05,
+          "required_recall": 0.05,
+          "required_f1": 0.08695652173913043,
+          "overrequested_rows": 1,
+          "contains_prohibition_rows": 60,
+          "prohibited_issued_rows": 1,
+          "conflict_rows": 32,
+          "conflicts_classified": 25,
+          "conflicts_clarified": 30,
+          "conflicts_with_prohibited_issued": 0
+        },
+        "by_kind": {
+          "overlap": {
+            "rows": 32,
+            "requested": {
+              "precision": 0.7142857142857143,
+              "recall": 0.78125,
+              "f1": 0.746268656716418,
+              "tp": 25,
+              "fp": 10,
+              "fn": 7
+            },
+            "prohibited": {
+              "precision": 0.5625,
+              "recall": 0.84375,
+              "f1": 0.675,
+              "tp": 27,
+              "fp": 21,
+              "fn": 5
+            },
+            "requested_exact": 17,
+            "prohibited_exact": 12,
+            "both_exact": 7,
+            "both_exact_rate": 0.21875,
+            "extra_request_rows": 9,
+            "extra_prohibition_rows": 18,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 5,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "distinct": {
+            "rows": 16,
+            "requested": {
+              "precision": 0.5,
+              "recall": 0.875,
+              "f1": 0.6363636363636364,
+              "tp": 14,
+              "fp": 14,
+              "fn": 2
+            },
+            "prohibited": {
+              "precision": 0.4444444444444444,
+              "recall": 0.75,
+              "f1": 0.5581395348837209,
+              "tp": 12,
+              "fp": 15,
+              "fn": 4
+            },
+            "requested_exact": 4,
+            "prohibited_exact": 2,
+            "both_exact": 0,
+            "both_exact_rate": 0.0,
+            "extra_request_rows": 11,
+            "extra_prohibition_rows": 13,
+            "explicit_prohibition_in_request_rows": 11,
+            "missed_prohibition_rows": 4,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "disjoint": {
+            "rows": 10,
+            "requested": {
+              "precision": 0.7272727272727273,
+              "recall": 0.8,
+              "f1": 0.7619047619047619,
+              "tp": 8,
+              "fp": 3,
+              "fn": 2
+            },
+            "prohibited": {
+              "precision": 0.5384615384615384,
+              "recall": 0.7,
+              "f1": 0.6086956521739131,
+              "tp": 7,
+              "fp": 6,
+              "fn": 3
+            },
+            "requested_exact": 5,
+            "prohibited_exact": 3,
+            "both_exact": 0,
+            "both_exact_rate": 0.0,
+            "extra_request_rows": 3,
+            "extra_prohibition_rows": 6,
+            "explicit_prohibition_in_request_rows": 0,
+            "missed_prohibition_rows": 3,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          },
+          "revision": {
+            "rows": 6,
+            "requested": {
+              "precision": 0.3333333333333333,
+              "recall": 0.5,
+              "f1": 0.4,
+              "tp": 2,
+              "fp": 4,
+              "fn": 2
+            },
+            "prohibited": {
+              "precision": 0.25,
+              "recall": 1.0,
+              "f1": 0.4,
+              "tp": 2,
+              "fp": 6,
+              "fn": 0
+            },
+            "requested_exact": 1,
+            "prohibited_exact": 2,
+            "both_exact": 1,
+            "both_exact_rate": 0.16666666666666666,
+            "extra_request_rows": 3,
+            "extra_prohibition_rows": 4,
+            "explicit_prohibition_in_request_rows": 2,
+            "missed_prohibition_rows": 0,
+            "mention_only_rows": 0,
+            "mention_only_false_request_rows": 0,
+            "mention_only_false_prohibition_rows": 0
+          }
+        }
+      }
+    }
+  },
+  "original_v5_reproduced": true
+}
