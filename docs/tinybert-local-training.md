@@ -1,5 +1,7 @@
 # 在本地用 NVIDIA Docker 训练 TinyBERT v4
 
+训练包大小为 43,592,568 字节，SHA-256 为 `d71afb7baa70dfa6d77b9d2687c2f91a3173c7b3b060bc42a898a3da6bdc4daa`。[下载训练包](https://drive.google.com/file/d/1rLQw_JBF4ub6o9p0FnGqgsHi5aXhghtX/view?usp=drivesdk)
+
 下载训练包，解压后进入包含 `docker/` 和 `ml/` 的目录。包内的 `inputs/v3/` 是训练起点，包含上一轮配套的权重、配置、词表、协议和 SHA-256 锁定文件。通过 Git 使用本目录时，从上一轮主包提取 `run/checkpoint/` 和 `run/selection_lock.json` 到 `inputs/v3/` 即可。[v3 主包](https://drive.google.com/file/d/1MCWkosDEW5DRMhmzndbtckr7cVqX_079/view?usp=drivesdk)
 
 镜像面向 Linux x86-64（也可在 WSL 2 中构建）。准备能运行 `docker run --gpus all` 的 NVIDIA Container Toolkit，以及与 CUDA 12.8 兼容的 NVIDIA 驱动。构建时会下载 CUDA 版 PyTorch 及其运行库，请预留数 GB 下载空间和约 10 GB 以上可用磁盘空间。教师实验还会下载约 409 MB 的公开权重。
