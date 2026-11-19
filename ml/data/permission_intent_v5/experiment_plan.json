@@ -1,0 +1,11 @@
+{
+  "source": "Locked v4 mobile checkpoint, unchanged encoder size and capability order",
+  "arms": ["original_v4", "v5_data_only", "v5_dual_evidence"],
+  "development": "Same frozen v4 train/validation plus separately authored v5 contrast groups. Existing v4 reserved data is previously observed regression only.",
+  "head_supervision": "Recover dual evidence only from known v4 training compositions, mask unknown requested evidence on older non-executing examples, and directly supervise new evidence labels. Supervise scope overlap only when both evidence labels are known to refer to the same capability.",
+  "selection": "Train both arms for four epochs, seed 20261119, batch 32, encoder LR 1e-5, head LR 1e-4. Pick highest development score per arm, then prefer dual only if it wins the same score. Compare unchanged v4 and both locked arms on one new reserved set; no test tuning.",
+  "score": "0.60 * v4 historical development semantic score + 0.25 * new validation conflict F1 + 0.15 * new validation exact effective states and intent rate",
+  "thresholds": "Calibrate directory-specific state/evidence thresholds on validation only. Keep in_scope probability gate at 0.90. Scope overlap >= 0.55, disjoint <= 0.25; in between clarify when both signals are high.",
+  "decision": "Known/likely overlapping active evidence controls clarification. Confirmed disjoint evidence requires scoped review because the current interface does not return executable scope slots. All non-accept outputs clear the required list and preserve prohibited evidence.",
+  "report": "New reserved 64 rows, old v4 reserved 320 as regression, raw intent, evidence and scope scores, strictly comparable clarifications vs policy, normal acceptance/recall, prohibitions and per-group paired consistency. Synthetic authored cases; human review pending."
+}

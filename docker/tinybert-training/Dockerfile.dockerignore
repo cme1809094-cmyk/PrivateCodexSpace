@@ -20,8 +20,13 @@
 !ml/data/permission_intent_v3/shards/*.jsonl
 !ml/data/permission_intent_v4/*.json
 !ml/data/permission_intent_v4/*.jsonl
+!ml/data/permission_intent_v5/*.json
+!ml/data/permission_intent_v5/*.jsonl
+!ml/data/permission_intent_v5/*.txt
 !ml/results/tinybert-intent-v2-20261118/data_manifest.json
 !ml/results/tinybert-intent-v3-20261118/evaluation/comparison_report.json
+!ml/results/tinybert-intent-v4-20261118/evaluation/comparison_report.json
 !tests/test_intent_training.py
+!tests/test_permission_evidence.py
 !docs/tinybert-intent-v4-training.md
 !docs/tinybert-local-training.md

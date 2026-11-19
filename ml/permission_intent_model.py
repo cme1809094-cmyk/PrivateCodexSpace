@@ -248,10 +248,10 @@ def save_checkpoint(model, tokenizer, directory, protocol):
     (directory / "protocol.json").write_text(json.dumps(protocol, ensure_ascii=False, indent=2) + "\n")
 
 
-def load_checkpoint(directory):
+def load_checkpoint(directory, *, expected_states=STATES):
     directory = Path(directory)
     protocol = json.loads((directory / "protocol.json").read_text())
-    if protocol["states"] != STATES or protocol["intent_statuses"] != INTENTS:
+    if protocol["states"] != expected_states or protocol["intent_statuses"] != INTENTS:
         raise ValueError("Unsupported state/intent ordering")
     config = BertConfig.from_pretrained(directory, local_files_only=True)
     model = PermissionIntentModel(config, len(protocol["capability_ids"]))

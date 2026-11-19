@@ -1,0 +1,51 @@
+{
+  "files_sha256": {
+    "train.jsonl": "0f448191c6660d48b23a87eddb1dc93f4f30706c8c3067d1c2d684720755d4b3",
+    "validation.jsonl": "2322b0af52d77551cc246582ab32bea701c8ceac040d99219faa9f167cc9ca71",
+    "reserved_test.jsonl": "7b5ef43fdde5e95b4bf5437a6f00be4999bfdda4da5a91dc4d6db8d63f4648fa",
+    "development_cases.txt": "b98067a5d03a82a89f0ffb79eb474cc98e159e4e0976e03a6f7cbd57fa260090",
+    "reserved_cases.txt": "315c0e8bcdf733915e9ef2ccc6d60631b7fe279cb857faf8e0a10e28ec0e5811",
+    "experiment_plan.json": "01d2f1394aa0a3d9addde76dbcce3dbee7021d30e08bfab458f6ed082bc204e2"
+  },
+  "generator_sha256": "38938d76b4a2946041a7f74daf0f6be4f713156f1c14008fc474cef708d189c0",
+  "summary": {
+    "train": {
+      "rows": 384,
+      "kinds": {
+        "overlap": 176,
+        "distinct": 128,
+        "disjoint": 48,
+        "revision": 32
+      },
+      "groups": 192,
+      "at_most_16_tokens": 0,
+      "skipped_train_groups": 0
+    },
+    "validation": {
+      "rows": 36,
+      "kinds": {
+        "overlap": 12,
+        "distinct": 12,
+        "disjoint": 8,
+        "revision": 4
+      },
+      "groups": 12,
+      "at_most_16_tokens": 0,
+      "skipped_train_groups": 0
+    },
+    "reserved_test": {
+      "rows": 64,
+      "kinds": {
+        "overlap": 32,
+        "distinct": 16,
+        "disjoint": 10,
+        "revision": 6
+      },
+      "groups": 16,
+      "at_most_16_tokens": 4,
+      "skipped_train_groups": 0
+    }
+  },
+  "authoring": "Assistant-authored validation and reserved cases; human review pending",
+  "test_rules": "Reserved texts are authored and checked before training; only file hashes are used during training."
+}

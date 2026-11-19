@@ -10,9 +10,11 @@ COPY --chmod=u=rwX,go=rX ml/data/permission_intent_v2/expansion/splits/*.jsonl /
 COPY --chmod=u=rwX,go=rX ml/data/permission_intent_v3/*.json ml/data/permission_intent_v3/*.jsonl /app/ml/data/permission_intent_v3/
 COPY --chmod=u=rwX,go=rX ml/data/permission_intent_v3/shards/*.jsonl /app/ml/data/permission_intent_v3/shards/
 COPY --chmod=u=rwX,go=rX ml/data/permission_intent_v4/*.json ml/data/permission_intent_v4/*.jsonl /app/ml/data/permission_intent_v4/
+COPY --chmod=u=rwX,go=rX ml/data/permission_intent_v5/*.json ml/data/permission_intent_v5/*.jsonl ml/data/permission_intent_v5/*.txt /app/ml/data/permission_intent_v5/
 COPY --chmod=u=rwX,go=rX ml/results/tinybert-intent-v2-20261118/data_manifest.json /app/ml/results/tinybert-intent-v2-20261118/
 COPY --chmod=u=rwX,go=rX ml/results/tinybert-intent-v3-20261118/evaluation/comparison_report.json /app/ml/results/tinybert-intent-v3-20261118/evaluation/
-COPY --chmod=u=rwX,go=rX tests/test_intent_training.py /app/tests/
+COPY --chmod=u=rwX,go=rX ml/results/tinybert-intent-v4-20261118/evaluation/comparison_report.json /app/ml/results/tinybert-intent-v4-20261118/evaluation/
+COPY --chmod=u=rwX,go=rX tests/test_intent_training.py tests/test_permission_evidence.py /app/tests/
 COPY --chmod=u=rwX,go=rX docs/tinybert-intent-v4-training.md docs/tinybert-local-training.md /app/docs/
 COPY --chmod=u=rwX,go=rX docker/tinybert-training/entrypoint.py /app/docker/tinybert-training/
 
