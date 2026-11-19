@@ -11,6 +11,7 @@ COPY --chmod=u=rwX,go=rX ml/data/permission_intent_v3/*.json ml/data/permission_
 COPY --chmod=u=rwX,go=rX ml/data/permission_intent_v3/shards/*.jsonl /app/ml/data/permission_intent_v3/shards/
 COPY --chmod=u=rwX,go=rX ml/data/permission_intent_v4/*.json ml/data/permission_intent_v4/*.jsonl /app/ml/data/permission_intent_v4/
 COPY --chmod=u=rwX,go=rX ml/data/permission_intent_v5/*.json ml/data/permission_intent_v5/*.jsonl ml/data/permission_intent_v5/*.txt /app/ml/data/permission_intent_v5/
+COPY --chmod=u=rwX,go=rX ml/data/permission_intent_v6/*.json ml/data/permission_intent_v6/*.jsonl ml/data/permission_intent_v6/*.txt /app/ml/data/permission_intent_v6/
 COPY --chmod=u=rwX,go=rX ml/results/tinybert-intent-v2-20261118/data_manifest.json /app/ml/results/tinybert-intent-v2-20261118/
 COPY --chmod=u=rwX,go=rX ml/results/tinybert-intent-v3-20261118/evaluation/comparison_report.json /app/ml/results/tinybert-intent-v3-20261118/evaluation/
 COPY --chmod=u=rwX,go=rX ml/results/tinybert-intent-v4-20261118/evaluation/comparison_report.json /app/ml/results/tinybert-intent-v4-20261118/evaluation/

@@ -3,10 +3,12 @@ import unittest
 from pathlib import Path
 
 import numpy as np
+import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'ml'))
 
 from permission_evidence import DEFAULT_THRESHOLDS, POLICY, decode_evidence, evidence_targets
+from train_intent_v6 import ranking_loss
 
 
 class PermissionEvidenceTests(unittest.TestCase):
@@ -32,6 +34,17 @@ class PermissionEvidenceTests(unittest.TestCase):
         target, known = evidence_targets([older, template], ['camera'])
         self.assertEqual(target.tolist(), [[[0, 1, 0]], [[1, 1, 1]]])
         self.assertEqual(known.tolist(), [[[False, True, False]], [[True, True, True]]])
+
+    def test_role_ranking_penalizes_sibling_request_within_its_annotated_role(self):
+        logits = torch.tensor([[[0., 3., 0.], [1., 0., 0.], [9., 9., 0.]]], requires_grad=True)
+        target = torch.tensor([[[1., 0., 0.], [0., 1., 0.], [0., 0., 0.]]])
+        known = torch.tensor([[[True, True, False], [True, True, False], [False, False, False]]])
+        ranking_loss(logits, target, known).backward()
+        self.assertLess(float(logits.grad[0, 0, 0]), 0)
+        self.assertGreater(float(logits.grad[0, 1, 0]), 0)
+        self.assertGreater(float(logits.grad[0, 0, 1]), 0)
+        self.assertLess(float(logits.grad[0, 1, 1]), 0)
+        self.assertTrue(torch.equal(logits.grad[0, 2], torch.zeros(3)))
 
 
 if __name__ == '__main__':

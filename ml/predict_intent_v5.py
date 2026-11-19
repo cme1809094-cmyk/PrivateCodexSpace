@@ -13,18 +13,26 @@ from train_intent_v5 import verify_profile
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--checkpoint', type=Path, required=True)
+    parser.add_argument('--lists-only', action='store_true',
+                        help='Print the independent requested and avoid lists before policy')
     parser.add_argument('text', nargs='+')
     args = parser.parse_args()
     torch.set_num_threads(4)
     verify_profile(args.checkpoint)
     model, tokenizer, protocol = load_profile(args.checkpoint)
     if protocol['states'] != EVIDENCE_CHANNELS:
-        raise ValueError('A v5 dual-evidence checkpoint is required')
+        raise ValueError('A paired independent-evidence checkpoint is required')
     names = protocol['capability_ids']
     rows = [{'text': text, 'id': f'input_{i+1}'} for i, text in enumerate(args.text)]
     cap, intent = infer(model, encode(tokenizer, rows, 64), True)
     decoded = decode_profile(cap, intent, protocol)
     for i, text in enumerate(args.text):
+        if args.lists_only:
+            result = {'text': text,
+                      'requested_capabilities': [name for name, keep in zip(names, decoded['requested'][i]) if keep],
+                      'avoid_capabilities': [name for name, keep in zip(names, decoded['prohibited'][i]) if keep]}
+            print(json.dumps(result, ensure_ascii=False))
+            continue
         decision = str(decoded['decision'][i])
         mask = decoded['requested'][i] | decoded['prohibited'][i]
         if decoded['overlap'][i].any():

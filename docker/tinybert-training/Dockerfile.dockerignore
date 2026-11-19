@@ -23,6 +23,9 @@
 !ml/data/permission_intent_v5/*.json
 !ml/data/permission_intent_v5/*.jsonl
 !ml/data/permission_intent_v5/*.txt
+!ml/data/permission_intent_v6/*.json
+!ml/data/permission_intent_v6/*.jsonl
+!ml/data/permission_intent_v6/*.txt
 !ml/results/tinybert-intent-v2-20261118/data_manifest.json
 !ml/results/tinybert-intent-v3-20261118/evaluation/comparison_report.json
 !ml/results/tinybert-intent-v4-20261118/evaluation/comparison_report.json

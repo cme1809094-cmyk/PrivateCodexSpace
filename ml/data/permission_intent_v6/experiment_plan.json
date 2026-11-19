@@ -1,0 +1,9 @@
+{
+  "primary": "Identify active requested and explicitly prohibited capabilities independently, before permission policy. Empty or unmentioned is neither list.",
+  "compare": ["original v5 locked profile", "v5 recalibrated on v6 development only", "v6 continued training plus same calibration"],
+  "selection_score": "On v6 natural validation use 0.3 request F1 + 0.3 prohibition F1 + 0.4 exact match of both lists. Apply 0.8 weight to that score and 0.2 to the same score on v5 development for retention. Report precision and recall separately.",
+  "thresholds": "Sweep shared requested/prohibited thresholds independently from 0.30 to 0.95 on development only; scope and policy retain the v5 protocol.",
+  "train": "Start from locked v5 dual profile, all previous development training plus new same-domain controlled contrasts. Four epochs, batch 32, seed 20261119, encoder LR 1.5e-5, head LR 1e-4. Supervise both lists with evidence loss and a margin against highest-scoring known wrong capabilities. Retain v5 whole-sentence and scope objectives.",
+  "holdout": "80 separately written cases; do not use for fitting or selecting thresholds. Previous v5 tests are observed regression only. All new cases authored by the assistant; human review pending. Preserve all original frozen inputs.",
+  "report": "Precision, recall and F1 of each list, exact both lists, forbidden leaked into requests, missing forbiddens and false request in unmentioned cases. Policy and conflict remain separate regression checks. Select an experimental profile by development only and qualify held-out trade-offs."
+}
